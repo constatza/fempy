@@ -5,7 +5,7 @@ from .entities import Element, DOFtype, GaussQuadrature, GaussPoint3D
 
 
 class Quad4(Element):
-    """quadrilateral 4-node 2D element"""
+    """Quadrilateral 4-node 2D element"""
     
     nodal_DOFtypes = [DOFtype.X, DOFtype.Y]
     
@@ -32,6 +32,8 @@ class Quad4(Element):
 
     def set_material_at_gauss_points(self):
         pass   
+    
+    
     
     @property
     def node_coordinates(self):
@@ -173,12 +175,12 @@ class Quad4(Element):
                 detJ_inv = self.calculate_jacobian_inv(J, detJ)
                 DM = Quad4.calculate_deformation_matrix(ksi, eta,
                                                        J, detJ_inv, SF_der)
-                weightfactor = point_ksi.weight * point_eta.weight * detJ
+                weight_factor = point_ksi.weight * point_eta.weight * detJ
                 current_gauss_point =  GaussPoint3D(ksi, eta, 0, DM, weight_factor)
                 integration_points.append(current_gauss_point)
         return integration_points
 
-
+    @nb.njit
     def calculate_stiffness_matrix(integration_points, materials_at_gauss_points, thickness):
         """Method that calculates the stiffness matrix of an isoparametric 
         4-noded quadrilateral element, with constant thickness.
@@ -188,16 +190,23 @@ class Quad4(Element):
         point_ID = -1
         for point in integration_points:
             point_ID += 1
-            constitutive_matrix = self.materials_at_gauss_points[point_ID].constitutive_matrix
+            constitutive_matrix = materials_at_gauss_points[point_ID].constitutive_matrix
             deformation_matrix = point.deformation_matrix
             stiffness_matrix += deformation_matrix.T @ constitutive_matrix @ deformation_matrix
             stiffness_matrix *= point.weight * thickness
         
         return stiffness_matrix
     
-    @property
-    def stiffness_matrix(self):
-        stiffness_matrix = calculate_stiffness_matrix(self.integration_points,   
+    
+    def get_stiffness_matrix(self):
+        stiffness_matrix = self.calculate_stiffness_matrix(self.integration_points,   
                                                        self.materials_at_gauss_points,
                                                        self.thickness)
         return stiffness_matrix
+    
+    def stiffness_matrix(element):
+        stiffness_matrix = Quad4.calculate_stiffness_matrix(element.integration_points,
+                                                            element.materials_at_gauss_points,
+                                                            element.thickness)
+        return stiffness_matrix
+        

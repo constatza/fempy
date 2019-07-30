@@ -29,8 +29,34 @@ class Node:
  
        
 class Element:
+    """
+    An abstract Element class that defines the basic properties and
+    methods of a finite element.
+    """
     
     def __init__(self, ID=None, nodes_dictionary={}, element_type=None):
+        """
+        Creates an instance.
+        
+        Parameters
+        ----------
+        ID : int
+            Element ID.
+        nodes_dictionary : dict
+            Dictionary with nodes' ID as keys and nodes as values.
+        element_type : Element
+            Instance of Element with material and thickness only.
+        
+        Attributes
+        ----------
+        DOFtypes : list<list>
+            A list with size equal to the number of nodes, each containing
+            a list with the degrees of freedom of each node
+        DOFs : list
+            A list with the DOFs othe element
+        DOF_enumerator : GenericDOFEnumerator
+            
+        """
         self.ID = ID
         self.nodes_dictionary = nodes_dictionary
         # element_type e.g. Quad4(material), no ID, just properties 
@@ -39,7 +65,8 @@ class Element:
         #each containing a list with the degrees of freedom of each node
         Element.DOFtypes = []
         Element.DOFs = []
-
+        self.DOF_enumerator = None
+    
     def add_node(self, node):
         self.nodes_dictionary[node.ID] = node
         
@@ -51,6 +78,8 @@ class Element:
     def nodes(self):
         return list(self.nodes_dictionary.values())        
 
+    def get_nodes_for_matrix_assembly(element):
+        return element.nodes
 
 class Model:
     
@@ -63,6 +92,7 @@ class Model:
         # global nodal dof number.
         self.nodal_DOFs_dictionary = {}
         self.loads = []
+        self.forces = None
     
     @property
     def nodes(self):
@@ -110,6 +140,7 @@ class Model:
             load_global_DOF = self.nodal_DOFs_dictionary[load.node.ID][load.DOF]
             if load_global_DOF>=0:
                 forces[load_global_DOF] = load.magnitude
+        self.forces = forces 
                 
     def connect_data_structures(self):
          self.build_element_dictionary_of_each_node()

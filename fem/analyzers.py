@@ -1,13 +1,11 @@
 
 
-
-
 class LinearAnalyzer:
     """ 
     This class makes the appropriate arrangements 
     for the solution of linear systems of equations.
     """
-    
+
     def __init__(self, solver=None):
         """
         Initializes an instance of the class.
@@ -36,7 +34,7 @@ class LinearAnalyzer:
         the actual solution of the system.
         """
         self.solver.initialize()
-    
+
     def solve(self):
         """
         Solves the linear system of equations by calling the corresponding 
@@ -74,14 +72,14 @@ class StaticAnalyzer:
         self.child = child_analyzer
         self.child.parent = self       
         self.linear_system = linear_system
-    
+ 
     def build_matrices(self):
         """
         Builds the appropriate linear system matrix and updates the 
         linear system instance used in the constructor.
         """
         return self.provider.calculate_matrix(self.linear_system)
-    
+
     def initialize(self):
         """
         Makes the proper solver-specific initializations before the solution 
@@ -91,7 +89,7 @@ class StaticAnalyzer:
         if self.child==None:
             raise ValueError("Static analyzer must contain a child analyzer.")
         self.child.initialize()
-    
+
     def solve(self):
         """
         Solves the linear system of equations by calling the corresponding 
@@ -100,5 +98,4 @@ class StaticAnalyzer:
         if self.child==None:
             raise ValueError("Static analyzer must contain a child analyzer.")
         self.child.solve()
-            
-        
+
