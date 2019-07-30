@@ -4,7 +4,7 @@ Created on Tue Jul 30 13:49:31 2019
 
 @author: constatza
 """
-from numpy import empty
+from numpy import empty, nanmin, NaN
 
 
 class ProblemStructural:
@@ -49,10 +49,27 @@ class ElementStructuralStiffnessProvider:
 class GlobalMatrixAssembler:
     """Assembles the global stiffness matrix."""
     
+    # POSSIBLY USELESS
     @staticmethod
     def calculate_row_index(model, nodal_DOFs_dictionary):
-        row_heights = empty(model.total_DOFs)
+        """Calculates row indices for the assembly of global stiffness matrix.
         
+        Parameters
+        ----------
+        nodal_DOFs_dictionary : dict<int, dict<DOFType, int>>
+            Dictionary that links node.ID and DOFType with the equivalent 
+            global nodal DOF number.
+        """
+
+        row_heights = empty(model.total_DOFs)
+        minDOF = NaN
         for element in model.elements:
-            for node in element.element_type.DOF_enumerator.
+            
+            for node in element.element_type.DOF_enumerator.get_nodes_for_matrix_assembly(element):
+                
+                for dof in nodal_DOFs_dictionary[node.ID].values():
+                    
+                    if dof != -1:
+                        minDOF = nanmin(minDOF, dof)
+                    
     

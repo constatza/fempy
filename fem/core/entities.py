@@ -7,12 +7,14 @@ Created on Sat Apr  6 12:44:21 2019
 import numpy as np
 from enum import IntEnum
 
+
 class DOFtype(IntEnum):
     Unknown = 0,
     X = 1,
     Y = 2,
     Z = 3, 
     Zrot = 4
+
 
 class Node:
     
@@ -26,7 +28,6 @@ class Node:
         # list of DOFtypes
         self.constraints = []
 
- 
        
 class Element:
     """
@@ -81,15 +82,35 @@ class Element:
     def get_nodes_for_matrix_assembly(element):
         return element.nodes
 
+#%%
 class Model:
+    """Model composed of elements and their nodes.
     
+    Attributes
+    ----------
+    nodal_DOFs_dictionary : dict<int, dict<DOFType, int>>
+        Dictionary that links node.ID and DOFType with the equivalent 
+        global nodal DOF number. 
+    loads : list<Load>
+        List containing the loads applied to the model nodes.
+    forces : np.ndarray<float>
+        Force vector applied to model DOFs.
+    """
+
     def __init__(self, nodes_dictionary={}, elements_dictionary={}):
-        # Dictionary that contains all nodes of the model.
+        """Initialize Model instance.
+        
+        Parameters
+        ----------
+        nodes_dictionary : dict<int, Node>
+            Dictionary of model nodes : { nodeID : node}.
+        
+        elements_dictionary : dict<int, Element>
+            Dictionary of model elements : { elementID : element}.
+        """
+
         self.nodes_dictionary = nodes_dictionary
-        # Dictionary that contains all elements of the model.
         self.elements_dictionary = elements_dictionary
-        # Dictionary that links node.ID and DOFType with the equivalent 
-        # global nodal dof number.
         self.nodal_DOFs_dictionary = {}
         self.loads = []
         self.forces = None
@@ -126,11 +147,14 @@ class Model:
                 DOF_ID = 0
                 if DOFtype in node.constraints:
                     DOF_ID = -1                 
-                elif DOF_ID==0:
+                elif DOF_ID == 0:
                     DOF_ID = total_DOFs
                     total_DOFs += 1
+                
                 DOFs_dictionary[DOFtype] = DOF_ID               
+            
             self.nodal_DOFs_dictionary[node.ID] = DOFs_dictionary
+        
         self.total_DOFs = total_DOFs 
          
     def assign_nodal_loads(self):
@@ -147,7 +171,7 @@ class Model:
          self.enumerate_global_DOFs()
          self.assign_nodal_loads()
     
-
+#%%
 class Load:
     
     def __init__(self, magnitude=None, node=None, DOF=None):
@@ -155,7 +179,7 @@ class Load:
         self.node = node
         self.DOF = DOF
 
-
+#%%
 """ 
 Gauss integration library
 """

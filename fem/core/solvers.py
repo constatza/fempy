@@ -11,6 +11,7 @@ class Solver:
 
 class SimpleSolver(Solver):
     
+    def __init__(self, linear_system):
         Solver.__init__(square_matrix=linear_system.matrix2D, 
                         right_hand_side=linear_system.rhs)
 
