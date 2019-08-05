@@ -74,7 +74,7 @@ class GlobalMatrixAssembler:
                         minDOF = nanmin(minDOF, dof)
     
     @staticmethod           
-    def calculate_global_matrix(model, nodal_DOFs_dictionary, element_provider):
+    def calculate_global_matrix(model, element_provider, nodal_DOFs_dictionary=None):
         """Calculates the global stiffness matrix.
        
         Parameters
@@ -93,6 +93,9 @@ class GlobalMatrixAssembler:
             Model global stiffness matrix.
         """
         
+        
+        if nodal_DOFs_dictionary == None:
+            nodal_DOFs_dictionary = model.nodal_DOFs_dictionary
         
         numDOFs = model.total_DOFs
         global_stiffness_matrix = zeros([numDOFs, numDOFs])
