@@ -84,29 +84,6 @@ class ElementStructuralStiffnessProvider:
 class GlobalMatrixAssembler:
     """Assembles the global stiffness matrix."""
     
-    # POSSIBLY USELESS
-    @staticmethod
-    def calculate_row_index(model, nodal_DOFs_dictionary):
-        """Calculates row indices for the assembly of global stiffness matrix.
-        
-        Parameters
-        ----------
-        nodal_DOFs_dictionary : dict<int, dict<DOFType, int>>
-            Dictionary that links node.ID and DOFType with the equivalent 
-            global nodal DOF number.
-        """
-
-        row_heights = empty(model.total_DOFs)
-        minDOF = NaN
-        for element in model.elements:
-            
-            for node in element.element_type.DOF_enumerator.get_nodes_for_matrix_assembly(element):
-                
-                for dof in nodal_DOFs_dictionary[node.ID].values():
-                    
-                    if dof != -1:
-                        minDOF = nanmin(minDOF, dof)
-    
     @staticmethod           
     def calculate_global_matrix(model, element_provider, nodal_DOFs_dictionary=None):
         """Calculates the global stiffness matrix.
