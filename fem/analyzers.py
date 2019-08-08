@@ -1,6 +1,6 @@
 
 
-class LinearAnalyzer:
+class Linear:
     """ 
     This class makes the appropriate arrangements 
     for the solution of linear systems of equations.
@@ -44,7 +44,7 @@ class LinearAnalyzer:
         self.solver.solve()
 
 
-class StaticAnalyzer:
+class Static:
     """
     This class constructs the system of equations to be solved and utilizes 
     a child analyzer for handling the solution of these equations.

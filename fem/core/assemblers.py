@@ -7,16 +7,50 @@ Created on Tue Jul 30 13:49:31 2019
 from numpy import empty, nanmin, NaN, zeros
 
 
+class GenericDOFEnumerator:
+    """Retrieves element connectivity data required for matrix assembly."""
+    
+    @staticmethod
+    def get_DOF_types(element):
+        """Retrieves the dof types of each node."""
+        return element.element_type.get_element_DOFtypes(element)
+    
+    @staticmethod
+    def get_DOFtypes_for_DOF_enumeration(element):
+        """Retrieves the dof types of each node."""
+        return element.element_type.get_element_DOFtypes(element)
+
+    @staticmethod
+    def get_nodes_for_matrix_assembly(element):
+        """Retrieves the element nodes."""
+        return element.nodes
+
+    @staticmethod
+    def get_transformed_matrix(matrix):
+        """Retrieves matrix transformed from local to global coordinate system."""
+        return matrix
+
+    @staticmethod
+    def get_tranformed_displacements_vector(vector):
+        """ Retrieves displacements transformed from local to global coordinate system."""
+        return vector
+    
+    def get_transformed_forces_vector(vector):
+        """Retrieves displacements transformed from local to global coordinate system."""
+        return vector
+
+        
 class ProblemStructural:
     """Responsible for the assembly of the global stiffness matrix."""
     
     def __init__(self, model):
         self.model = model
         self._matrix = None
+        self.stiffness_provider = ElementStructuralStiffnessProvider()
 
     @property
     def matrix(self):
-        if self._matrix == None:
+        if self._matrix is None:
             self.build_matrix()
         else:
             self.rebuild_matrix()
@@ -25,16 +59,16 @@ class ProblemStructural:
     def build_matrix(self):
         """ Builds the global Stiffness Matrix"""
         provider = ElementStructuralStiffnessProvider()
-        self._matrix = GlobalMatrixAssembler.calculate_global_matrix(model, provider)
+        self._matrix = GlobalMatrixAssembler.calculate_global_matrix(self.model, provider)
     
     def rebuild_matrix(self):
         """ Rebuilds the global Stiffness Matrix"""
-        self._matrix = GlobalMatrixAssembler.calculate_global_matrix(model, provider)
+        self._matrix = GlobalMatrixAssembler.calculate_global_matrix(self.model, self.stiffness_provider)
     
     def calculate_matrix(self, linear_system):
-        if self._matrix2D == None:
+        if self._matrix == None:
             self.build_matrix()
-        linear_system.matrix = self.matrix2D
+        linear_system.matrix = self.matrix
 
 
 class ElementStructuralStiffnessProvider:
@@ -103,6 +137,7 @@ class GlobalMatrixAssembler:
         for element in model.elements:
             
             element_matrix = element_provider.matrix(element)
+            print(element_matrix)
             element_DOFtypes = element.element_type.DOF_enumerator.get_DOF_types(element)
             matrix_assembly_nodes = element.element_type.DOF_enumerator.get_nodes_for_matrix_assembly(element)
             
@@ -115,7 +150,7 @@ class GlobalMatrixAssembler:
                     if DOFrow != -1:
                         
                         element_matrix_column = 0  
-                        for j in range(i,len(element_DOFtypes)):
+                        for j in range(len(element_DOFtypes)):
                             node_column = matrix_assembly_nodes[j]
                             for DOFtype_column in element_DOFtypes[j]:
                                 DOFcolumn = nodal_DOFs_dictionary[node_column.ID][DOFtype_column]
@@ -125,7 +160,7 @@ class GlobalMatrixAssembler:
                                 element_matrix_column += 1
                     
                     element_matrix_row += 1
-        
+
         return global_stiffness_matrix 
                 
             

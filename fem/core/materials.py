@@ -21,13 +21,13 @@ class ElasticMaterial2D:
     def constitutive_matrix(self):
         """Gets the constitutive matrix ."""
         
-        if self._constitutive_matrix == None:
+        if self._constitutive_matrix is None:
             self.update_material()
         return self._constitutive_matrix
     
     def update_material(self, strains=None):
         """Given a strain vector updates the material state."""
-        if self.stress_state==StressState2D.PlainStress:
+        if self.stress_state==StressState2D.plain_stress:
             E = self.young_modulus
             ni = self.poisson_ratio
             constitutive_matrix =  E/(1-ni*ni) * np.array([[1, ni, 0],

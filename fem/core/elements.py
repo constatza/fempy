@@ -2,7 +2,7 @@
 import numpy as np
 import numba as nb
 from .entities import Element, DOFtype, GaussQuadrature, GaussPoint3D
-
+from .assemblers import GenericDOFEnumerator
 
 class Quad4(Element):
     """Quadrilateral 4-node 2D element"""
@@ -18,26 +18,25 @@ class Quad4(Element):
     gauss_iter2 = 4
     gauss_iter3 = 8
     
-    def __init__(self, *args, material=None ,thickness=None, **kwargs):
+    def __init__(self, *args, material=None ,thickness=None, DOF_enumerator=GenericDOFEnumerator(), **kwargs):
         Element.__init__(self, *args, **kwargs)
         materials = []
-        for i in range(Quad4.gauss_iter):
+        for i in range(Quad4.gauss_iter2):
             materials.append(material)
         self.materials_at_gauss_points = materials
         self.material = material   
         self.thickness = thickness
+        self.DOF_enumerator = DOF_enumerator
         self._node_coordinates = None
         self._integration_points = None
         self._stiffness_matrix = None
 
     def set_material_at_gauss_points(self):
-        pass   
-    
-    
+        pass       
     
     @property
     def node_coordinates(self):
-        if self._node_coordinates==None:
+        if self._node_coordinates is None:
             self._node_coordinates = self.get_current_node_coordinates()
         return self._node_coordinates
             
@@ -52,7 +51,7 @@ class Quad4(Element):
     def integration_points(self):
         current_node_coordinates = self.get_current_node_coordinates()
         coordinates_changed  = (self.node_coordinates==current_node_coordinates).all()
-        if coordinates_changed | (self._integation_points==None):
+        if coordinates_changed | (self._integration_points==None):
             self._node_coordinates = current_node_coordinates
             self._integration_points = self.calculate_gauss_matrices(current_node_coordinates)            
         return self._integration_points
@@ -82,7 +81,6 @@ class Quad4(Element):
         return Dn
     
     @staticmethod
-    @nb.njit
     def calculate_deformation_matrix(ksi, eta, jacobian_matrix, detJ_inv, shape_function_derivatives_matrix):
         """ deformation matrix B = B1 @ B2 """
 #        B1 = 1/detJ * np.array([[J[1, 1], -J[0, 1],       0,         0],
@@ -104,7 +102,7 @@ class Quad4(Element):
 #                           [0, -1+eta, 0, 1-eta, 0, 1+eta, 0, -1-eta],
 #                           [0, -1+ksi, 0, -1-ksi, 0, 1+ksi, 0, 1-ksi]])
         
-        B_matrix = np.zeros((4, 8), dtype=np.float64)
+        B_matrix = np.zeros((3, 8), dtype=np.float64)
         
         B_matrix[0, 0] = B1[0, :2] @ shape_function_derivatives_matrix[:, 0]
         B_matrix[0, 2] = B1[0, :2] @ shape_function_derivatives_matrix[:, 1]
@@ -137,7 +135,7 @@ class Quad4(Element):
 
     @staticmethod
     @nb.njit
-    def calculate_jacobian_determinant(jacobian):
+    def calculate_determinant(jacobian):
         """Calculates the Jacobian determinant for an integration point."""
         detJ = jacobian[0,0]*jacobian[1,1] - jacobian[1,0]*jacobian[0,1]
         if detJ<1e-7:
@@ -159,42 +157,42 @@ class Quad4(Element):
         J_inv[1, 0] = -jacobian_matrix[1, 0] * detJ_inv
         J_inv[1, 1] = jacobian_matrix[0, 0] * detJ_inv
         return J_inv
-
+    
     def calculate_gauss_matrices(self, node_coordinates):
         """ Calculates the integration points. """
         integration_points_per_axis = GaussQuadrature.get_gauss_points(2)
         #total_sampling_points = len(integration_points_per_axis)**2
-        integration_points = []
+        integration_points_list = []
         for point_ksi in integration_points_per_axis:
             for point_eta in integration_points_per_axis:
                 ksi = point_ksi.coordinate
                 eta = point_eta.coordinate
                 SF_der = self.calculate_shape_function_derivatives(ksi, eta)
                 J = self.calculate_jacobian_matrix(SF_der, node_coordinates)
-                detJ = self.calculate_jacobian_determinant(J)
-                detJ_inv = self.calculate_jacobian_inv(J, detJ)
+                detJ = self.calculate_determinant(J)
+                #J_inv = self.calculate_jacobian_inv(J, detJ)
                 DM = Quad4.calculate_deformation_matrix(ksi, eta,
-                                                       J, detJ_inv, SF_der)
+                                                       J, 1/detJ, SF_der)
                 weight_factor = point_ksi.weight * point_eta.weight * detJ
                 current_gauss_point =  GaussPoint3D(ksi, eta, 0, DM, weight_factor)
-                integration_points.append(current_gauss_point)
-        return integration_points
-
-    @nb.njit
+                integration_points_list.append(current_gauss_point)
+        return integration_points_list
+    
+    @staticmethod
+    #@nb.njit
     def calculate_stiffness_matrix(integration_points, materials_at_gauss_points, thickness):
         """Method that calculates the stiffness matrix of an isoparametric 
         4-noded quadrilateral element, with constant thickness.
         """
-        integration_points = integration_points
+        #integration_points = integration_points
         stiffness_matrix = np.zeros((8,8))
         point_ID = -1
         for point in integration_points:
             point_ID += 1
             constitutive_matrix = materials_at_gauss_points[point_ID].constitutive_matrix
             deformation_matrix = point.deformation_matrix
-            stiffness_matrix += deformation_matrix.T @ constitutive_matrix @ deformation_matrix
-            stiffness_matrix *= point.weight * thickness
-        
+            stiffness_matrix += deformation_matrix.T @ constitutive_matrix @ deformation_matrix * point.weight
+            stiffness_matrix *= thickness
         return stiffness_matrix
     
     
@@ -204,6 +202,7 @@ class Quad4(Element):
                                                        self.thickness)
         return stiffness_matrix
     
+    @staticmethod
     def stiffness_matrix(element):
         stiffness_matrix = Quad4.calculate_stiffness_matrix(element.integration_points,
                                                             element.materials_at_gauss_points,

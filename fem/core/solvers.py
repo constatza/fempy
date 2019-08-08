@@ -4,19 +4,23 @@ import scipy as sp
 
 class Solver:
     
-    def __init__(self, square_matrix, right_hand_side):
-        self.matrix = square_matrix
-        self.vector = right_hand_side
+    def __init__(self, system):
+        self.system = system
+    
+    def initialize(self):
+        """makes preparations."""
+        pass
 
 
 class SimpleSolver(Solver):
     
     def __init__(self, linear_system):
-        Solver.__init__(square_matrix=linear_system.matrix2D, 
-                        right_hand_side=linear_system.rhs)
+        Solver.__init__(self, linear_system)
 
     def solve(self):
-        return sp.linalg.solve(self.matrix, self.vector, assume_a='sym')
+        self.system.solution = sp.linalg.solve(self.system.matrix, 
+                                          self.system.rhs,
+                                          assume_a='sym')
 
 
 class LinearSystem:
@@ -40,6 +44,6 @@ class LinearSystem:
         """
         self.rhs = rhs
         self.solution = None #np.empty(rhs.shape)
-        self.matrix2D = None
+        self.matrix = None
     
 

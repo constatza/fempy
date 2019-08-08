@@ -6,7 +6,7 @@ Created on Sat Apr  6 12:44:21 2019
 """
 import numpy as np
 from enum import IntEnum
-
+from .assemblers import GenericDOFEnumerator
 
 class DOFtype(IntEnum):
     Unknown = 0,
@@ -34,8 +34,9 @@ class Element:
     An abstract Element class that defines the basic properties and
     methods of a finite element.
     """
+    DOFtypes = None
     
-    def __init__(self, ID=None, nodes_dictionary={}, element_type=None):
+    def __init__(self, ID=None, nodes_dictionary={}, element_type=None, DOF_enumerator=GenericDOFEnumerator()):
         """
         Creates an instance.
         
@@ -66,8 +67,8 @@ class Element:
         #each containing a list with the degrees of freedom of each node
         Element.DOFtypes = []
         Element.DOFs = []
-        self.DOF_enumerator = None
-    
+        self.DOF_enumerator = DOF_enumerator
+        
     def add_node(self, node):
         self.nodes_dictionary[node.ID] = node
         
@@ -78,9 +79,14 @@ class Element:
     @property
     def nodes(self):
         return list(self.nodes_dictionary.values())        
-
+    
+    @staticmethod
     def get_nodes_for_matrix_assembly(element):
         return element.nodes
+    
+    @staticmethod
+    def get_element_DOFtypes(element):
+        return element.DOFtypes
 
 #%%
 class Model:
@@ -205,19 +211,15 @@ class GaussPoint3D:
 
 class GaussQuadrature:
     """Provides one-dimensional Gauss-Legendre points and weights."""
+
+    gauss_point1 = GaussPoint1D(coordinate=0, weight=2)
     
-    @property
-    def gauss_point1(self):
-        point = GaussPoint1D(coordinate=0, weight=2)
-        return [point]
+    gauss_point2a = GaussPoint1D(coordinate=-.5773502691896, weight= 1)    
+    gauss_point2b = GaussPoint1D(coordinate=0.5773502691896, weight= 1)
+
     
-    @property
-    def gauss_point2(self):
-        point1 = GaussPoint1D(coordinate=-.5773502691896, weight= 1)      
-        point2 = GaussPoint1D(coordinate=0.5773502691896, weight= 1)
-        return [point1, point2]
-    
-    def get_gauss_points(self, integration_degree):
+    @staticmethod
+    def get_gauss_points(integration_degree):
 #         * For point coordinates, we encounter the following constants:
 #         * 0.5773502691896 = 1 / Square Root 3
 #         * 0.7745966692415 = (Square Root 15)/ 5
@@ -230,9 +232,10 @@ class GaussQuadrature:
 #         * 0.3478548451375 = (18 - sqrt30)/36
 #         * 0.6521451548625 = (18 + sqrt30)/36  
         if integration_degree==1:
-            return self.gauss_point1
+            return [GaussQuadrature.gauss_point1]
         elif integration_degree==2:
-            return self.gauss_point2
+            return [GaussQuadrature.gauss_point2a,
+                    GaussQuadrature.gauss_point2b]
         else:
             raise NotImplementedError("Unsupported degree of integration: {:}".format(integration_degree))
             
