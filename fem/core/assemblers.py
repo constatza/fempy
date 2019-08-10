@@ -68,8 +68,6 @@ class ProblemStructural:
         self._matrix = GlobalMatrixAssembler.calculate_global_matrix(self.model, self.stiffness_provider)
     
     def calculate_matrix(self, linear_system):
-        if self._matrix == None:
-            self.build_matrix()
         linear_system.matrix = self.matrix
 
 
@@ -119,6 +117,10 @@ class GlobalMatrixAssembler:
             matrix_assembly_nodes = element.element_type.DOF_enumerator.get_nodes_for_matrix_assembly(element)
             
             element_matrix_row = 0
+#            global_rows_list = []
+#            global_columns_list = []
+#            element_rows_list = []
+#            element_columns_list = []
             for i in range(len(element_DOFtypes)):
                 node_row = matrix_assembly_nodes[i]
                 for DOFtype_row in element_DOFtypes[i]:
@@ -132,12 +134,19 @@ class GlobalMatrixAssembler:
                             for DOFtype_column in element_DOFtypes[j]:
                                 DOFcolumn = nodal_DOFs_dictionary[node_column.ID][DOFtype_column]
                                 if DOFcolumn != -1:
+#                                    global_rows_list.append(DOFrow)
+#                                    global_columns_list.append(DOFcolumn)
+#                                    element_rows_list.append(element_matrix_row)
+#                                    element_columns_list.append(element_matrix_column)
                                     global_stiffness_matrix[DOFrow, DOFcolumn] += element_matrix[element_matrix_row,
                                                                                                  element_matrix_column]
+                                    
                                 element_matrix_column += 1
                     
                     element_matrix_row += 1
-
+            
+#            global_stiffness_matrix[global_rows_list, global_columns_list] += element_matrix[element_rows_list,
+#                                                                                             element_columns_list]
         return global_stiffness_matrix 
                 
             

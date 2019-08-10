@@ -30,9 +30,6 @@ class Quad4(Element):
         self._node_coordinates = None
         self._integration_points = None
         self._stiffness_matrix = None
-
-    def set_material_at_gauss_points(self):
-        pass       
     
     @property
     def node_coordinates(self):
@@ -68,10 +65,22 @@ class Quad4(Element):
         f_eta_plus = (1.0 + eta) * fN025
         f_ksi_minus = (1.0 - ksi) * fN025
         f_eta_minus = (1.0 - eta) * fN025
+        
+        Dn = np.empty((2,4), dtype=np.float64)
+        Dn[0, 0] = -f_eta_minus
+        Dn[0, 1] = f_eta_minus
+        Dn[0, 2] = f_eta_plus
+        Dn[0, 3] = -f_eta_plus
+        
+        Dn[1, 0] = -f_ksi_minus
+        Dn[1, 1] = -f_ksi_plus
+        Dn[1, 2] = f_ksi_plus
+        Dn[1, 3] = f_ksi_minus
 
-        Dn =  np.array([[-f_eta_minus, f_eta_minus, f_eta_plus, -f_eta_plus], 
-                        [-f_ksi_minus, -f_ksi_plus, f_ksi_plus, f_ksi_minus]])
-
+#        Dn =  np.array([[-f_eta_minus, f_eta_minus, f_eta_plus, -f_eta_plus], 
+#                        [-f_ksi_minus, -f_ksi_plus, f_ksi_plus, f_ksi_minus]])
+        
+        
 #       Dn = .25*[-(1-eta), (1-eta), (1+eta), -(1+eta),
 #                 -(1-ksi), -(1+ksi), (1+ksi), (1-ksi)]
 #
@@ -82,9 +91,12 @@ class Quad4(Element):
     @staticmethod
     def calculate_deformation_matrix(ksi, eta, jacobian_matrix, detJ_inv, shape_function_derivatives_matrix):
         """ deformation matrix B = B1 @ B2 
+        
+        
         B1 = 1/detJ *[[J[1, 1], -J[0, 1],       0,         0],
                       [       0,       0, -J[1, 0],   J[0, 0]],
                       [-J[1, 0],  J[0, 0],  J[1, 1], -J[0, 1]]]
+        
         
         B2 =.25*[[-1+eta, 0, 1-eta, 0, 1+eta, 0, -1-eta, 0],
                  [-1+ksi, 0, -1-ksi, 0, 1+ksi, 0, 1-ksi, 0],
@@ -95,46 +107,42 @@ class Quad4(Element):
         
         B_matrix = np.zeros((3, 8), dtype=np.float64)
 
-        #@nb.njit
-        def calc(B1, B_matrix, jacobian_matrix, detJ_inv):
-            
-            B1[0, 0] = detJ_inv * jacobian_matrix[1, 1]
-            B1[0, 1] = -detJ_inv * jacobian_matrix[0, 1]
-            B1[1, 2] = -detJ_inv * jacobian_matrix[1, 0]
-            B1[1, 3] = detJ_inv * jacobian_matrix[0, 0]
-            B1[2, 0] = -detJ_inv * jacobian_matrix[1, 0]
-            B1[2, 1] = detJ_inv * jacobian_matrix[0, 0]
-            B1[2, 2] = detJ_inv * jacobian_matrix[1, 1]
-            B1[2, 3] = -detJ_inv * jacobian_matrix[0, 1]
         
-            dN1 = shape_function_derivatives_matrix[:, 0]
-            dN2 = shape_function_derivatives_matrix[:, 1]
-            dN3 = shape_function_derivatives_matrix[:, 2]
-            dN4 = shape_function_derivatives_matrix[:, 3]
-            
-            B_matrix[0, 0] = B1[0, :2] @ dN1
-            B_matrix[0, 2] = B1[0, :2] @ dN2
-            B_matrix[0, 4] = B1[0, :2] @ dN3
-            B_matrix[0, 6] = B1[0, :2] @ dN4
-            
-            B_matrix[1, 1] = B1[1, 2:] @ dN1
-            B_matrix[1, 3] = B1[1, 2:] @ dN2
-            B_matrix[1, 5] = B1[1, 2:] @ dN3
-            B_matrix[1, 7] = B1[1, 2:] @ dN4
-            
-            B_matrix[2, 0] = B1[2, :2] @ dN1
-            B_matrix[2, 2] = B1[2, :2] @ dN2
-            B_matrix[2, 4] = B1[2, :2] @ dN3
-            B_matrix[2, 6] = B1[2, :2] @ dN4
-            
-            B_matrix[2, 1] = B1[2, 2:] @ dN1
-            B_matrix[2, 3] = B1[2, 2:] @ dN2
-            B_matrix[2, 5] = B1[2, 2:] @ dN3
-            B_matrix[2, 7] = B1[2, 2:] @ dN4
-            
-            return B_matrix
+        B1[0, 0] = detJ_inv * jacobian_matrix[1, 1]
+        B1[0, 1] = -detJ_inv * jacobian_matrix[0, 1]
+        B1[1, 2] = -detJ_inv * jacobian_matrix[1, 0]
+        B1[1, 3] = detJ_inv * jacobian_matrix[0, 0]
+        B1[2, 0] = -detJ_inv * jacobian_matrix[1, 0]
+        B1[2, 1] = detJ_inv * jacobian_matrix[0, 0]
+        B1[2, 2] = detJ_inv * jacobian_matrix[1, 1]
+        B1[2, 3] = -detJ_inv * jacobian_matrix[0, 1]
+    
+        dN1 = shape_function_derivatives_matrix[:, 0]
+        dN2 = shape_function_derivatives_matrix[:, 1]
+        dN3 = shape_function_derivatives_matrix[:, 2]
+        dN4 = shape_function_derivatives_matrix[:, 3]
         
-        return calc(B1, B_matrix, jacobian_matrix, detJ_inv)
+        B_matrix[0, 0] = B1[0, 0] * dN1[0] + B1[0, 1] * dN1[1]
+        B_matrix[0, 2] = B1[0, 0] * dN2[0] + B1[0, 1] * dN2[1]
+        B_matrix[0, 4] = B1[0, 0] * dN3[0] + B1[0, 1] * dN3[1]
+        B_matrix[0, 6] = B1[0, 0] * dN4[0] + B1[0, 1] * dN4[1]
+        
+        B_matrix[1, 1] = B1[1, 2] * dN1[0] + B1[1, 3] * dN1[1]
+        B_matrix[1, 3] = B1[1, 2] * dN2[0] + B1[1, 3] * dN2[1]
+        B_matrix[1, 5] = B1[1, 2] * dN3[0] + B1[1, 3] * dN3[1]
+        B_matrix[1, 7] = B1[1, 2] * dN4[0] + B1[1, 3] * dN4[1]
+        
+        B_matrix[2, 0] = B1[2, 0] * dN1[0] + B1[2, 1] * dN1[1]
+        B_matrix[2, 2] = B1[2, 0] * dN2[0] + B1[2, 1] * dN2[1]
+        B_matrix[2, 4] = B1[2, 0] * dN3[0] + B1[2, 1] * dN3[1]
+        B_matrix[2, 6] = B1[2, 0] * dN4[0] + B1[2, 1] * dN4[1]
+        
+        B_matrix[2, 1] = B1[2, 2] * dN1[0] + B1[2, 3] * dN1[1]
+        B_matrix[2, 3] = B1[2, 2] * dN2[0] + B1[2, 3] * dN2[1]
+        B_matrix[2, 5] = B1[2, 2] * dN3[0] + B1[2, 3] * dN3[1]
+        B_matrix[2, 7] = B1[2, 2] * dN4[0] + B1[2, 3] * dN4[1]
+        
+        return B_matrix
 
     @staticmethod
     def calculate_jacobian_matrix(shape_function_derivatives, node_coordinates):

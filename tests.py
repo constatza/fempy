@@ -13,8 +13,8 @@ import numpy as np
 
 
 def boo():
-    a = [1,2,3]
-    b = np.array([1,2,3,4])
-    print(b[a])
+    b = np.zeros((2,3))
+    c = b[:,0]
+    print(c[:])
     
 boo()

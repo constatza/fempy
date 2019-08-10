@@ -36,19 +36,20 @@ quad = Quad4(material=material, thickness=1)
 element1 = Quad4(ID=1, material=material, element_type=quad, thickness=1)
 for i in range(1,5):
     element1.add_node(model.nodes_dictionary[i])			
+
 model.elements_dictionary[1] = element1
 
-for i in range(5000):
-    model.connect_data_structures()
+model.connect_data_structures()
+
+linear_system = LinearSystem(model.forces)
+solver = SimpleSolver(linear_system)
     
-    linear_system = LinearSystem(model.forces)
-    solver = SimpleSolver(linear_system)
-    provider = ProblemStructural(model)
-    child_analyzer = analyzers.Linear(solver)
-    parent_analyzer = analyzers.Static(provider, child_analyzer, linear_system)
-    
-    parent_analyzer.build_matrices()
-    parent_analyzer.initialize()
-    parent_analyzer.solve()
-    
-    linear_system.solution
+provider = ProblemStructural(model)
+child_analyzer = analyzers.Linear(solver)
+parent_analyzer = analyzers.Static(provider, child_analyzer, linear_system)
+
+parent_analyzer.build_matrices()
+parent_analyzer.initialize()
+parent_analyzer.solve()
+
+linear_system.solution
