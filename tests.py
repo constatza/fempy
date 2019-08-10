@@ -10,16 +10,11 @@ import numpy as np
 
 
 
- 
-class A:
-    a = 1
-
-   
-    def do(self):
-        print(self.a)
 
 
-class foo(A):
-    a = 2
-
-print(foo().a)
+def boo():
+    a = [1,2,3]
+    b = np.array([1,2,3,4])
+    print(b[a])
+    
+boo()

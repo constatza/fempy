@@ -1,6 +1,6 @@
 
 
-import scipy as sp
+import scipy.linalg as linalg
 
 class Solver:
     
@@ -18,7 +18,7 @@ class SimpleSolver(Solver):
         Solver.__init__(self, linear_system)
 
     def solve(self):
-        self.system.solution = sp.linalg.solve(self.system.matrix, 
+        self.system.solution = linalg.solve(self.system.matrix, 
                                           self.system.rhs,
                                           assume_a='sym')
 

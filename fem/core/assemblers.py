@@ -4,6 +4,8 @@ Created on Tue Jul 30 13:49:31 2019
 
 @author: constatza
 """
+
+
 from numpy import empty, nanmin, NaN, zeros
 
 
@@ -72,8 +74,7 @@ class ProblemStructural:
 
 
 class ElementStructuralStiffnessProvider:
-    """ 
-    Responsible for providing elemental stiffness matrix 
+    """ Responsible for providing elemental stiffness matrix 
     for the global matrix assembly.
     """
     @staticmethod
@@ -114,7 +115,6 @@ class GlobalMatrixAssembler:
         for element in model.elements:
             
             element_matrix = element_provider.matrix(element)
-            print(element_matrix)
             element_DOFtypes = element.element_type.DOF_enumerator.get_DOF_types(element)
             matrix_assembly_nodes = element.element_type.DOF_enumerator.get_nodes_for_matrix_assembly(element)
             
