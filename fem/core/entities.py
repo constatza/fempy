@@ -36,49 +36,44 @@ class Element:
     """
     DOFtypes = None
     
-    def __init__(self, ID=None, nodes_dictionary={}, element_type=None, DOF_enumerator=GenericDOFEnumerator()):
-        """
-        Creates an instance.
+    def __init__(self, ID=None, element_type=None):
+        """Creates an element instance.
         
         Parameters
         ----------
         ID : int
             Element ID.
-        nodes_dictionary : dict
-            Dictionary with nodes' ID as keys and nodes as values.
+        
         element_type : Element
             Instance of Element with material and thickness only.
         
         Attributes
         ----------
+        nodes_dictionary : dict
+            Dictionary with nodes' ID as keys and nodes as values.
         DOFtypes : list<list>
             A list with size equal to the number of nodes, each containing
             a list with the degrees of freedom of each node
         DOFs : list
             A list with the DOFs othe element
         DOF_enumerator : GenericDOFEnumerator
-            
         """
+       
         self.ID = ID
-        self.nodes_dictionary = nodes_dictionary
-        # element_type e.g. Quad4(material), no ID, just properties 
         self.element_type = element_type
-        # A list with size equal to the number of nodes, 
-        #each containing a list with the degrees of freedom of each node
-        Element.DOFtypes = []
-        Element.DOFs = []
-        self.DOF_enumerator = DOF_enumerator
+        self._nodes_dictionary = {}
+        self.DOF_enumerator = GenericDOFEnumerator()
         
     def add_node(self, node):
-        self.nodes_dictionary[node.ID] = node
+        self._nodes_dictionary[node.ID] = node
         
     def add_nodes(self, node_list):
         for node in node_list:
-            self.nodes_dictionary.add_node(node)
+            self._nodes_dictionary.add_node(node)
     
     @property
     def nodes(self):
-        return list(self.nodes_dictionary.values())        
+        return list(self._nodes_dictionary.values())        
     
     @staticmethod
     def get_nodes_for_matrix_assembly(element):

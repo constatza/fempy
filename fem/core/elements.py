@@ -19,7 +19,7 @@ class Quad4(Element):
     gauss_iter3 = 8
     
     def __init__(self, *args, material=None ,thickness=None, DOF_enumerator=GenericDOFEnumerator(), **kwargs):
-        Element.__init__(self, *args, **kwargs)
+        super().__init__(*args, **kwargs)
         materials = []
         for i in range(Quad4.gauss_iter2):
             materials.append(material)
@@ -30,6 +30,9 @@ class Quad4(Element):
         self._node_coordinates = None
         self._integration_points = None
         self._stiffness_matrix = None
+    
+    def add_node(self,node):
+        self._nodes_dictionary[node.ID] = node
     
     @property
     def node_coordinates(self):
