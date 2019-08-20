@@ -61,19 +61,19 @@ class Element:
        
         self.ID = ID
         self.element_type = element_type
-        self._nodes_dictionary = {}
+        self.nodes_dictionary = {}
         self.DOF_enumerator = GenericDOFEnumerator()
         
     def add_node(self, node):
-        self._nodes_dictionary[node.ID] = node
+        self.nodes_dictionary[node.ID] = node
         
     def add_nodes(self, node_list):
         for node in node_list:
-            self._nodes_dictionary.add_node(node)
+            self.nodes_dictionary.add_node(node)
     
     @property
     def nodes(self):
-        return list(self._nodes_dictionary.values())        
+        return list(self.nodes_dictionary.values())        
     
     @staticmethod
     def get_nodes_for_matrix_assembly(element):

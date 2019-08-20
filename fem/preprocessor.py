@@ -4,45 +4,87 @@ Created on Mon Apr  8 19:56:25 2019
 
 @author: constatza
 """
-import pandas as pd
-import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
+from fem.core.entities import Model, Node, Element
+from fem.core.elements import Quad4
 
-plt.close('all')
+def rectangular_mesh_model(xlim, ylim, xnumel, ynumel, element_type):
+    """ Builds a rectangular mesh model. 
+            Nodes are numbered from left to right, bottom to top, starting from
+            bottom left corner.
+        
+    Parameters
+    ----------
+    xlim : list
+        List of length 2 containing the lower and upper limit of x-axis.
+    ylim : list
+        List of length 2 containing the lower and upper limit of y-axis.
+    xnumel : int
+        Number of elements along x-axis.
+    ynumel : int
+        Number of elements along y-axis.
+    """
+    numels = xnumel*ynumel
+    xnumnodes = xnumel + 1
+    ynumnodes = ynumel + 1
+    
+    xlength = xlim[1] - xlim[0]
+    ylength = ylim[1] - ylim[0]
+    
+    xstep = xlength/xnumel
+    ystep = ylength/ynumel
+    
+    xcoordinates = np.linspace(xlim[0], xlim[1], xnumnodes)
+    ycoordinates = np.linspace(ylim[0], ylim[1], ynumnodes)
+    
+    nodeID = -1
+    nodes_dictionary = {}
+    for i in range(ynumnodes):
+        for j in range(xnumnodes):
+            nodeID +=1
+            nodes_dictionary[nodeID] = Node(ID=nodeID,
+                                                  X=xcoordinates[j],
+                                                  Y=ycoordinates[i],
+                                                  Z=0)           
+    elements_dictionary = {}
+    for i in range(numels):
+                  
+        elements_dictionary[i] = Quad4(ID=i,
+                                       material=element_type.material,                              
+                                       element_type=element_type, 
+                                       thickness=element_type.thickness)
+    elementID = -1
+    for i in range(xnumel):
+        for j in range(ynumel):
+            elementID += 1
+            lower_left_nodeID = xnumnodes*j + i 
+            elements_dictionary[elementID].add_node(nodes_dictionary[lower_left_nodeID])       
+            elements_dictionary[elementID].add_node(nodes_dictionary[lower_left_nodeID+1])
+            elements_dictionary[elementID].add_node(nodes_dictionary[lower_left_nodeID+1+xnumnodes])
+            elements_dictionary[elementID].add_node(nodes_dictionary[lower_left_nodeID+xnumnodes])
+            
 
+    model = Model(nodes_dictionary=nodes_dictionary, 
+                  elements_dictionary=elements_dictionary)
+    return model                      
+    
 
-def read_nodes(file='nodes.csv'):
-    nodes = pd.read_csv(file)
-    return create_node_dofs(nodes)
+def read_nodes(file='nodes.csv'): 
+    return pd.read_csv(file)
 
 
 def read_connectivity(file='connectivity.csv'):
     return pd.read_csv(file, header=None, usecols=(1,2,3,4))
 
-
-def create_node_dofs(nodes):
-    try:
-        nodes['Xrestrained'].fillna(False, inplace=True)
-        nodes['Yrestrained'].fillna(False, inplace=True)
-        nodes['Fx'].fillna(0, inplace=True)
-        nodes['Fy'].fillna(0, inplace=True)
-        nodes['Dx'].fillna(0, inplace=True)
-        nodes['Dy'].fillna(0, inplace=True)
-    except:
-        print('exception!!!!@#$')    
-    nodes['dofX'] = 2*nodes.index.values
-    nodes['dofY'] = 2*nodes.index.values + 1
-    nodes.set_index('Node', inplace=True)
-    return nodes
-
-
-def draw_underformed_shape(ax=None, elements=None, what='', *args, **kwargs):
-    if ax is None:
-        fig, ax = plt.subplots()
+def draw_mesh(elements, *args, **kwargs):
+    import matplotlib.pyplot as plt
     for element in elements:
-        x = np.concatenate([element.nodes[what + 'X'],
-                            element.nodes.X.head(1)])
-        y = np.concatenate([element.nodes[what + 'Y'],
-                            element.nodes.Y.head(1)])
-        ax.plot(x, y, *args, **kwargs)
-    return ax
+        X = [node.X for node in element.nodes]
+        Y = [node.Y for node in element.nodes]
+        X.append(X[0])
+        Y.append(Y[0])
+        plt.plot(X, Y, *args, **kwargs)
+    plt.show()
+            
+

@@ -30,10 +30,7 @@ class Quad4(Element):
         self._node_coordinates = None
         self._integration_points = None
         self._stiffness_matrix = None
-    
-    def add_node(self,node):
-        self._nodes_dictionary[node.ID] = node
-    
+     
     @property
     def node_coordinates(self):
         if self._node_coordinates is None:
