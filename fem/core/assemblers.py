@@ -6,7 +6,7 @@ Created on Tue Jul 30 13:49:31 2019
 """
 
 
-from numpy import empty, nanmin, NaN, zeros
+from numpy import array, zeros, newaxis, arange
 
 
 class GenericDOFEnumerator:
@@ -79,7 +79,19 @@ class ElementStructuralStiffnessProvider:
     def matrix(element):
         return element.element_type.stiffness_matrix(element)
 
-
+class ElementMaterialOnlyStiffnessProvider:
+    """ Responsible for providing elemental stiffness matrix 
+    for the global matrix assembly.
+        
+        Deploys the fact that only the material has changed.
+    """
+    @staticmethod
+    def matrix(element):
+        points = element.integration_points
+        thickness = element.thickness
+        materials= element.materials_at_gauss_points
+        return element.calculate_stiffness_matrix(points, materials, thickness)
+    
 class GlobalMatrixAssembler:
     """Assembles the global stiffness matrix."""
     
@@ -104,49 +116,38 @@ class GlobalMatrixAssembler:
         """
         
         
-        if nodal_DOFs_dictionary == None:
+        if nodal_DOFs_dictionary is None:
             nodal_DOFs_dictionary = model.nodal_DOFs_dictionary
         
         numDOFs = model.total_DOFs
         global_stiffness_matrix = zeros([numDOFs, numDOFs])
-        
-        for element in model.elements:
+        elements = (element for element in model.elements)
+        for element in elements:
             
             element_matrix = element_provider.matrix(element)
             element_DOFtypes = element.element_type.DOF_enumerator.get_DOF_types(element)
             matrix_assembly_nodes = element.element_type.DOF_enumerator.get_nodes_for_matrix_assembly(element)
             
-            element_matrix_row = 0
-#            global_rows_list = []
-#            global_columns_list = []
-#            element_rows_list = []
-#            element_columns_list = []
+            element_rows = arange(element_matrix.shape[0])
+            
+            DOFrows = []
             for i in range(len(element_DOFtypes)):
                 node_row = matrix_assembly_nodes[i]
                 for DOFtype_row in element_DOFtypes[i]:
-                    DOFrow = nodal_DOFs_dictionary[node_row.ID][DOFtype_row]
-                    
-                    if DOFrow != -1:
-                        
-                        element_matrix_column = 0  
-                        for j in range(len(element_DOFtypes)):
-                            node_column = matrix_assembly_nodes[j]
-                            for DOFtype_column in element_DOFtypes[j]:
-                                DOFcolumn = nodal_DOFs_dictionary[node_column.ID][DOFtype_column]
-                                if DOFcolumn != -1:
-#                                    global_rows_list.append(DOFrow)
-#                                    global_columns_list.append(DOFcolumn)
-#                                    element_rows_list.append(element_matrix_row)
-#                                    element_columns_list.append(element_matrix_column)
-                                    global_stiffness_matrix[DOFrow, DOFcolumn] += element_matrix[element_matrix_row,
-                                                                                                 element_matrix_column]
-                                    
-                                element_matrix_column += 1
-                    
-                    element_matrix_row += 1
-            
-#            global_stiffness_matrix[global_rows_list, global_columns_list] += element_matrix[element_rows_list,
-#                                                                                             element_columns_list]
+                     DOFrows.append(nodal_DOFs_dictionary[node_row.ID][DOFtype_row])
+                     
+            DOFrows = array(DOFrows)
+            DOFcolumns = DOFrows.copy()
+            is_free = (DOFrows != -1)
+            free_rows = DOFrows[is_free]
+            free_rows = free_rows[:, newaxis]
+            free_cols = DOFcolumns[is_free]
+            element_rows = element_rows[is_free]
+            element_cols = element_rows.copy()
+            element_rows = element_rows[:, newaxis]
+
+            global_stiffness_matrix[free_rows, free_cols] += element_matrix[element_rows, element_cols]
+
         return global_stiffness_matrix 
                 
             

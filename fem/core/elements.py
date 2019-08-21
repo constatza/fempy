@@ -65,8 +65,8 @@ class Quad4(Element):
     @property
     def integration_points(self):
         current_node_coordinates = self.get_current_node_coordinates()
-        coordinates_changed  = (self.node_coordinates==current_node_coordinates).all()
-        if coordinates_changed | (self._integration_points==None):
+        coordinates_changed  = (self.node_coordinates!=current_node_coordinates).any()
+        if coordinates_changed | (self._integration_points==None):        
             self._node_coordinates = current_node_coordinates
             self._integration_points = self.calculate_gauss_matrices(current_node_coordinates)            
         return self._integration_points
@@ -121,6 +121,7 @@ class Quad4(Element):
                  [0, -1+eta, 0, 1-eta, 0, 1+eta, 0, -1-eta],
                  [0, -1+ksi, 0, -1-ksi, 0, 1+ksi, 0, 1-ksi]]
         """
+        
         B1 = np.zeros((3, 4), dtype=np.float64)
         
         B_matrix = np.zeros((3, 8), dtype=np.float64)
@@ -211,7 +212,6 @@ class Quad4(Element):
         return integration_points_list
     
     @staticmethod
-    #@nb.njit
     def calculate_stiffness_matrix(integration_points, materials_at_gauss_points, thickness):
         """Method that calculates the stiffness matrix of an isoparametric 
         4-noded quadrilateral element, with constant thickness.
