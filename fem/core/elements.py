@@ -64,11 +64,11 @@ class Quad4(Element):
     
     @property
     def integration_points(self):
-        current_node_coordinates = self.get_current_node_coordinates()
-        coordinates_changed  = (self.node_coordinates!=current_node_coordinates).any()
-        if coordinates_changed | (self._integration_points==None):        
-            self._node_coordinates = current_node_coordinates
-            self._integration_points = self.calculate_gauss_matrices(current_node_coordinates)            
+#        current_node_coordinates = self.get_current_node_coordinates()
+#        coordinates_changed  = (self.node_coordinates!=current_node_coordinates).any()
+        if (self._integration_points==None):#| coordinates_changed       
+#            self._node_coordinates = current_node_coordinates
+            self._integration_points = self.calculate_gauss_matrices(self.node_coordinates)            
         return self._integration_points
         
         
