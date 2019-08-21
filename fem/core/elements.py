@@ -19,18 +19,36 @@ class Quad4(Element):
     gauss_iter3 = 8
     
     def __init__(self, *args, material=None ,thickness=None, DOF_enumerator=GenericDOFEnumerator(), **kwargs):
+        
         super().__init__(*args, **kwargs)
-        materials = []
-        for i in range(Quad4.gauss_iter2):
-            materials.append(material)
-        self.materials_at_gauss_points = materials
         self.material = material   
         self.thickness = thickness
         self.DOF_enumerator = DOF_enumerator
         self._node_coordinates = None
         self._integration_points = None
         self._stiffness_matrix = None
-     
+    
+    @property
+    def materials_at_gauss_points(self):
+        """A 4-list containing 4 copies of the material"""
+        return self._materials_at_gauss_points
+    
+    @materials_at_gauss_points.setter
+    def materials_at_gauss_points(self, material):
+        materials = []
+        for i in range(Quad4.gauss_iter2):
+            materials.append(material)
+        self._materials_at_gauss_points = materials
+    
+    @property
+    def material(self):
+        return self._material
+    
+    @material.setter
+    def material(self, material):
+        self._material = material
+        self.materials_at_gauss_points = material
+        
     @property
     def node_coordinates(self):
         if self._node_coordinates is None:
