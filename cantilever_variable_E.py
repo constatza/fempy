@@ -11,7 +11,7 @@ from fem.core.elements import Quad4, Element
 from fem.core.entities import Model, Node, DOFtype, Load
 from fem.core.assemblers import ProblemStructural, ElementMaterialOnlyStiffnessProvider
 from fem.core.materials import ElasticMaterial2D, StressState2D
-from fem.core.solvers import LinearSystem, SimpleSolver
+from fem.core.solvers import LinearSystem, SimpleSolver, SparseSolver
 import fem.analyzers as analyzers
 
 element_type = Quad4()
@@ -39,14 +39,14 @@ load1 = Load(magnitude=100,
 model.loads.append(load1)             
 model.connect_data_structures()
 linear_system = LinearSystem(model.forces)
-solver = SimpleSolver(linear_system)
+solver = SparseSolver(linear_system)
     
 provider = ProblemStructural(model)
 provider.stiffness_provider = ElementMaterialOnlyStiffnessProvider()
 child_analyzer = analyzers.Linear(solver)
 parent_analyzer = analyzers.Static(provider, child_analyzer, linear_system)
 
-for i in range(200):
+for i in range(100):
 
     parent_analyzer.build_matrices()
     parent_analyzer.initialize()
