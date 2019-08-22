@@ -172,6 +172,8 @@ class Model:
          self.enumerate_global_DOFs()
          self.assign_nodal_loads()
     
+
+        
 #%%
 class Load:
     

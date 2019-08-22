@@ -25,6 +25,11 @@ class ElasticMaterial2D:
             self.update_material()
         return self._constitutive_matrix
     
+    @constitutive_matrix.setter
+    def constitutive_matrix(self, none):
+        self._constitutive_matrix = none
+        
+    
     def update_material(self, strains=None):
         """Given a strain vector updates the material state."""
         if self.stress_state==StressState2D.plain_stress:

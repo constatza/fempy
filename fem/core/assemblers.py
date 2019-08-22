@@ -7,7 +7,7 @@ Created on Tue Jul 30 13:49:31 2019
 
 
 from numpy import array, zeros, newaxis, arange
-
+from scipy import sparse
 
 class GenericDOFEnumerator:
     """Retrieves element connectivity data required for matrix assembly."""
@@ -69,7 +69,8 @@ class ProblemStructural:
     
     def calculate_matrix(self, linear_system):
         linear_system.matrix = self.matrix
-
+        
+        
 
 class ElementStructuralStiffnessProvider:
     """ Responsible for providing elemental stiffness matrix 
@@ -89,7 +90,8 @@ class ElementMaterialOnlyStiffnessProvider:
     def matrix(element):
         points = element.integration_points
         thickness = element.thickness
-        materials= element.materials_at_gauss_points
+        element.material.constitutive_matrix = None
+        materials = element.materials_at_gauss_points
         return element.calculate_stiffness_matrix(points, materials, thickness)
     
 class GlobalMatrixAssembler:
@@ -120,7 +122,9 @@ class GlobalMatrixAssembler:
             nodal_DOFs_dictionary = model.nodal_DOFs_dictionary
         
         numDOFs = model.total_DOFs
+    
         global_stiffness_matrix = zeros([numDOFs, numDOFs])
+        
         elements = (element for element in model.elements)
         for element in elements:
             
@@ -147,7 +151,7 @@ class GlobalMatrixAssembler:
             element_rows = element_rows[:, newaxis]
 
             global_stiffness_matrix[free_rows, free_cols] += element_matrix[element_rows, element_cols]
-
+    
         return global_stiffness_matrix 
                 
             
