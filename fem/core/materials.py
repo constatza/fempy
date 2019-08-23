@@ -31,21 +31,38 @@ class ElasticMaterial2D:
         
     
     def update_material(self, strains=None):
-        """Given a strain vector updates the material state."""
+        """Given a strain vector updates the material state.
+        
+        constitutive_matrix =  E/(1-ni*ni) [[1, ni, 0],
+                                            [ni, 1, 0],
+                                            [0, 0, (1-ni)/2]]
+        """
+        E = self.young_modulus
+        ni = self.poisson_ratio
+        constitutive_matrix = np.zeros((3,3))
+        
         if self.stress_state==StressState2D.plain_stress:
-            E = self.young_modulus
-            ni = self.poisson_ratio
-            constitutive_matrix =  E/(1-ni*ni) * np.array([[1, ni, 0],
-                                                           [ni, 1, 0],
-                                                           [0, 0, (1-ni)/2]])
+            
+            factor = E/(1-ni*ni)
+           
+            constitutive_matrix[0, 0] = factor
+            constitutive_matrix[1, 1] = factor
+            constitutive_matrix[1, 0] = factor * ni
+            constitutive_matrix[0, 1] = factor * ni
+            constitutive_matrix[2, 2] = factor * (1-ni) * .5
+            
         else:
             raise NotImplementedError("PlainStrain not implemented yet.")
         
         self._constitutive_matrix = constitutive_matrix
-        if strains==None:
+        if strains is None:
             self.strains = np.zeros((3,1))
             self.stresses = np.zeros((3,1))
+
         else:
-            self.stresses = constitutive_matrix @ strains
+            # σ = E ε
+            self.stresses = (constitutive_matrix[:,0] * strains[0] 
+                             + constitutive_matrix[:,1] * strains[1] 
+                             + constitutive_matrix[:,2] * strains[2])
         
 

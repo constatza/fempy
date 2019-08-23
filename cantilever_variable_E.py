@@ -76,9 +76,9 @@ for i,E in enumerate(Es):
     
     U[:,i] = linear_system.solution
     
-
-plt.plot(U, linestyle=' ', marker='.')
-plt.show()
+#TO DO write to file
+#plt.hist(U[-2,:],10)
+#plt.show()
 
 
 

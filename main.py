@@ -49,6 +49,7 @@ provider.stiffness_provider = ElementMaterialOnlyStiffnessProvider()
 child_analyzer = analyzers.Linear(solver)
 parent_analyzer = analyzers.Static(provider, child_analyzer, linear_system)
 
+
 for i in range(20000):
     
     parent_analyzer.build_matrices()
