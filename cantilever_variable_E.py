@@ -8,11 +8,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 import fem.preprocessor as pre
-from fem.core.elements import Quad4, Element
-from fem.core.entities import Model, Node, DOFtype, Load
+from fem.core.elements import Quad4
+from fem.core.entities import DOFtype, Load
 from fem.core.assemblers import ProblemStructural, ElementMaterialOnlyStiffnessProvider
 from fem.core.materials import ElasticMaterial2D, StressState2D
-from fem.core.solvers import LinearSystem, SimpleSolver, SparseSolver
+from fem.core.solvers import LinearSystem, SparseSolver
 import fem.analyzers as analyzers
 
 plt.close()
@@ -60,16 +60,17 @@ linear_system = LinearSystem(model.forces)
 solver = SparseSolver(linear_system)
 provider = ProblemStructural(model)
 provider.stiffness_provider = ElementMaterialOnlyStiffnessProvider() 
-child_analyzer = analyzers.Linear(solver)
 
 U = np.empty((2100, Nsim))
 for i,E in enumerate(Es):
     for element in provider.model.elements: 
         element.material.young_modulus = E
     
-   
-
+    
+    child_analyzer = analyzers.Linear(solver)
     parent_analyzer = analyzers.Static(provider, child_analyzer, linear_system)
+
+   
     parent_analyzer.build_matrices()
     parent_analyzer.initialize()
     parent_analyzer.solve()

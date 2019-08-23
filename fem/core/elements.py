@@ -1,6 +1,7 @@
 
 import numpy as np
 import numba as nb
+import numba.cuda as cuda
 from .entities import Element, DOFtype, GaussQuadrature, GaussPoint3D
 from .assemblers import GenericDOFEnumerator
 
@@ -216,17 +217,39 @@ class Quad4(Element):
         """Method that calculates the stiffness matrix of an isoparametric 
         4-noded quadrilateral element, with constant thickness.
         """
-        #integration_points = integration_points
+
         stiffness_matrix = np.zeros((8,8))
-        point_ID = -1
+        Es = np.empty((3 ,3, Quad4.gauss_iter2))
+        Bs = np.empty((3, 8, Quad4.gauss_iter2))
+        ws = np.empty(Quad4.gauss_iter2)
+        pointID = -1
         for point in integration_points:
-            point_ID += 1
-            constitutive_matrix = materials_at_gauss_points[point_ID].constitutive_matrix
+            pointID += 1
+            constitutive_matrix = materials_at_gauss_points[pointID].constitutive_matrix
             deformation_matrix = point.deformation_matrix
-            stiffness_matrix += deformation_matrix.T @ constitutive_matrix @ deformation_matrix * point.weight
-        stiffness_matrix *= thickness    
+            ws[pointID] = point.weight
+            Es[:, :, pointID] = constitutive_matrix
+            Bs[:, :, pointID] = deformation_matrix
+            
+        stiffness_matrix = Quad4.sum_stiffnesses(Es, Bs, ws, stiffness_matrix, thickness)
+        
         return stiffness_matrix
     
+    @staticmethod
+    @nb.njit('float64[:,:](float64[:,:,:], float64[:,:,:], float64[:], float64[:,:], float64)')
+    def sum_stiffnesses(Es, Bs, ws, stiffness_matrix, thickness):
+        for k in range(ws.shape[0]):
+            for i in range(Bs.shape[1]):
+                for j in range(Es.shape[0]):
+                    for m in range(Es.shape[1]):
+                        for n in range(Bs.shape[1]):
+                            stiffness_matrix[i,n] += Bs[j,i,k] * Es[j,m,k] * Bs[m,n,k] *ws[k]*thickness
+#            stiffness_matrix *= ws[k]
+        
+#            stiffness_matrix = B_T @ E @ B
+#            stiffness_matrix += deformation_matrix.T @ constitutive_matrix @ deformation_matrix * point.weight
+#            stiffness_matrix *= thickness
+        return stiffness_matrix
     
     def get_stiffness_matrix(self):
         stiffness_matrix = self.calculate_stiffness_matrix(self.integration_points,   

@@ -6,7 +6,8 @@ Created on Mon Apr  8 19:56:25 2019
 """
 import numpy as np
 import pandas as pd
-from fem.core.entities import Model, Node, Element
+import matplotlib.pyplot as plt
+from fem.core.entities import Model, Node
 from fem.core.elements import Quad4
 
 def rectangular_mesh_model(xlim, ylim, xnumel, ynumel, element_type):
@@ -78,7 +79,7 @@ def read_connectivity(file='connectivity.csv'):
     return pd.read_csv(file, header=None, usecols=(1,2,3,4))
 
 def draw_mesh(elements, *args, **kwargs):
-    import matplotlib.pyplot as plt
+    
     for element in elements:
         X = [node.X for node in element.nodes]
         Y = [node.Y for node in element.nodes]
