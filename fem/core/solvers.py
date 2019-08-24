@@ -14,7 +14,7 @@ class Solver:
         pass
 
 
-class SimpleSolver(Solver):
+class CholeskySolver(Solver):
     
     def __init__(self, linear_system):
         super().__init__(linear_system)
