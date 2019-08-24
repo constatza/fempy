@@ -218,7 +218,7 @@ class Quad4(Element):
         4-noded quadrilateral element, with constant thickness.
         """
 
-        stiffness_matrix = np.zeros((8,8))
+        
         Es = np.empty((3 ,3, Quad4.gauss_iter2))
         Bs = np.empty((3, 8, Quad4.gauss_iter2))
         ws = np.empty(Quad4.gauss_iter2)
@@ -231,24 +231,39 @@ class Quad4(Element):
             Es[:, :, pointID] = constitutive_matrix
             Bs[:, :, pointID] = deformation_matrix
             
-        stiffness_matrix = Quad4.sum_stiffnesses(Es, Bs, ws, stiffness_matrix, thickness)
+        stiffness_matrix = Quad4.sum_stiffnesses(Es, Bs, ws, thickness)
         
         return stiffness_matrix
     
     @staticmethod
-    @nb.njit('float64[:,:](float64[:,:,:], float64[:,:,:], float64[:], float64[:,:], float64)')
-    def sum_stiffnesses(Es, Bs, ws, stiffness_matrix, thickness):
+    @nb.njit('float64[:,:](float64[:,:,:], float64[:,:,:], float64[:], float64)')
+    def sum_stiffnesses(Es, Bs, ws, thickness):
+        stiffness_matrix = np.zeros((8,8))
+        EB = np.empty(3)
         for k in range(ws.shape[0]):
             for i in range(Bs.shape[1]):
-                for j in range(Es.shape[0]):
-                    for m in range(Es.shape[1]):
-                        for n in range(Bs.shape[1]):
-                            stiffness_matrix[i,n] += Bs[j,i,k] * Es[j,m,k] * Bs[m,n,k] *ws[k]*thickness
-#            stiffness_matrix *= ws[k]
-        
-#            stiffness_matrix = B_T @ E @ B
-#            stiffness_matrix += deformation_matrix.T @ constitutive_matrix @ deformation_matrix * point.weight
-#            stiffness_matrix *= thickness
+                
+                
+                EB[0] = (Es[0, 0, k] * Bs[0, i, k]
+                        + Es[0, 1, k] * Bs[1, i, k]
+                        + Es[0, 2, k] * Bs[2, i, k])
+                
+                EB[1] = (Es[1, 0, k] * Bs[0, i, k]
+                        + Es[1, 1, k] * Bs[1, i, k]
+                        + Es[1, 2, k] * Bs[2, i, k])
+                
+                EB[2] = (Es[2, 0, k] * Bs[0, i, k]
+                        + Es[2, 1, k] * Bs[1, i, k]
+                        + Es[2, 2, k] * Bs[2, i, k])
+                    
+                for j in range(i, Bs.shape[1]):
+                    stiffness = (Bs[0, j, k] * EB[0] 
+                                + Bs[1, j, k] * EB[1]
+                                + Bs[2, j, k] * EB[2])* ws[k] * thickness
+                    
+                    stiffness_matrix[i, j] += stiffness 
+                    stiffness_matrix[j, i] += stiffness
+
         return stiffness_matrix
     
     def get_stiffness_matrix(self):
