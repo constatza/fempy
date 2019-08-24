@@ -10,7 +10,7 @@ from fem.core.entities import Model, Node, DOFtype, Load
 from fem.core.assemblers import ProblemStructural, ElementMaterialOnlyStiffnessProvider
 from fem.core.materials import ElasticMaterial2D, StressState2D
 from fem.core.elements import Quad4
-from fem.core.solvers import LinearSystem, SimpleSolver
+from fem.core.solvers import LinearSystem, CholeskySolver
 import fem.analyzers as analyzers
 
 model = Model()
@@ -42,7 +42,7 @@ model.elements_dictionary[1] = element1
 model.connect_data_structures()
 
 linear_system = LinearSystem(model.forces)
-solver = SimpleSolver(linear_system)
+solver = CholeskySolver(linear_system)
     
 provider = ProblemStructural(model)
 provider.stiffness_provider = ElementMaterialOnlyStiffnessProvider()
