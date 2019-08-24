@@ -75,6 +75,10 @@ class Element:
     def nodes(self):
         return list(self.nodes_dictionary.values())        
     
+    @property
+    def number_of_nodes(self):
+        return len(self.nodes)
+    
     @staticmethod
     def get_nodes_for_matrix_assembly(element):
         return element.nodes
@@ -82,6 +86,7 @@ class Element:
     @staticmethod
     def get_element_DOFtypes(element):
         return element.DOFtypes
+    
 
 #%%
 class Model:
@@ -121,10 +126,17 @@ class Model:
         return list(self.nodes_dictionary.values())
     
     @property
+    def number_of_nodes(self):
+        return len(self.nodes)
+    
+    @property
     def elements(self):
         return list(self.elements_dictionary.values())
-
-    # Load list, Forces array, nodalDOFS_dictionary
+    
+    @property
+    def number_of_elements(self):
+        return len(self.elements)
+    
     def build_element_dictionary_of_each_node(self):
         for element in self.elements:
             for node in element.nodes:
@@ -140,16 +152,16 @@ class Model:
                 if node.ID not in nodal_DOFtype_dictionary: #searches in keys
                     nodal_DOFtype_dictionary[node.ID] = element.DOFtypes[i]
        
-        total_DOFs = 0
+        total_DOFs = int(0)
         for node in self.nodes:
             # {DOFtype.X: DOFID}
             DOFs_dictionary = {}
             for DOFtype in nodal_DOFtype_dictionary[node.ID]:
                 DOF_ID = 0
                 if DOFtype in node.constraints:
-                    DOF_ID = -1                 
+                    DOF_ID = int(-1)                 
                 elif DOF_ID == 0:
-                    DOF_ID = total_DOFs
+                    DOF_ID = int(total_DOFs)
                     total_DOFs += 1
                 
                 DOFs_dictionary[DOFtype] = DOF_ID               
