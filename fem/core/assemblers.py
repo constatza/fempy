@@ -6,8 +6,9 @@ Created on Tue Jul 30 13:49:31 2019
 """
 
 
-from numpy import array, zeros, newaxis, arange
+from numpy import array, zeros, newaxis, arange, empty
 from scipy import sparse
+from numba import njit
 
 class GenericDOFEnumerator:
     """Retrieves element connectivity data required for matrix assembly."""
@@ -121,38 +122,45 @@ class GlobalMatrixAssembler:
         if nodal_DOFs_dictionary is None:
             nodal_DOFs_dictionary = model.nodal_DOFs_dictionary
         
-        numDOFs = model.total_DOFs
-    
-        global_stiffness_matrix = zeros([numDOFs, numDOFs])
-        
-        elements = (element for element in model.elements)
-        for element in elements:
+        numels = model.number_of_elements
+        globalDOFs = empty((numels, 8))
+        total_element_matrices = empty((8, 8, numels))
+        for k,element in enumerate(model.elements):
             
-            element_matrix = element_provider.matrix(element)
+            total_element_matrices[:, :, k] = element_provider.matrix(element)
             element_DOFtypes = element.element_type.DOF_enumerator.get_DOF_types(element)
             matrix_assembly_nodes = element.element_type.DOF_enumerator.get_nodes_for_matrix_assembly(element)
             
-            element_rows = arange(element_matrix.shape[0])
-            
-            DOFrows = []
+            counter = -1
             for i in range(len(element_DOFtypes)):
-                node_row = matrix_assembly_nodes[i]
-                for DOFtype_row in element_DOFtypes[i]:
-                     DOFrows.append(nodal_DOFs_dictionary[node_row.ID][DOFtype_row])
-                     
-            DOFrows = array(DOFrows)
-            DOFcolumns = DOFrows.copy()
-            is_free = (DOFrows != -1)
-            free_rows = DOFrows[is_free]
-            free_rows = free_rows[:, newaxis]
-            free_cols = DOFcolumns[is_free]
-            element_rows = element_rows[is_free]
-            element_cols = element_rows.copy()
-            element_rows = element_rows[:, newaxis]
-
-            global_stiffness_matrix[free_rows, free_cols] += element_matrix[element_rows, element_cols]
-    
+                node = matrix_assembly_nodes[i]
+                for DOFtype in element_DOFtypes[i]:
+                    counter += 1
+                    globalDOFs[k,counter] = nodal_DOFs_dictionary[node.ID][DOFtype]
+                    
+        numDOFs = model.total_DOFs            
+        globalDOFs = globalDOFs.astype(int)
+        global_stiffness_matrix = zeros((numDOFs, numDOFs))
+        global_stiffness_matrix = GlobalMatrixAssembler.assign_element_to_global_matrix(
+                                                                        global_stiffness_matrix,
+                                                                        total_element_matrices,
+                                                                        globalDOFs)
+                                                                  
+                                                                  
         return global_stiffness_matrix 
                 
-            
-        
+    @staticmethod
+    @njit('float64[:, :](float64[:, :], float64[:, :, :], int32[:, :])')
+    def assign_element_to_global_matrix(K, element_matrices, globalDOFs):
+         
+        for ielement in range(element_matrices.shape[2]):
+            for i in range(8):
+                DOFrow = globalDOFs[ielement, i]
+                if DOFrow != -1:
+                    for j in range(i, 8):
+                        DOFcol = globalDOFs[ielement, j]
+                        if DOFcol != -1:
+                            K[DOFrow, DOFcol] += element_matrices[i, j, ielement]
+                            K[DOFcol, DOFrow] = K[DOFrow, DOFcol]
+                            
+        return K

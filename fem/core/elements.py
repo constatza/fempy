@@ -262,7 +262,7 @@ class Quad4(Element):
                                 + Bs[2, j, k] * EB[2])* ws[k] * thickness
                     
                     stiffness_matrix[i, j] += stiffness 
-                    stiffness_matrix[j, i] += stiffness
+                    stiffness_matrix[j, i] = stiffness_matrix[i, j]
 
         return stiffness_matrix
     
