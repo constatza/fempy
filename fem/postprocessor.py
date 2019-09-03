@@ -10,12 +10,23 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def model_to_elements(model):
+def assign_element_displacements(displacements, model):
+    counter = -1
     for element in model.elements:
-        element.nodes['displacementsX'] = model.displacements[element.nodes.dofX]
-        element.nodes['displacementsY'] = model.displacements[element.nodes.dofY]
-        element.compute_final_position()
-    return model
+        element_disp = []
+        for i, node in enumerate(element.nodes):
+            node_disp = []
+            for DOF in model.nodal_DOFs_dictionary[node.ID].values():
+            
+                if DOF != -1:
+                    counter += 1
+                    node_disp.append(displacements[counter])
+                else:
+                    node_disp.append(0)
+            element_disp.append[node_disp]
+        element.displacements = element_disp
+                    
+                
 
 def draw_deformed_shape(ax=None, elements=None, scale=100, *args, **kwargs):
     if ax is None:
