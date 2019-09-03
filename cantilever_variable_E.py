@@ -8,7 +8,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import time 
 import scipy.sparse.linalg as spla
+
 import fem.preprocessor as pre
+import fem.postprocessor as post
 from fem.core.elements import Quad4
 from fem.core.entities import DOFtype, Load
 from fem.core.assemblers import ProblemStructural, ElementMaterialOnlyStiffnessProvider
@@ -57,7 +59,7 @@ load1 = Load(magnitude=100,
 """
 Variable Young's modulus realization
 """
-Nsim = 10000
+Nsim = 10
 m = 30
 v = (.2*m)**2
 mu = np.log(m**2/(v + m**2)**.5)
@@ -96,12 +98,13 @@ for i,E in enumerate(Es):
     U[:,i] = linear_system.solution
 
 
+model = post.assign_element_displacements(U[:,1], model)
+post.draw_deformed_shape(elements=model.elements, color='g')
+#print("Elapsed time = {:.3f} sec".format(time.time() - t1))
+#with open(__file__.split('.')[0] +"_output_U.csv", 'ab') as file:
+#    np.savetxt(file, U, delimiter=",", fmt="%.6f")
 
-print("Elapsed time = {:.3f} sec".format(time.time() - t1))
-with open(__file__.split('.')[0] +"_output_U.csv", 'ab') as file:
-    np.savetxt(file, U, delimiter=",", fmt="%.6f")
 
-#TO DO write to file
 #plt.hist(U[-2,:],10)
 #plt.show()
 
