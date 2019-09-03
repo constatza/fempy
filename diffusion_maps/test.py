@@ -7,7 +7,7 @@ Created on Sun Jul 14 18:03:35 2019
 
 import numpy as np
 import scipy.linalg as linalg
-
+import scipy.optimize as opt
 
 class DiffusionMaps:
     
@@ -147,10 +147,31 @@ class DiffusionMaps:
         
         return transformation_matrix.T
     
-    
-    def vectorize(func):
+    @staticmethod
+    def func(x, U, Z):
+        d = U.shape[0]
+        n = Z.shape[1]
         
-        pass
+        A = x.reshape((d, n))
+        
+        res = U - A @ Z.T
+        return res.ravel()
+        
+        
+   
+    
+    def nl_least_squares(natural_coordinates, diffusion_coordinates):
+        
+        
+        x0 = DiffusionMaps.ls_approx(natural_coordinates=natural_coordinates, 
+                                     diffusion_coordinates=diffusion_coordinates)
+        x0 = x0.ravel()
+        
+
+        res = opt.least_squares(DiffusionMaps.func, x0, args=(natural_coordinates, diffusion_coordinates))
+        
+        return res.x.reshape((natural_coordinates.shape[0], diffusion_coordinates.shape[1]))
+        
   
 if __name__=='__main__':
     import matplotlib.pyplot as plt
@@ -199,7 +220,7 @@ if __name__=='__main__':
     plt.show() 
     k = 8
     A = DM.ls_approx(U, Fi[:,:k])
-    
+#    A = DM.nl_least_squares(U, Fi[:, :k])
     print(A.shape)
     Unew = A @ Fi[:,:k].T
     xnew = Unew[0,:]
