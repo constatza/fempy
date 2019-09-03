@@ -4,21 +4,17 @@ Created on Thu Aug  8 14:59:33 2019
 
 @author: constatza
 """
+from copy import deepcopy
 
-import numpy as np
+a = { 1 : {1 : 1} , 2 :{ 2 : 2}}
+
+outer = a.keys()
+
+inner = next(iter(a.values()))
 
 
+b = dict.fromkeys(outer, None)
+
+b
 
 
-
-arr = np.zeros((5))
-
-arr[0] = 1
-print(arr)
-
-arr[-1] = arr[0]
-
-print(arr)
-
-arr[0] = 0
-print(arr)
