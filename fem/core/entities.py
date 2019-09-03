@@ -145,11 +145,12 @@ class Model:
     def enumerate_global_DOFs(self):
         """Enumerates the degrees of freedom of the model."""
        
-        # dic e.g. {random_nodeID, [DOFtype.X, DOFtype.Y]}
+        # dict e.g. {random_nodeID: [DOFtype.X, DOFtype.Y]}
         nodal_DOFtype_dictionary = {}
         for element in self.elements:
             for i,node in enumerate(element.nodes):
                 if node.ID not in nodal_DOFtype_dictionary: #searches in keys
+                    # if node not in dictionary, append the node to it
                     nodal_DOFtype_dictionary[node.ID] = element.DOFtypes[i]
        
         total_DOFs = int(0)

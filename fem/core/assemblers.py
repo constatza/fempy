@@ -136,7 +136,7 @@ class GlobalMatrixAssembler:
                 node = matrix_assembly_nodes[i]
                 for DOFtype in element_DOFtypes[i]:
                     counter += 1
-                    globalDOFs[k,counter] = nodal_DOFs_dictionary[node.ID][DOFtype]
+                    globalDOFs[k, counter] = nodal_DOFs_dictionary[node.ID][DOFtype]
                     
         numDOFs = model.total_DOFs            
         globalDOFs = globalDOFs.astype(int)
