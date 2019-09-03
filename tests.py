@@ -11,4 +11,14 @@ import numpy as np
 
 
 
-print(a)
+arr = np.zeros((5))
+
+arr[0] = 1
+print(arr)
+
+arr[-1] = arr[0]
+
+print(arr)
+
+arr[0] = 0
+print(arr)

@@ -162,5 +162,6 @@ class GlobalMatrixAssembler:
                         if DOFcol != -1:
                             K[DOFrow, DOFcol] += element_matrices[i, j, ielement]
                             K[DOFcol, DOFrow] = K[DOFrow, DOFcol]
+         
                             
         return K

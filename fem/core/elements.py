@@ -263,7 +263,7 @@ class Quad4(Element):
                     
                     stiffness_matrix[i, j] += stiffness 
                     stiffness_matrix[j, i] = stiffness_matrix[i, j]
-
+        
         return stiffness_matrix
     
     def get_stiffness_matrix(self):
