@@ -99,7 +99,7 @@ venv.bak/
 .spyderproject
 .spyproject
 # Spyder profiler result
-.Result
+*.Result
 # Rope project settings
 .ropeproject
 
@@ -124,3 +124,4 @@ dmypy.json
 # data folder
 
 data/
+examples/data
