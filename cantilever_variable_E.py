@@ -27,9 +27,9 @@ Units: kN, mm
 """
 Create rectangular mesh for the model.
 """
-numelX = 20
-numelY = 50
-boundX = [0, 2000]
+numelX = 14
+numelY = 14*5
+boundX = [0, 1000]
 boundY = [0, 5000]
 last_node = (numelX + 1) * (numelY + 1)
 
@@ -58,8 +58,9 @@ load1 = Load(magnitude=100,
 
 """
 Variable Young's modulus realization
+units: kN/mm2 
 """
-Nsim = 10
+Nsim = 20000
 m = 30
 v = (.2*m)**2
 mu = np.log(m**2/(v + m**2)**.5)
@@ -80,7 +81,7 @@ provider.stiffness_provider = ElementMaterialOnlyStiffnessProvider()
 """
 Displacements
 """
-U = np.empty((2100, Nsim))
+U = np.empty((Nsim, 2100))
 t1 = time.time()
 for i,E in enumerate(Es):
     for element in provider.model.elements: 
@@ -95,18 +96,20 @@ for i,E in enumerate(Es):
     parent_analyzer.initialize()
     parent_analyzer.solve()
     
-    U[:,i] = linear_system.solution
+    U[i, :] = linear_system.solution
+
+print("Elapsed time = {:.3f} sec".format(time.time() - t1))
+print("-------------------------")
+
+model = post.assign_element_displacements(U[1,:], model)
+ax = post.draw_deformed_shape(elements=model.elements, scale=20, color='g')
+ax.set_aspect('equal', adjustable='box')
+plt.draw()
+
+np.save('variable_E_displacements', U)
 
 
-model = post.assign_element_displacements(U[:,1], model)
-post.draw_deformed_shape(elements=model.elements, color='g')
-#print("Elapsed time = {:.3f} sec".format(time.time() - t1))
-#with open(__file__.split('.')[0] +"_output_U.csv", 'ab') as file:
-#    np.savetxt(file, U, delimiter=",", fmt="%.6f")
 
-
-#plt.hist(U[-2,:],10)
-#plt.show()
 
 
 
