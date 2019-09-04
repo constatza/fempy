@@ -98,7 +98,8 @@ venv.bak/
 # Spyder project settings
 .spyderproject
 .spyproject
-
+# Spyder profiler result
+.Result
 # Rope project settings
 .ropeproject
 
@@ -112,3 +113,10 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# numpy data
+.npy
+
+# large data
+.txt
+.csv
