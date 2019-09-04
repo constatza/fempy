@@ -60,7 +60,7 @@ load1 = Load(magnitude=100,
 Variable Young's modulus realization
 units: kN/mm2 
 """
-Nsim = 20000
+Nsim = 20
 m = 30
 v = (.2*m)**2
 mu = np.log(m**2/(v + m**2)**.5)
@@ -77,6 +77,12 @@ linear_system = LinearSystem(model.forces)
 solver = SparseLUSolver(linear_system)
 provider = ProblemStructural(model)
 provider.stiffness_provider = ElementMaterialOnlyStiffnessProvider() 
+child_analyzer = analyzers.Linear(solver)
+parent_analyzer = analyzers.Static(provider, child_analyzer, linear_system)
+
+import pickle
+with open('analyzer.pkl', 'wb') as output:  # Overwrites any existing file.
+        pickle.dump(parent_analyzer, output, pickle.HIGHEST_PROTOCOL)
 
 """
 Displacements
@@ -84,12 +90,11 @@ Displacements
 U = np.empty((Nsim, 2100))
 t1 = time.time()
 for i,E in enumerate(Es):
-    for element in provider.model.elements: 
+    for element in parent_analyzer.provider.model.elements: 
         element.material.young_modulus = E
     
     
-    child_analyzer = analyzers.Linear(solver)
-    parent_analyzer = analyzers.Static(provider, child_analyzer, linear_system)
+    
 
    
     parent_analyzer.build_matrices()
@@ -106,7 +111,7 @@ ax = post.draw_deformed_shape(elements=model.elements, scale=20, color='g')
 ax.set_aspect('equal', adjustable='box')
 plt.draw()
 
-np.save('variable_E_displacements', U)
+#np.save('variable_E_displacements', U)
 
 
 
