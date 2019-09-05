@@ -145,8 +145,9 @@ def ls_approx(natural_coordinates, diffusion_coordinates):
         
     else:#if lhs is scalar
         transformation_matrix = rhs/lhs
-    
-    return transformation_matrix.T
+    diff = natural_coordinates - transformation_matrix.T @ diffusion_coordinates.T
+    res =  np.sum(np.sum(diff*diff))
+    return transformation_matrix.T, res
 
 
 def func(x, U, Z):
@@ -218,7 +219,7 @@ if __name__=='__main__':
     plt.xlabel('Ψ1')
     plt.show() 
     k = numeigs
-    A = ls_approx(U, Fi[:,:k])
+    A,res = ls_approx(U, Fi[:,:k])
 #    A = nl_least_squares(U, Fi[:, :k])
     print(A.shape)
     Unew = A @ Fi[:,:k].T
