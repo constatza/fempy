@@ -8,13 +8,15 @@ Created on Wed Sep  4 10:30:38 2019
 import pickle
 import time
 import numpy as np
+import matplotlib
 import matplotlib.pyplot as plt
 import fempy.fem.preprocessor as pre
 import fempy.fem.postprocessor as post
+matplotlib.style.use('ggplot')
 numelX = 20
 numelY = 50
 Emean = 30
-Nsim = 100
+Nsim = 20
 
 with open('analyzer.pkl', 'rb') as pickle_file:
     parent_analyzer = pickle.load(pickle_file)
@@ -56,4 +58,4 @@ ax = post.draw_deformed_shape(elements=model.elements, scale=200, color='g')
 ax.set_aspect('equal', adjustable='box')
 plt.draw()
 
-np.save('stochastic_E_displacements_{:d}x{:d}'.format(numelX, numelY), U)
+#np.save('stochastic_displacements_{:d}x{:d}'.format(numelX, numelY), U)
