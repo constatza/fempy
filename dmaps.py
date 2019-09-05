@@ -178,9 +178,9 @@ if __name__=='__main__':
     from mpl_toolkits.mplot3d import Axes3D
     
     
-    epsilon = 80
+    epsilon = 40
     timesteps = 1
-    numeigs = 4
+    numeigs = 10
     
     t = np.linspace(0, 4*np.pi, 500)
     x = np.cos(t) #+ np.random.normal(scale=0.05, size=len(t))
@@ -218,7 +218,7 @@ if __name__=='__main__':
     plt.ylabel('Ψ2')
     plt.xlabel('Ψ1')
     plt.show() 
-    k = numeigs
+    k = k = len(eigvals[eigvals>0.1])
     A,res = ls_approx(U, Fi[:,:k])
 #    A = nl_least_squares(U, Fi[:, :k])
     print(A.shape)
