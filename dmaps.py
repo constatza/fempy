@@ -178,21 +178,23 @@ if __name__=='__main__':
     from mpl_toolkits.mplot3d import Axes3D
     
     
-    epsilon = 40
+    epsilon = 1
+
     timesteps = 1
-    numeigs = 10
+    numeigs = 30
     
+    sigma = 0.05
     t = np.linspace(0, 4*np.pi, 500)
-    x = np.cos(t) #+ np.random.normal(scale=0.05, size=len(t))
-    y = np.sin(t) #+ np.random.normal(scale=0.05, size=len(t))
-    z = t*t
+    x = np.cos(t)*(1 + np.random.normal(scale=sigma, size=len(t)) )
+    y = np.sin(t)*(1 + np.random.normal(scale=sigma, size=len(t)) )
+    z = t *(1 + np.random.normal(scale=sigma, size=len(t)) )
     U = np.concatenate([[x],[y],[z]])
 
     
     e = np.logspace(-3,3)
     
     eigvals, eigvecs = diffusion_maps(U, epsilon=epsilon, t=timesteps, k=numeigs)
-    Fi = eigvals * eigvecs
+    Fi = np.exp(-eigvals) * eigvecs
     
     
     fig = plt.figure()
@@ -218,7 +220,7 @@ if __name__=='__main__':
     plt.ylabel('Ψ2')
     plt.xlabel('Ψ1')
     plt.show() 
-    k = k = len(eigvals[eigvals>0.1])
+    k = k = len(eigvals[eigvals>0.05])
     A,res = ls_approx(U, Fi[:,:k])
 #    A = nl_least_squares(U, Fi[:, :k])
     print(A.shape)
