@@ -10,6 +10,8 @@ from scipy.sparse import csr_matrix
 import scipy.sparse.linalg as linalg
 import scipy.optimize as opt
 import numba as nb
+
+
 class DiffusionMaps:
     
     def __init__(self, data_set=None, epsilon=None):
@@ -66,21 +68,25 @@ def M(data_set, epsilon):
 
 def calculate_M(data_set, epsilon=1):
     L = calculate_diffusion_matrix(data_set, epsilon=epsilon)
-    return np.sum(np.sum(L, axis=1))
+    return np.einsum('ij->', L)
 
 
-@nb.njit
+@nb.njit(parallel=True)
 def calculate_diffusion_matrix(data_set, epsilon=1):
+#    e = np.exp(1)
     numdata = data_set.shape[1]
     deltaU = np.zeros((numdata, numdata))
+    K = np.empty((numdata, numdata))
     for i in range(numdata):
-        for j in range(numdata):
+        for j in range(i, numdata):
             for k in range(data_set.shape[0]):
                 diff = data_set[k, i] - data_set[k, j]
                 deltaU[i, j] += diff*diff
-    k = np.exp(-deltaU/epsilon/epsilon)
+            deltaU[j, i] = deltaU[i, j]
+            
+    K = np.exp(-deltaU/epsilon/epsilon)
     
-    return k 
+    return K
     
 
 def calculate_transition_matrix(matrix):
@@ -100,15 +106,14 @@ def calculate_transition_matrix(matrix):
 def diffusion_maps(data_set, numeigs=10, t=1, epsilon=None):
     k = numeigs
     L = calculate_diffusion_matrix(data_set, epsilon=epsilon)
-    L [ abs(L)<1e-12] = 0
+    L [ np.abs(L)<1e-12] = 0
     P = calculate_transition_matrix(L)
     P[np.abs(P)<1e-12] = 0
     if t>1:
         P = np.linalg.matrix_power(P,t)
     eigenvalues, eigenvectors = linalg.eigsh(P, k=k, which='LM')
-    ordered = np.argsort(-eigenvalues)
-    eigenvalues = eigenvalues[ordered]
-    eigenvectors = eigenvectors[:, ordered]
+    eigenvalues = eigenvalues[::-1]
+    eigenvectors = eigenvectors[:, ::-1]
     eigenvectors[np.abs(eigenvectors)<1e-12] = 0
     return eigenvalues, eigenvectors
  
@@ -157,7 +162,7 @@ def ls_approx(natural_coordinates, diffusion_coordinates):
     else:#if lhs is scalar
         transformation_matrix = rhs/lhs
     diff = natural_coordinates - transformation_matrix.T @ diffusion_coordinates.T
-    res =  np.sum(np.sum(diff*diff))
+    res =  np.sum(np.sum(diff*diff, axis=1))
     return transformation_matrix.T, res
 
 
@@ -189,20 +194,20 @@ if __name__=='__main__':
     from mpl_toolkits.mplot3d import Axes3D
     
     
-    epsilon = 1
+    epsilon = 5
 
     timesteps = 10
     numeigs = 12
     
     sigma = 0.05
-    t = np.linspace(0, 3.5*np.pi, 200)
+    t = np.linspace(0, 3.5*np.pi, 2000)
     x = np.cos(t)#*(1 + np.random.normal(scale=sigma, size=len(t)) )
     y = np.sin(t)#*(1 + np.random.normal(scale=sigma, size=len(t)) )
     z = t*t#*(1 + np.random.normal(scale=sigma, size=len(t)) )
     U = np.concatenate([[x],[y],[z]])
 
     
-    e = np.logspace(-3,3)
+    e = np.logspace(-3,3, num=20)
     
     eigvals, eigvecs = diffusion_maps(U, epsilon=epsilon, t=timesteps, numeigs=numeigs)
     Fi = eigvals[:] * eigvecs[:, :]
