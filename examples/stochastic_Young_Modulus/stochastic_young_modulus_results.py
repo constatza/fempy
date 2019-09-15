@@ -16,7 +16,7 @@ Input
 epsilon = 1
 numeigs = 100
 timesteps = 1
-Nsim = 2000
+Nsim = 500
 
 filename = r"stochastic_E_displacements_20x50.npy"
 with open(filename) as file:
@@ -27,7 +27,7 @@ U = displacements[:, :Nsim]
 utop = displacements[:,:]
 utop_norm1 = np.linalg.norm(utop, 1, axis=0)
 
-eigvals, eigvecs = dm.diffusion_maps(displacements[:,:Nsim], epsilon=epsilon, t=timesteps, k=numeigs)
+eigvals, eigvecs = dm.diffusion_maps(displacements[:,:Nsim], epsilon=epsilon, t=timesteps, numeigs=numeigs)
 Fi = eigvals* eigvecs
 
 k = len(eigvals[eigvals>0.05])
@@ -41,10 +41,10 @@ errors = Unew - U
 errnorm = np.linalg.norm(errors)
 relative_err = (errors/U)
 
-#epsilons = np.logspace(-3,3)
-#M = dm.M(displacements, epsilon=epsilons)
-#plt.figure()  
-#plt.loglog(epsilon, M)
+epsilons = np.logspace(-3,3, 10)
+M = dm.M(displacements, epsilon=epsilons)
+plt.figure()  
+plt.loglog(epsilon, M)
 
 plt.figure()
 plt.plot(eigvals, 'o-')
