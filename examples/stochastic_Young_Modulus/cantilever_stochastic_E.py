@@ -16,7 +16,7 @@ matplotlib.style.use('ggplot')
 numelX = 20
 numelY = 50
 Emean = 30
-Nsim = 20
+Nsim = 10
 
 with open('analyzer.pkl', 'rb') as pickle_file:
     parent_analyzer = pickle.load(pickle_file)

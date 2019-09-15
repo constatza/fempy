@@ -77,9 +77,9 @@ def calculate_diffusion_matrix(data_set, epsilon=1):
     numdata = data_set.shape[1]
     deltaU = np.zeros((numdata, numdata))
     K = np.empty((numdata, numdata))
-    for i in range(numdata):
-        for j in range(i, numdata):
-            for k in range(data_set.shape[0]):
+    for i in nb.prange(numdata):
+        for j in nb.prange(i, numdata):
+            for k in nb.prange(data_set.shape[0]):
                 diff = data_set[k, i] - data_set[k, j]
                 deltaU[i, j] += diff*diff
             deltaU[j, i] = deltaU[i, j]
@@ -104,14 +104,13 @@ def calculate_transition_matrix(matrix):
 
 
 def diffusion_maps(data_set, numeigs=10, t=1, epsilon=None):
-    k = numeigs
     L = calculate_diffusion_matrix(data_set, epsilon=epsilon)
     L [ np.abs(L)<1e-12] = 0
     P = calculate_transition_matrix(L)
     P[np.abs(P)<1e-12] = 0
     if t>1:
         P = np.linalg.matrix_power(P,t)
-    eigenvalues, eigenvectors = linalg.eigsh(P, k=k, which='LM')
+    eigenvalues, eigenvectors = linalg.eigsh(P, k=numeigs, which='LM')
     eigenvalues = eigenvalues[::-1]
     eigenvectors = eigenvectors[:, ::-1]
     eigenvectors[np.abs(eigenvectors)<1e-12] = 0
@@ -169,15 +168,12 @@ def ls_approx(natural_coordinates, diffusion_coordinates):
 def func(x, U, Z):
     d = U.shape[0]
     n = Z.shape[1]
-    
     A = x.reshape((d, n))
-    
     res = U - A @ Z.T
     return res.ravel()
     
     
 def nl_least_squares(natural_coordinates, diffusion_coordinates):
-    
     
     x0 = ls_approx(natural_coordinates=natural_coordinates, 
                                  diffusion_coordinates=diffusion_coordinates)
@@ -194,16 +190,16 @@ if __name__=='__main__':
     from mpl_toolkits.mplot3d import Axes3D
     
     
-    epsilon = 5
+    epsilon = 1
 
-    timesteps = 10
+    timesteps = 5
     numeigs = 12
     
     sigma = 0.05
     t = np.linspace(0, 3.5*np.pi, 2000)
     x = np.cos(t)#*(1 + np.random.normal(scale=sigma, size=len(t)) )
     y = np.sin(t)#*(1 + np.random.normal(scale=sigma, size=len(t)) )
-    z = t*t#*(1 + np.random.normal(scale=sigma, size=len(t)) )
+    z = t#*(1 + np.random.normal(scale=sigma, size=len(t)) )
     U = np.concatenate([[x],[y],[z]])
 
     
