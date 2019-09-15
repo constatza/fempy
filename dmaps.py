@@ -6,7 +6,8 @@ Created on Sun Jul 14 18:03:35 2019
 """
 
 import numpy as np
-import scipy.linalg as linalg
+from scipy.sparse import csr_matrix
+import scipy.sparse.linalg as linalg
 import scipy.optimize as opt
 import numba as nb
 class DiffusionMaps:
@@ -63,12 +64,10 @@ def M(data_set, epsilon):
             return Me    
 
 
-
-
-
 def calculate_M(data_set, epsilon=1):
     L = calculate_diffusion_matrix(data_set, epsilon=epsilon)
-    return np.einsum('ij->', L)
+    return np.sum(np.sum(L, axis=1))
+
 
 @nb.njit
 def calculate_diffusion_matrix(data_set, epsilon=1):
@@ -84,23 +83,34 @@ def calculate_diffusion_matrix(data_set, epsilon=1):
     return k 
     
 
-def calculate_transition_matrix(data_set, epsilon=None):
-    """ Computes the matrix T = D**(-1) @ matrix, where
-    Dii component = sum(matrix, axis=1)
+def calculate_transition_matrix(matrix):
+    """ Converts the input matrix to transition matrix
+        
+    T = D**(-1) @ matrix
+    
+        where:
+        Dii component = sum(matrix, axis=1)
     """
+    
+    rowsums = np.sum(matrix, axis=1)
+    T = ( 1/rowsums[:, np.newaxis] ) * matrix
+    return T
+
+
+def diffusion_maps(data_set, numeigs=10, t=1, epsilon=None):
+    k = numeigs
     L = calculate_diffusion_matrix(data_set, epsilon=epsilon)
-    D = np.sum(L, axis=1)
-    return (1/D) * L
-
-
-def diffusion_maps(data_set, epsilon=None, t=1, k=10):
-    P = calculate_transition_matrix(data_set, epsilon=epsilon)
-    N = P.shape[0]
+    L [ abs(L)<1e-12] = 0
+    P = calculate_transition_matrix(L)
+    P[np.abs(P)<1e-12] = 0
     if t>1:
         P = np.linalg.matrix_power(P,t)
-    eigenvalues, eigenvectors = linalg.eigh(P, eigvals=(N-k,N-1))
+    eigenvalues, eigenvectors = linalg.eigsh(P, k=k, which='LM')
     ordered = np.argsort(-eigenvalues)
-    return eigenvalues[ordered], eigenvectors[:, ordered]
+    eigenvalues = eigenvalues[ordered]
+    eigenvectors = eigenvectors[:, ordered]
+    eigenvectors[np.abs(eigenvectors)<1e-12] = 0
+    return eigenvalues, eigenvectors
  
 
 def ls_approx(natural_coordinates, diffusion_coordinates):
@@ -140,8 +150,9 @@ def ls_approx(natural_coordinates, diffusion_coordinates):
     rhs = diffusion_coordinates.T @ natural_coordinates.T
     lhs = diffusion_coordinates.T @ diffusion_coordinates
     if lhs.shape!=():
-        L = linalg.cho_factor(lhs)
-        transformation_matrix = linalg.cho_solve(L, rhs)
+        lhs[ np.abs(lhs)<1e-12] = 0
+        lhs = csr_matrix(lhs)
+        transformation_matrix = linalg.spsolve(lhs, rhs)
         
     else:#if lhs is scalar
         transformation_matrix = rhs/lhs
@@ -180,31 +191,31 @@ if __name__=='__main__':
     
     epsilon = 1
 
-    timesteps = 1
-    numeigs = 30
+    timesteps = 10
+    numeigs = 12
     
     sigma = 0.05
-    t = np.linspace(0, 4*np.pi, 500)
-    x = np.cos(t)*(1 + np.random.normal(scale=sigma, size=len(t)) )
-    y = np.sin(t)*(1 + np.random.normal(scale=sigma, size=len(t)) )
-    z = t *(1 + np.random.normal(scale=sigma, size=len(t)) )
+    t = np.linspace(0, 3.5*np.pi, 200)
+    x = np.cos(t)#*(1 + np.random.normal(scale=sigma, size=len(t)) )
+    y = np.sin(t)#*(1 + np.random.normal(scale=sigma, size=len(t)) )
+    z = t*t#*(1 + np.random.normal(scale=sigma, size=len(t)) )
     U = np.concatenate([[x],[y],[z]])
 
     
     e = np.logspace(-3,3)
     
-    eigvals, eigvecs = diffusion_maps(U, epsilon=epsilon, t=timesteps, k=numeigs)
-    Fi = np.exp(-eigvals) * eigvecs
+    eigvals, eigvecs = diffusion_maps(U, epsilon=epsilon, t=timesteps, numeigs=numeigs)
+    Fi = eigvals[:] * eigvecs[:, :]
     
     
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
-    ax.scatter(x,y,z)
+    ax.scatter(x,y,z, alpha=0.5)
     ax.set_xlabel('X')
     ax.set_ylabel('Y')
     ax.set_zlabel('Z')
 
-    cumsum = np.gradient(M(U, epsilon=e), e)
+    cumsum = M(U, epsilon=e)
     plt.figure()  
     plt.loglog(e, cumsum)
     
@@ -230,3 +241,4 @@ if __name__=='__main__':
     znew = Unew[2,:]
     ax.scatter(xnew,ynew,znew, color='g')     
 
+  
