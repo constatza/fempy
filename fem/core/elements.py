@@ -240,8 +240,8 @@ class Quad4(Element):
     def sum_stiffnesses(Es, Bs, ws, thickness):
         stiffness_matrix = np.zeros((8,8))
         EB = np.empty(3)
-        for k in nb.prange(ws.shape[0]):
-            for i in nb.prange(Bs.shape[1]):
+        for k in range(ws.shape[0]):
+            for i in range(Bs.shape[1]):
                 
                 
                 EB[0] = (Es[0, 0, k] * Bs[0, i, k]

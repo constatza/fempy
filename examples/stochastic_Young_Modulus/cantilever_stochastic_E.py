@@ -16,7 +16,7 @@ matplotlib.style.use('ggplot')
 numelX = 20
 numelY = 50
 Emean = 30
-Nsim = 10
+Nsim = 100
 
 with open('analyzer.pkl', 'rb') as pickle_file:
     parent_analyzer = pickle.load(pickle_file)
@@ -35,6 +35,9 @@ E = Emean*(1+stochastic_field)
 U = np.empty((Nsim, 2100))
 t1 = time.time()
 
+#list with all analyzers for the tests from last until Nsim from the end
+K = np.empty((U.shape[1], U.shape[1], Nsim))
+total_simulations = E.shape[0]
 for sim in range(Nsim):
     counter = -1
     listy = []
@@ -43,12 +46,13 @@ for sim in range(Nsim):
             counter += 1
             # access elements bottom to top, ascending Y
             element = model.elements[counter] 
-            element.material.young_modulus = E[sim, j]
+            element.material.young_modulus = E[-sim-1, j]
             
     parent_analyzer.build_matrices()
     parent_analyzer.initialize()
-    parent_analyzer.solve()
-    U[sim, :] = parent_analyzer.linear_system.solution
+    K[:, :, sim] = parent_analyzer.linear_system.matrix 
+#    parent_analyzer.solve()
+#    U[sim, :] = parent_analyzer.linear_system.solution
 
 print("Elapsed time = {:.3f} sec".format(time.time() - t1))
 print("-------------------------")
@@ -58,4 +62,5 @@ ax = post.draw_deformed_shape(elements=model.elements, scale=200, color='g')
 ax.set_aspect('equal', adjustable='box')
 plt.draw()
 
-#np.save('stochastic_displacements_{:d}x{:d}'.format(numelX, numelY), U)
+np.save('stochastic_E.npy', E)
+np.save('stochastic_K.npy', K[:,:,::-1])
