@@ -47,7 +47,7 @@ for sim in range(Nsim):
             # access elements bottom to top, ascending Y
             element = model.elements[counter] 
             element.material.young_modulus = E[-sim-1, j]
-            
+    
     parent_analyzer.build_matrices()
     parent_analyzer.initialize()
     K[:, :, sim] = parent_analyzer.linear_system.matrix 
@@ -62,5 +62,5 @@ ax = post.draw_deformed_shape(elements=model.elements, scale=200, color='g')
 ax.set_aspect('equal', adjustable='box')
 plt.draw()
 
-np.save('stochastic_E.npy', E)
-np.save('stochastic_K.npy', K[:,:,::-1])
+#np.save('stochastic_E.npy', E)
+#np.save('stochastic_K.npy', K[:,:,::-1])
