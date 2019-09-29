@@ -103,19 +103,17 @@ def calculate_transition_matrix(matrix):
 
 def diffusion_maps(data_set, numeigs=10, t=1, epsilon=None):
     L = calculate_diffusion_matrix(data_set, epsilon=epsilon)
-    #L [ np.abs(L)<1e-15] = 0
     P = calculate_transition_matrix(L)
-    Pplus = np.abs(P)
-    #P[Pplus/np.max(Pplus)<1e-7] = 0
+
     if t>1:
         P = np.linalg.matrix_power(P,t)
 
     B = csr_matrix(P)
     
-    eigenvalues, eigenvectors = splinalg.eigsh(L, k=numeigs, which='LM', mode='buckling')
-    eigenvalues = eigenvalues[::-1]
-    eigenvectors = eigenvectors[:, ::-1]
-    eigenvectors[np.abs(eigenvectors)<1e-15] = 0
+    eigenvalues, eigenvectors = splinalg.eigs(B, k=numeigs, which='LR')
+    eigenvalues = eigenvalues.real
+    eigenvectors = eigenvectors.real
+    
     return eigenvalues, eigenvectors
  
 
@@ -156,7 +154,7 @@ def ls_approx(natural_coordinates, diffusion_coordinates):
     rhs = diffusion_coordinates.T @ natural_coordinates.T
     lhs = diffusion_coordinates.T @ diffusion_coordinates
     if lhs.shape!=():
-        lhs[ np.abs(lhs)<1e-12] = 0
+        lhs[ np.abs(lhs)<1e-15] = 0
         lhs = csr_matrix(lhs)
         transformation_matrix = splinalg.spsolve(lhs, rhs)
         
@@ -170,22 +168,24 @@ def ls_approx(natural_coordinates, diffusion_coordinates):
 def func(x, U, Z):
     d = U.shape[0]
     n = Z.shape[1]
-    A = x.reshape((d, n))
-    res = U - A @ Z.T
+    A = x[:d*n].reshape((d, n))
+    B = x[d*n:].reshape((d, n))
+    res = U - A @ Z.T - B @ Z.T**3
     return res.ravel()
     
     
 def nl_least_squares(natural_coordinates, diffusion_coordinates):
     
-    x0 = ls_approx(natural_coordinates=natural_coordinates, 
-                                 diffusion_coordinates=diffusion_coordinates)
-    x0 = x0.ravel()
+#    x0, res  = ls_approx(natural_coordinates=natural_coordinates, 
+#                                 diffusion_coordinates=diffusion_coordinates)
+#    x0 = x0.ravel()
+    d = natural_coordinates.shape[0]
+    n = diffusion_coordinates.shape[1]
+    x0 = np.random.rand(2*d*n)
     
-
     res = opt.least_squares(func, x0, args=(natural_coordinates, diffusion_coordinates))
     
-    return res.x.reshape((natural_coordinates.shape[0], diffusion_coordinates.shape[1]))
-
+    return res.x
 
 def normalize(U):
     try:
@@ -213,42 +213,50 @@ if __name__=='__main__':
     import matplotlib.pyplot as plt
     from mpl_toolkits.mplot3d import Axes3D
     
+    plt.close('all')
+    
+    epsilon = .5
 
-    epsilon = 5
-
-    timesteps = 1
-    numeigs = 8
+    timesteps = 500
+    numeigs = 2
     
     sigma = 0.05
-    t = np.linspace(0, 3.5*np.pi,10)
+    t = np.linspace(0, 2*np.pi, 100)
     x = np.cos(t)*(1 + np.random.normal(scale=sigma, size=len(t)) )
     y = np.sin(t)*(1 + np.random.normal(scale=sigma, size=len(t)) )
     z = t*(1 + np.random.normal(scale=sigma, size=len(t)) )
     U = np.concatenate([[x],[y],[z]])
-    U = normalize(U)
-
+    U, Umean, Ustd = normalize(U)
+    d = U.shape[0]
+    N = U.shape[1]
     
     """Diffusion Maps"""   
     e = np.logspace(-3,3, num=20)
     
-    eigvals, eigvecs = diffusion_maps(U, epsilon=epsilon, t=timesteps, numeigs=numeigs)
-    k = len(eigvals[eigvals>0.05]) 
-    Fi =  eigvecs[:, :k]
+    eigvals, eigvecs = diffusion_maps(U, epsilon=epsilon, t=timesteps, numeigs=numeigs+1)
+    #k = len(eigvals[eigvals>0.05]) +1
+    Fi =  eigvecs[:, :]
     
-    A,res = ls_approx(U, Fi)
+    sol = nl_least_squares(U, Fi)
+    d = U.shape[0]
+    n = Fi.shape[1]
+    A = sol[:d*n].reshape((d, n))
+    B = sol[d*n:].reshape((d, n))
+    res = U - A @ Fi.T - B @ Fi.T**3
+    res = np.einsum('ij->', res*res)
     print(A.shape)
-    Unew = A @ Fi.T
+    Unew = denormalize(A @ Fi.T + B @ Fi.T**3, Umean, Ustd)
     xnew = Unew[0,:]
     ynew = Unew[1,:]
     znew = Unew[2,:]
     
     """PCA"""
-    val, vec = pca(U, k=numeigs, which='LM')
+    val, vec = pca(U, numeigs=numeigs)
     m = len(val[val>[.05]]) 
     Lr = vec[:, :m]
     P, res2 = ls_approx(U, Lr) 
 
-    U_new2 = P @ Lr.T 
+    U_new2 = denormalize(P @ Lr.T, Umean, Ustd) 
     x_pca = U_new2[0, :]
     y_pca = U_new2[1, :]
     z_pca = U_new2[2, :]
@@ -257,7 +265,7 @@ if __name__=='__main__':
 
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
-    ax.scatter(normalize(x),normalize(y),normalize(z), alpha=0.5, label='Data')
+    ax.scatter(x, y, z, alpha=0.5, label='Data')
     ax.set_xlabel('X')
     ax.set_ylabel('Y')
     ax.set_zlabel('Z')
@@ -272,16 +280,20 @@ if __name__=='__main__':
     plt.ylabel('eigenvalues')
     plt.grid()
     
-    fig2 = plt.figure()
-    ax2 = fig2.add_subplot(111, projection='3d')
-    ax2.scatter(Fi[:,1], Fi[:,2], Fi[:,3])
-    ax2.scatter(Lr[:,0], Lr[:,1], Lr[:,2])
-    plt.grid()
-    plt.ylabel('Ψ2')
-    plt.xlabel('Ψ1')
-    plt.show() 
+    
     
     ax.scatter(xnew,ynew,znew, color='g', label='Diffusion Maps')  
     ax.scatter(x_pca,y_pca,z_pca, color='r', label='PCA')
     ax.legend()
   
+    fig2 = plt.figure()
+    ax2 = fig2.add_subplot(111, projection='3d')
+    try:
+        ax2.scatter(Fi[:,1], Fi[:,2], Fi[:,3])
+        ax2.scatter(Lr[:,0], Lr[:,1], Lr[:,2])
+    except IndexError:
+        pass
+    plt.grid()
+    plt.ylabel('$\Psi_2$')
+    plt.xlabel('$\Psi_1$')
+    plt.show() 
