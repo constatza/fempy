@@ -13,10 +13,10 @@ import fempy.smartplot as sp
 plt.close('all')
 sp.formal_serif()
 
-epsilon = 2
+epsilon = 10
 
 timesteps = 1
-numeigs = 5
+numeigs = 2
 
 sigma = 0.05
 t = np.linspace(0, 3.5*np.pi, 200)
@@ -33,7 +33,7 @@ U, Umean, Ustd = normalize(U)
 eigvals, eigvecs = diffusion_maps(U, epsilon=epsilon, t=timesteps, numeigs=numeigs+1)
 k = len(eigvals[eigvals>0.05]) + 1
 #k = numeigs + 1
-Fi =  eigvals[1:k] * eigvecs[:, 1:k]
+Fi =  eigvals[1:] * eigvecs[:, 1:]
 
 A,res = ls_approx(U, Fi)
 print(A.shape)
@@ -81,14 +81,14 @@ plt.ylabel('eigenvalues')
 plt.legend()
 plt.grid()
 
-fig2 = plt.figure()
-ax2 = fig2.add_subplot(111)
-ax2.scatter(Fi[:,1], Fi[:,2])
-ax2.scatter(Lr[:,0], Lr[:,1])
-plt.grid()
-plt.ylabel('$\Psi_2$')
-plt.xlabel('$\Psi_1$')
-plt.show() 
+#fig2 = plt.figure()
+#ax2 = fig2.add_subplot(111)
+#ax2.scatter(Fi[:,1], Fi[:,2])
+##ax2.scatter(Lr[:,0], Lr[:,1])
+#plt.grid()
+#plt.ylabel('$\Psi_2$')
+#plt.xlabel('$\Psi_1$')
+#plt.show() 
 
 ax.scatter(xnew,ynew,znew, color='g', label='Diffusion Maps')  
 ax.scatter(x_pca,y_pca,z_pca, color='r', label='PCA')

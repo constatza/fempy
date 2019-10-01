@@ -11,6 +11,7 @@ import fempy.dmaps as dm
 from mpl_toolkits.mplot3d import Axes3D
 import scipy.sparse.linalg as splinalg
 import scipy.linalg as linalg
+import fempy.smartplot as smartplot
 
 
 plt.close('all')
@@ -47,7 +48,7 @@ eigvals_dm, eigvecs_dm = dm.diffusion_maps(U,
 
 k = len(eigvals_dm[eigvals_dm>0.05])
 k = numeigs+1
-Fi =  eigvecs_dm
+Fi =  eigvals_dm[1:] * eigvecs_dm[:, 1:]
 A_dm, res_dm = dm.ls_approx(U, Fi)
 
 print(A_dm.shape)
@@ -58,9 +59,7 @@ x_dm = Unew_dm[0, :]
 y_dm = Unew_dm[1, :]
 z_dm = Unew_dm[2, :]
 
-errors = Unew_dm - U
-errnorm = np.linalg.norm(errors)
-relative_err = (errors/U)
+
 
 """PCA"""
 
@@ -80,44 +79,45 @@ z_pca = Unew_pca[2, :]
 
 
 """Tests"""
-stiffness_matrix = Ks[:, :, -1]
 
+stiffness_matrix = Ks[:, :, -1]
+u_true = displacements[:,-1]
 force_vector = np.zeros((stiffness_matrix.shape[0],1))
 force_vector[-2,0] = 100
 
 reduced_matrix_dm = A_dm.T @ stiffness_matrix @ A_dm
 reduced_vector_dm = A_dm.T @ force_vector
 
-reduced_displacements_dm = linalg.solve(reduced_matrix_dm, reduced_vector_dm)
+reduced_displacements_dm = np.linalg.solve(reduced_matrix_dm, reduced_vector_dm)
 
-u_dm = A_dm @ reduced_displacements_dm
-
-errors = u_dm - U[:,-1]
-errnorm = np.linalg.norm(errors)
-relative_err = (errors/U[:,-1])
+u_dm = dm.denormalize(A_dm @ reduced_displacements_dm, Umean, Ustd)
+u_dm = np.squeeze(u_dm)
+errors_dm = np.squeeze(u_dm) - u_true
+errnorm_dm = np.linalg.norm(errors_dm)
+relative_err_dm = np.abs(errors_dm)
 
 
 
 reduced_matrix_pca = A_pca.T @ stiffness_matrix @ A_pca
 reduced_vector_pca = A_pca.T @ force_vector
 
-reduced_displacements_pca = linalg.solve(reduced_matrix_pca, reduced_vector_pca)
+reduced_displacements_pca = np.linalg.solve(reduced_matrix_pca, reduced_vector_pca)
 
-u_pca = A_pca @ reduced_displacements_pca
+u_pca = dm.denormalize(A_pca @ reduced_displacements_pca, Umean, Ustd)
+u_pca = np.squeeze(u_pca)
 
-
-errors = u_pca - displacements[:,-1]
-errnorm = np.linalg.norm(errors)
-relative_err = (errors/displacements[:,-1])
+errors_pca = np.squeeze(u_pca) - u_true
+errnorm_pca = np.linalg.norm(errors_pca)
+relative_err_pca = np.abs(errors_pca)
 
 """Plots"""
 # plot M(e)
-epsilons = np.logspace(-2, 3, 20)
+epsilons = np.logspace(-1.5, 4, 30)
 M = dm.M(U, epsilon=epsilons)
 plt.figure()  
 plt.loglog(epsilons, M)
 
-
+U = dm.denormalize(U, Umean, Ustd)
 x, y, z = U[0, :], U[1, :], U[2, :]
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
@@ -137,14 +137,11 @@ plt.ylabel('Eigenvalues')
 plt.legend()
 plt.grid()
 
-fig2 = plt.figure()
-ax2 = fig2.add_subplot(111, projection='3d')
-ax2.scatter(Fi[:, 1], Fi[:, 2], Fi[:, 3], label="Diffusion Maps")
-ax2.scatter(Lr[:, 0], Lr[:, 1], Lr[:, 2], label="PCA")
-ax2.grid()
-ax2.set_ylabel('$\psi_2$')
-ax2.set_xlabel('$\psi_1$')
-ax2.set_zlabel('$\psi_3$')
-ax2.legend()
-plt.show() 
 
+ax3 = smartplot.eigenvector_plot(Fi, title='Eigenvectors - Diffusion Maps')
+ax4 = smartplot.eigenvector_plot(Lr, title='Eigenvectors - PCA')
+
+plt.figure()
+
+smartplot.histogram(relative_err_pca, norm_hist=True)
+plt.draw()
