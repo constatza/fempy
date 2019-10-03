@@ -51,7 +51,7 @@ child_analyzer = analyzers.Linear(solver)
 parent_analyzer = analyzers.Static(provider, child_analyzer, linear_system)
 
 
-for i in range(20000):
+for i in range(200000):
     
     parent_analyzer.build_matrices()
     parent_analyzer.initialize()

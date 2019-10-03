@@ -215,7 +215,7 @@ class GaussPoint3D:
         self.ksi = ksi
         self.eta = eta
         self.zeta = zeta
-        self.shape_functions
+        self.shape_functions = shape_functions
         self.deformation_matrix = deformation_matrix
         self.weight = weight
         
