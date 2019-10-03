@@ -76,8 +76,8 @@ class Quad4(Element):
     @staticmethod
     def calculate_shape_functions(ksi, eta):
         """
-        Calculates the shape function derivative values
-        for an integration point.
+        Calculates the shape functions' values
+        at an integration point.
 
        N = [N1, N2 N3, N4] = 1/4 * [(1-ksi)(1-eta),
                                     (1+ksi)(1-eta),
@@ -86,7 +86,7 @@ class Quad4(Element):
        Returns:
        --------
        N : ndarray
-           1-d array with the shape derivatives.
+           Array with size 1x4 containing the shape functions.
         
         """
         
@@ -102,17 +102,31 @@ class Quad4(Element):
         N[2] = f_ksi_plus * f_eta_plus
         N[3] = f_ksi_minus * f_eta_plus
         
-    
-        
-        
-
-        return Dn    
+        return N   
     
     @staticmethod
     def calculate_shape_function_derivatives(ksi, eta):
         """
-        Calculates the shape function derivative values
-        for an integration point.
+        Calculates the shape function derivatives' values
+        at an integration point.
+        
+        Dn = [-f_eta_minus, f_eta_minus, f_eta_plus, -f_eta_plus]
+             [-f_ksi_minus, -f_ksi_plus, f_ksi_plus, f_ksi_minus]
+        
+        
+        Dn = .25*[-(1-eta), (1-eta), (1+eta), -(1+eta)]
+                 [-(1-ksi), -(1+ksi), (1+ksi), (1-ksi)]
+
+        Dn = .25*[N1,ksi 
+                  N2,ksi 
+                  N3,ksi 
+                  N4,ksi]
+        
+        Returns:
+       --------
+       Dn : ndarray
+           Array with size 2x4 containing the shape functions' derivatives.
+        
         """
         fN025 = 0.25;
         f_ksi_plus = (1.0 + ksi) * fN025
@@ -131,15 +145,7 @@ class Quad4(Element):
         Dn[1, 2] = f_ksi_plus
         Dn[1, 3] = f_ksi_minus
 
-#        Dn =  np.array([[-f_eta_minus, f_eta_minus, f_eta_plus, -f_eta_plus], 
-#                        [-f_ksi_minus, -f_ksi_plus, f_ksi_plus, f_ksi_minus]])
-        
-        
-#       Dn = .25*[-(1-eta), (1-eta), (1+eta), -(1+eta),
-#                 -(1-ksi), -(1+ksi), (1+ksi), (1-ksi)]
-#
-#       Dn = .25*[N1,ksi N2,ksi N3,ksi N4,ksi]
-#                [N1,eta N2,eta N3,eta N4,eta]  
+       [N1,eta N2,eta N3,eta N4,eta]  
         return Dn
     
     @staticmethod
@@ -235,16 +241,21 @@ class Quad4(Element):
         integration_points_list = []
         for point_ksi in integration_points_per_axis:
             for point_eta in integration_points_per_axis:
+                
                 ksi = point_ksi.coordinate
                 eta = point_eta.coordinate
-                SF_der = Quad4.calculate_shape_function_derivatives(ksi, eta)
+                
+                shape_funcs = Quad4.calculate_shape_functions(ksi, eta)
+                shape_func_der = Quad4.calculate_shape_function_derivatives(ksi, eta)
+                
                 J = Quad4.calculate_jacobian_matrix(SF_der, node_coordinates)
                 detJ = Quad4.calculate_determinant(J)
-                DM = Quad4.calculate_deformation_matrix(ksi, eta,
-                                                       J, 1/detJ, SF_der)
+                deform_matrix = Quad4.calculate_deformation_matrix(ksi, eta, J, 1/detJ, shape_func_der)
+                
                 weight_factor = point_ksi.weight * point_eta.weight * detJ
-                current_gauss_point =  GaussPoint3D(ksi, eta, 0, DM, weight_factor)
+                current_gauss_point =  GaussPoint3D(ksi, eta, 0, deform_matrix, weight_factor)
                 integration_points_list.append(current_gauss_point)
+                
         return integration_points_list
     
     @staticmethod
@@ -300,7 +311,57 @@ class Quad4(Element):
                     stiffness_matrix[j, i] = stiffness_matrix[i, j]
         
         return stiffness_matrix
-    
+
+    @staticmethod
+    def calculate_mass_matrix(integration_points, mass_density, thickness):
+        """Method that calculates the mass matrix of an isoparametric 
+        4-noded quadrilateral element, with constant thickness.
+        """
+
+        Ns = np.empty((Quad4.gauss_iter2, 4))
+        ws = np.empty(Quad4.gauss_iter2)
+        pointID = -1
+        for point in integration_points:
+            pointID += 1
+            constitutive_matrix = materials_at_gauss_points[pointID].constitutive_matrix
+            shape_functions = 
+            ws[pointID] = point.weight
+            Ns[pointID, :] = point.shape_functions
+            
+        mass_matrix = Quad4.sum_masses(Ns, ws, mass_density, thickness)
+        
+        return mass_matrix
+
+    @staticmethod
+    @nb.njit('float64[:,:](float64[:,:,:], float64[:,:,:], float64[:], float64)')
+    def sum_masses(Es, Bs, ws, thickness):
+        mass_matrix = np.zeros((8,8))
+        for k in range(ws.shape[0]):
+            for i in range(Bs.shape[1]):
+                
+                
+                EB[0] = (Es[0, 0, k] * Bs[0, i, k]
+                        + Es[0, 1, k] * Bs[1, i, k]
+                        + Es[0, 2, k] * Bs[2, i, k])
+                
+                EB[1] = (Es[1, 0, k] * Bs[0, i, k]
+                        + Es[1, 1, k] * Bs[1, i, k]
+                        + Es[1, 2, k] * Bs[2, i, k])
+                
+                EB[2] = (Es[2, 0, k] * Bs[0, i, k]
+                        + Es[2, 1, k] * Bs[1, i, k]
+                        + Es[2, 2, k] * Bs[2, i, k])
+                    
+                for j in range(i, Bs.shape[1]):
+                    stiffness = (Bs[0, j, k] * EB[0] 
+                                + Bs[1, j, k] * EB[1]
+                                + Bs[2, j, k] * EB[2])* ws[k] * thickness
+                    
+                    stiffness_matrix[i, j] += stiffness 
+                    stiffness_matrix[j, i] = stiffness_matrix[i, j]
+        
+        return stiffness_matrix
+
     def get_stiffness_matrix(self):
         stiffness_matrix = self.calculate_stiffness_matrix(self.integration_points,   
                                                        self.materials_at_gauss_points,
