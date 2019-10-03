@@ -211,21 +211,22 @@ class GaussPoint1D:
 class GaussPoint3D:
     """Defines a three-dimensional Gauss Legendre integration point."""
     
-    def __init__(self, ksi, eta, zeta, deformation_matrix, weight):	
+    def __init__(self, ksi, eta, zeta, shape_functions, deformation_matrix, weight):	
         self.ksi = ksi
         self.eta = eta
         self.zeta = zeta
+        self.shape_functions
         self.deformation_matrix = deformation_matrix
         self.weight = weight
-
+        
 
 class GaussQuadrature:
     """Provides one-dimensional Gauss-Legendre points and weights."""
 
     gauss_point1 = GaussPoint1D(coordinate=0, weight=2)
     
-    gauss_point2a = GaussPoint1D(coordinate=-.5773502691896, weight= 1)    
-    gauss_point2b = GaussPoint1D(coordinate=0.5773502691896, weight= 1)
+    gauss_point2a = GaussPoint1D(coordinate=-.5773502691896, weight=1)    
+    gauss_point2b = GaussPoint1D(coordinate=0.5773502691896, weight=1)
 
     
     @staticmethod
