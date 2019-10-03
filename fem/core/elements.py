@@ -334,33 +334,30 @@ class Quad4(Element):
 
     @staticmethod
     @nb.njit('float64[:,:](float64[:,:,:], float64[:,:,:], float64[:], float64)')
-    def sum_masses(Es, Bs, ws, thickness):
-        mass_matrix = np.zeros((8,8))
-        for k in range(ws.shape[0]):
-            for i in range(Bs.shape[1]):
-                
-                
-                EB[0] = (Es[0, 0, k] * Bs[0, i, k]
-                        + Es[0, 1, k] * Bs[1, i, k]
-                        + Es[0, 2, k] * Bs[2, i, k])
-                
-                EB[1] = (Es[1, 0, k] * Bs[0, i, k]
-                        + Es[1, 1, k] * Bs[1, i, k]
-                        + Es[1, 2, k] * Bs[2, i, k])
-                
-                EB[2] = (Es[2, 0, k] * Bs[0, i, k]
-                        + Es[2, 1, k] * Bs[1, i, k]
-                        + Es[2, 2, k] * Bs[2, i, k])
-                    
-                for j in range(i, Bs.shape[1]):
-                    stiffness = (Bs[0, j, k] * EB[0] 
-                                + Bs[1, j, k] * EB[1]
-                                + Bs[2, j, k] * EB[2])* ws[k] * thickness
-                    
-                    stiffness_matrix[i, j] += stiffness 
-                    stiffness_matrix[j, i] = stiffness_matrix[i, j]
+    def sum_masses(Ns, ws, mass_density, thickness):
         
-        return stiffness_matrix
+        mass_matrix = np.zeros((8,8))
+        
+        w1 = mass_density * thickness
+        for i in range(ws.shape[0]):
+            
+            w2 = ws[i] * w1
+            
+            NN_1j = Ns[i, 0] * Ns[i, :] * w2
+            NN_2j = Ns[i, 1] * Ns[i, :] * w2
+            NN_3j = Ns[i, 2] * Ns[i, :] * w2
+            NN_4j = Ns[i, 3] * Ns[i, :] * w2
+            
+            mass_matrix[0, 0:2:7] += NN_1j
+            mass_matrix[1, 1:2:7] += NN_1j
+            mass_matrix[2, 0:2:7] += NN_2j
+            mass_matrix[3, 1:2:7] += NN_2j
+            mass_matrix[4, 0:2:7] += NN_3j
+            mass_matrix[5, 1:2:7] += NN_3j
+            mass_matrix[6, 0:2:7] += NN_4j
+            mass_matrix[7, 1:2:7] += NN_4j
+        
+        return mass_matrix
 
     def get_stiffness_matrix(self):
         stiffness_matrix = self.calculate_stiffness_matrix(self.integration_points,   
