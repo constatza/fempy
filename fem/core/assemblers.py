@@ -8,7 +8,7 @@ Created on Tue Jul 30 13:49:31 2019
 
 from numpy import array, zeros, newaxis, arange, empty
 from scipy import sparse
-from numba import njit
+from numba import njit, prange, parfor
 
 class GenericDOFEnumerator:
     """Retrieves element connectivity data required for matrix assembly."""
@@ -123,36 +123,46 @@ class GlobalMatrixAssembler:
             nodal_DOFs_dictionary = model.nodal_DOFs_dictionary
         
         numels = model.number_of_elements
-        globalDOFs = empty((numels, 8))
+        globalDOFs = empty((numels, 8), dtype=int)
         total_element_matrices = empty((8, 8, numels))
+                
+        #!!!!! Change if using different type of elements
+        element = model.elements[0]
+        get_DOF_types = element.element_type.DOF_enumerator.get_DOF_types
+        get_nodes_for_matrix_assembly = element.element_type.DOF_enumerator.get_nodes_for_matrix_assembly
         for k,element in enumerate(model.elements):
             
             total_element_matrices[:, :, k] = element_provider.matrix(element)
-            element_DOFtypes = element.element_type.DOF_enumerator.get_DOF_types(element)
-            matrix_assembly_nodes = element.element_type.DOF_enumerator.get_nodes_for_matrix_assembly(element)
             
-            counter = -1
-            for i in range(len(element_DOFtypes)):
-                node = matrix_assembly_nodes[i]
-                for DOFtype in element_DOFtypes[i]:
-                    counter += 1
-                    globalDOFs[k, counter] = nodal_DOFs_dictionary[node.ID][DOFtype]
-                    
-        numDOFs = model.total_DOFs            
+            if model.global_DOFs is None: 
+                element_DOFtypes = get_DOF_types(element)
+                matrix_assembly_nodes = get_nodes_for_matrix_assembly(element)
+                
+                counter = -1
+                for i in range(len(element_DOFtypes)):
+                    node = matrix_assembly_nodes[i]
+                    for DOFtype in element_DOFtypes[i]:
+                        counter += 1
+                        globalDOFs[k, counter] = nodal_DOFs_dictionary[node.ID][DOFtype]
+                        
+            else:
+                globalDOFs = model.global_DOFs
+            
+    
+        numDOFs = model.total_DOFs
         globalDOFs = globalDOFs.astype(int)
-        global_stiffness_matrix = zeros((numDOFs, numDOFs))
         global_stiffness_matrix = GlobalMatrixAssembler.assign_element_to_global_matrix(
-                                                                        global_stiffness_matrix,
                                                                         total_element_matrices,
-                                                                        globalDOFs)
+                                                                        globalDOFs,
+                                                                        numDOFs)
                                                                   
-                                                                  
+        model.global_DOFs = globalDOFs
         return global_stiffness_matrix 
                 
     @staticmethod
-    @njit('float64[:, :](float64[:, :], float64[:, :, :], int32[:, :])')
-    def assign_element_to_global_matrix(K, element_matrices, globalDOFs):
-         
+    @njit('float64[:, :](float64[:, :, :], int32[:, :], int64)')
+    def assign_element_to_global_matrix(element_matrices, globalDOFs, numDOFs):
+        K = zeros((numDOFs, numDOFs))
         for ielement in range(element_matrices.shape[2]):
             for i in range(8):
                 DOFrow = globalDOFs[ielement, i]
