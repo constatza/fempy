@@ -373,5 +373,5 @@ class Quad4(Element):
         mass_matrix = Quad4.calculate_mass_matrix(element.integration_points,
                                                             element.material.density,
                                                             element.thickness)
-        return stiffness_matrix
+        return mass_matrix
 
