@@ -100,7 +100,8 @@ class GlobalMatrixAssembler:
     
     @staticmethod           
     def calculate_global_matrix(model, element_provider, nodal_DOFs_dictionary=None):
-        """Calculates the global stiffness matrix.
+        """Calculates the generic global matrix. The type of matrix i.e. stiffness,
+        mass etc. is defined by the type of the element_provider."
        
         Parameters
         ----------
@@ -147,15 +148,13 @@ class GlobalMatrixAssembler:
                         
             else:
                 globalDOFs = model.global_DOFs
-            
-    
+
         numDOFs = model.total_DOFs
         globalDOFs = globalDOFs.astype(int)
         global_stiffness_matrix = GlobalMatrixAssembler.assign_element_to_global_matrix(
                                                                         total_element_matrices,
                                                                         globalDOFs,
-                                                                        numDOFs)
-                                                                  
+                                                                        numDOFs)                                                           
         model.global_DOFs = globalDOFs
         return global_stiffness_matrix 
                 
@@ -171,7 +170,5 @@ class GlobalMatrixAssembler:
                         DOFcol = globalDOFs[ielement, j]
                         if DOFcol != -1:
                             K[DOFrow, DOFcol] += element_matrices[i, j, ielement]
-                            K[DOFcol, DOFrow] = K[DOFrow, DOFcol]
-         
-                            
+                            K[DOFcol, DOFrow] = K[DOFrow, DOFcol]                 
         return K
