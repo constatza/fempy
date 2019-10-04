@@ -120,6 +120,7 @@ class Model:
         self.nodal_DOFs_dictionary = {}
         self.loads = []
         self.forces = None
+        self.global_DOFs = None
     
     @property
     def nodes(self):
