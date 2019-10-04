@@ -120,6 +120,7 @@ dmypy.json
 # large data
 *.txt
 *.csv
+*.pkl
 
 # data folder
 
