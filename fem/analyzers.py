@@ -9,13 +9,11 @@ class Analyzer:
         
         Parameters
         ----------
-        provider : ProblemStructural
+        provider : ProblemType
             Instance of the problem type to be solved.
         child_analyzer : Analyzer
             Instance of the child analyzer that will handle the solution of
             the system of equations.
-        linear_system 
-            Instance of the linear system that will be initialized.
         """
         self.provider = provider    
         self.child = child_analyzer
@@ -93,7 +91,7 @@ class Static(Analyzer):
         
         Parameters
         ----------
-        provider : ProblemStructural
+        provider : ProblemType
             Instance of the problem type to be solved.
         child_analyzer : Analyzer
             Instance of the child analyzer that will handle the solution of
@@ -109,7 +107,7 @@ class Static(Analyzer):
         Builds the appropriate linear system matrix and updates the 
         linear system instance used in the constructor.
         """
-        return self.provider.calculate_matrix(self.linear_system)
+        self.provider.calculate_matrix(self.linear_system)
 
     def initialize(self):
         """
@@ -141,7 +139,7 @@ class DynamicNewmark(Analyzer):
         self.model = model
         self.solver = solver
         try:
-            self.linear_systems = solver.linearsystems
+            self.linear_systems = solver.linear_systems
         except:
             pass
         self.timestep = timestep
@@ -149,5 +147,26 @@ class DynamicNewmark(Analyzer):
         self.alpha = alpha
         self.delta = delta
     
+    def main(self):
+        alpha = self.alpha
+        delta = self.delta
+        timestep = self.timestep
+        
+        a0 = 1 / (alpha * timestep* timestep)
+        a1 = delta / (alpha * timestep)
+        a2 = 1 / (alpha * timestep)
+        a3 = 1 / (2 * alpha) - 1
+        a4 = delta / alpha - 1
+        a5 = timestep* 0.5 * (delta / alpha - 2)
+        a6 = timestep* (1 - delta)
+        a7 = delta * timestep
+        
+    
+    
     def build_matrices(self):
-        pass
+        """
+        Builds the appropriate linear system matrix and updates the 
+        linear system instance used in the constructor.
+        """
+        return self.provider.calculate_matrix(self.linear_system)
+    
