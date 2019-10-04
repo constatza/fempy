@@ -1,4 +1,37 @@
+class Analyzer:
+    """Abstract class for Parent Analyzers"""
+    
+    def __init__(self, provider, child_analyzer):
+        """
+        Creates an instance that uses a specific problem type and an
+        appropriate child analyzer for the construction of the system of 
+        equations arising from the actual physical problem.
+        
+        Parameters
+        ----------
+        provider : ProblemStructural
+            Instance of the problem type to be solved.
+        child_analyzer : Analyzer
+            Instance of the child analyzer that will handle the solution of
+            the system of equations.
+        linear_system 
+            Instance of the linear system that will be initialized.
+        """
+        self.provider = provider    
+        self.child = child_analyzer
+        self.child.parent = self       
 
+ 
+    def build_matrices(self):
+        """
+        Builds the appropriate linear system matrix and updates the 
+        linear system instance used in the constructor.
+        """
+        return self.provider.calculate_matrix(self.linear_system)
+
+
+
+    
 
 class Linear:
     """ 
@@ -44,7 +77,7 @@ class Linear:
         self.solver.solve()
 
 
-class Static:
+class Static(Analyzer):
     """
     This class constructs the system of equations to be solved and utilizes 
     a child analyzer for handling the solution of these equations.
@@ -68,9 +101,7 @@ class Static:
         linear_system 
             Instance of the linear system that will be initialized.
         """
-        self.provider = provider    
-        self.child = child_analyzer
-        self.child.parent = self       
+        super().__init__(provider, child_analyzer)    
         self.linear_system = linear_system
  
     def build_matrices(self):
@@ -99,3 +130,24 @@ class Static:
             raise ValueError("Static analyzer must contain a child analyzer.")
         self.child.solve()
 
+
+class DynamicNewmark(Analyzer):
+    """Implements the Newmark method for dynamical analysis."""
+    
+    def __init__(self, model, solver, provider, child_analyzer, timestep, total_time, alpha, delta):
+        
+        super().__init__(provider, child_analyzer)
+        
+        self.model = model
+        self.solver = solver
+        try:
+            self.linear_systems = solver.linearsystems
+        except:
+            pass
+        self.timestep = timestep
+        self.total_time = total_time
+        self.alpha = alpha
+        self.delta = delta
+    
+    def build_matrices(self):
+        pass
