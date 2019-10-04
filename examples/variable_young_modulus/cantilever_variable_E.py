@@ -34,7 +34,7 @@ boundY = [0, 5000]
 Model properties
 Units: kN, mm
 """
-Nsim = 20000
+Nsim = 10
 Emean = 30
 poisson_ratio = .3
 thickness = 100
@@ -94,7 +94,7 @@ Displacements
 """
 U = np.empty((Nsim, 2100))
 t1 = time.time()
-print("Starting at {:}".format(t1))
+
 for i,E in enumerate(Es):
     for element in parent_analyzer.provider.model.elements: 
         element.material.young_modulus = E
