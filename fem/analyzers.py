@@ -1,6 +1,9 @@
-class Analyzer:
+from ABC import abc, abstractmethod
+
+class Analyzer(ABC):
     """Abstract class for Parent Analyzers"""
     
+    @abstractmethod
     def __init__(self, provider, child_analyzer):
         """
         Creates an instance that uses a specific problem type and an
@@ -22,13 +25,16 @@ class Analyzer:
  
     def build_matrices(self):
         """
-        Builds the appropriate linear system matrix and updates the 
-        linear system instance used in the constructor.
+        Builds the appropriate system matrix and updates the system instance 
+        used in the constructor.
         """
-        return self.provider.calculate_matrix(self.linear_system)
-
-
-
+        pass
+    
+    def initialize(self, is_first_analysis=False):
+        pass
+    
+    def solve(self):
+        pass
     
 
 class Linear:
@@ -152,15 +158,44 @@ class DynamicNewmark(Analyzer):
         delta = self.delta
         timestep = self.timestep
         
-        a0 = 1 / (alpha * timestep* timestep)
+        a0 = 1 / (alpha * timestep * timestep)
         a1 = delta / (alpha * timestep)
         a2 = 1 / (alpha * timestep)
         a3 = 1 / (2 * alpha) - 1
-        a4 = delta / alpha - 1
-        a5 = timestep* 0.5 * (delta / alpha - 2)
-        a6 = timestep* (1 - delta)
+        a4 = delta/alpha - 1
+        a5 = timestep * 0.5 * (delta/alpha - 2)
+        a6 = timestep * (1 - delta)
         a7 = delta * timestep
+        self.newmark_coefficients = (a0, a1, a2, a3, a4, a5, a6, a7)
+        K_effective = K + a0 * M + a1 * C
         
+    def solve(self):
+        
+        numTimestep = int(total_time / self.timestep)
+        for i in range(numTimestep):
+        
+            print("Newmark step: {0}", i)
+
+            self.provider.get_rhs_from_history_load(i)
+            self.initialize_rhs()
+            self.calculcate_rhs_implicit()            
+            self.child_analyzer.Solve()
+            self.update_velocity_and_accelaration(i)
+    
+    
+    def calculate_rhs_implicit(rhs, v, v1, v2, mass_matrix, dump_matrix):
+        uu = a0 * v+ a2 * v1 + a3 * v2
+        uc = a1 * v + a4 * v1 + a5 * v2
+        
+        uum = mass_matrix @ uu
+        ucc = dump_matrix @ uc
+
+       
+        rhs_effective = rhs + uum + ucc
+      
+        #rhs_effective = uum + ucc
+       
+        return rhs_effective
     
     
     def build_matrices(self):
