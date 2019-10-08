@@ -164,7 +164,11 @@ class Model:
             self.nodal_DOFs_dictionary[node.ID] = DOFs_dictionary
         
         self.total_DOFs = total_DOFs 
-         
+    
+    def assign_loads(self):
+        self.assign_nodal_loads()
+        self.assign_history_loads()
+     
     def assign_nodal_loads(self):
         """Assigns the loads to the force vector."""
         forces = np.zeros((self.total_DOFs,1))
@@ -173,8 +177,18 @@ class Model:
             if load_global_DOF>=0:
                 forces[load_global_DOF] = load.magnitude
         self.forces = forces 
-                
+    
+    def assign_history_loads(self):
+        dynamic_forces = {}
+        for hload in self.history_loads:
+            load_global_DOF = self.nodal_DOFs_dictionary[hload.node.ID][hload.DOF]
+            if load_global_DOF >= 0:
+                dynamic_forces[load_global_DOF] = hload.history
+        self.dynamic_forces = dynamic_forces 
+        
     def connect_data_structures(self):
          self.build_element_dictionary_of_each_node()
          self.enumerate_global_DOFs()
-         self.assign_nodal_loads()
+         self.assign_loads()
+         
+         

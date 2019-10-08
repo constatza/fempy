@@ -8,7 +8,7 @@ class ProblemStructural:
         self._matrix = None
         self.stiffness_provider = ElementStiffnessProvider()
         self.mass_provider = ElementMassProvider()
-        self.
+
 
     @property
     def matrix(self):
@@ -87,3 +87,20 @@ class ProblemStructuralDynamic:
         linear_system.stiffness_matrix = self.stiffness_matrix
         linear_system.mass_matrix = self.mass_matrix
     
+    def get_RHS_from_load_history(self, timestep):
+        static_forces = model.forces 
+        dynamic_forces = np.zeros(static_forces.shape)
+        for dof, history in model.dynamic_forces.items():
+            dynamic_forces[dof] = history[timestep]
+        
+        rhs = static_forces + dynamic_forces
+        
+        return rhs
+    
+    def linear_combination_into_stiffness(coeffs):
+        K_eff = coeffs['stiffness'] * self.stiffness_matrix 
+                + coeffs['mass'] * self.mass_matrix
+                + coeffs['damping'] * self.mass_matrix
+        return K_eff
+        
+        
