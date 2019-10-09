@@ -1,5 +1,5 @@
 
-
+from numba import njit
 
 class GenericDOFEnumerator:
     """Retrieves element connectivity data required for matrix assembly."""
@@ -110,3 +110,8 @@ class GlobalMatrixAssembler:
                             K[DOFrow, DOFcol] += element_matrices[i, j, ielement]
                             K[DOFcol, DOFrow] = K[DOFrow, DOFcol]                 
         return K
+
+
+class RayleighDampingMatrixAssembler:
+    pass
+

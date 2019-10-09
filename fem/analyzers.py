@@ -139,8 +139,8 @@ class Static(Analyzer):
         self.child.solve()
 
 
-class DynamicNewmark(Analyzer):
-    """Implements the Newmark method for dynamical analysis."""
+class NewmarkDynamic(Analyzer):
+    """Implements the Newmark method for dynamic analysis."""
     
     def __init__(self, model, solver , provider, child_analyzer, timestep, total_time, alpha, delta):
         
@@ -152,6 +152,12 @@ class DynamicNewmark(Analyzer):
         self.delta = delta
         self.calculate_coefficients()
         self.linear_system = solver.linear_system
+        self.u = None
+        self.ud = None
+        self.udd = None
+        self.u_next = None
+        self.ud_next = None
+        self.udd_next = None
     
     def calculate_coefficients(self):
         alpha = self.alpha
@@ -177,20 +183,20 @@ class DynamicNewmark(Analyzer):
         a0, a1 = self.alphas[:2]
 #        coeffs = {'mass' : a0, 'damping' : a1, 'stiffness' : 1}
 #        self.linear_system.Matrix = provider.linear_combination_into_stiffness(coeffs)
-        self.linear_system.Matrix = provider.stiffness_matrix 
+        self.linear_system.Matrix = (provider.stiffness_matrix 
                                     + a0 * provider.mass_matrix
-                                    + a1 * provider.damping_matrix
+                                    + a1 * provider.damping_matrix)
         
     def get_other_rhs_components(self, linear_system, current_solution):
         """Calculates inertia forces and damping forces."""
-       alphas = self.alphas
-       
-       u  = current_solution[0]
-       v = currnet_solution[1]
-       a = current_solution[2]
-       inertia_forces = provider.mass_matrix @ ( alphas[0]*u + alphas[2]*v + alphas[3]*a)
-       damping_forces = provider.damping_matrix  @ ( alphas[1]*u + alphas[4]*v + alphas[5]*a)
-       return interia_forces + damping_forces   
+        alphas = self.alphas
+           
+        u  = current_solution[0]
+        v = current_solution[1]
+        a = current_solution[2]
+        inertia_forces = provider.mass_matrix @ ( alphas[0]*u + alphas[2]*v + alphas[3]*a)
+        damping_forces = provider.damping_matrix  @ ( alphas[1]*u + alphas[4]*v + alphas[5]*a)
+        return inertia_forces + damping_forces   
    
     def initialize(self, is_first_analysis=True):
         """
@@ -200,10 +206,10 @@ class DynamicNewmark(Analyzer):
         if is_first_analysis:
             model.connect_data_structures()
             
-        linear_system.reset()
+        # linear_system.reset()
         linear_system.forces = np.zeros(linear_system.size)  
         self.build_matrices()
-        model.assign_loads(solver.DistributeNodalLoads) # ?????
+        model.assign_loads() # ?????
         linear_system.rhs = model.forces
         self.initialize_internal_vectors()
         initialize_rhs()
@@ -223,35 +229,70 @@ class DynamicNewmark(Analyzer):
             
             
             rhs = self.provider.get_rhs_from_history_load(i)
-            linear_system.rhs = rhs
-            self.initialize_rhs()
-            self.calculcate_rhs_implicit(rhs, v, v1, v2, self.mass_matrix)            
+            
+            self.linear_system.rhs = self.calculcate_rhs_implicit(rhs)            
             self.child_analyzer.Solve()
             self.update_velocity_and_accelaration(i)
-    
-    def calculate_rhs_implicit(rhs, v, v1, v2, mass_matrix, dump_matrix):
+
+    def calculate_rhs_implicit(self, rhs):
         """
-        Calculates the right-hand-side of the implicit dyanmic method. 
+        Calculates the right-hand-side of the implicit dynamic method. 
         This will be used for the solution of the linear dynamic system.
         """
-        uu = a0 * v + a2 * v1 + a3 * v2
-        uc = a1 * v + a4 * v1 + a5 * v2
+        alphas = self.alphas
         
-        uum = mass_matrix @ uu
-        ucc = dump_matrix @ uc
 
-       
-        rhs_effective = rhs + uum + ucc
-      
+        udd_eff = alphas[0] * self.u + alphas[2] * self.ud + alphas[3] * self.udd
+        ud_eff = alphas[1] * self.u + alphas[4] * self.ud + alphas[5] * self.udd
+        
+        inertia_forces = self.mass_matrix @ udd_eff
+        damping_forces = self.damp_matrix @ ud_eff
+
+        rhs_effective = rhs + inertia_forces + damping_forces
+        self.linear_system.rhs = rhs_effective
         #rhs_effective = uum + ucc
        
         return rhs_effective
     
     
-    def build_matrices(self):
-        """
-        Builds the appropriate linear system matrix and updates the 
-        linear system instance used in the constructor.
-        """
-        return self.provider.calculate_matrix(self.linear_system)
-    
+    def initialize_internal_vectors(self):
+        
+        if self.linear_system.solution is None:
+            total_dofs = self.model.total_dofs
+            self.u = np.zeros((total_dofs, 1))
+            self.ud = np.zeros((total_dofs, 1))
+            self.udd = np.zeros((total_dofs, 1))
+        else:
+            pass
+            #sth not zero 
+
+    def initialize_rhs(self):
+        self.coeffs = {
+            'mass' : self.alphas[0],
+            'damping' : self.alphas[1],
+            'stiffness' : 1
+        }
+        
+        self.rhs = self.linear_system.rhs
+
+
+    def update_result_storages(self):
+        pass
+
+    def update_velocity_and_accelaration(self, timestep):
+        a0, a2, a3, a6, a7 = self.alphas[[0,2,3,6,7]]
+        external_velocities = self.provider.get_velocities_of_timestep(timestep)
+        external_accelerations = self.provider.get_accelerations_of_timestep(timestep)
+        u = self.u
+        udd = external_accelerations
+        ud = external_velocities
+        u_next = self.linear_system.solution
+
+        udd_next = a0 * (u_next - u) - a2 * ud - a3 * udd 
+        ud_next = ud + a6 * udd +  a7 * udd_next
+        
+        self.udd_next = udd_next
+        self.ud_next = ud_next
+        self.u = u_next
+        self.ud = ud_next
+        self.udd = udd_next

@@ -112,6 +112,7 @@ class Model:
         self.elements_dictionary = elements_dictionary
         self.nodal_DOFs_dictionary = {}
         self.loads = []
+        self.time_dependent_loads = []
         self.forces = None
         self.global_DOFs = None
     
@@ -180,7 +181,7 @@ class Model:
     
     def assign_history_loads(self):
         dynamic_forces = {}
-        for hload in self.history_loads:
+        for hload in self.time_dependent_loads:
             load_global_DOF = self.nodal_DOFs_dictionary[hload.node.ID][hload.DOF]
             if load_global_DOF >= 0:
                 dynamic_forces[load_global_DOF] = hload.history

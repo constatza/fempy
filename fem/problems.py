@@ -1,3 +1,4 @@
+import numpy as np
 
 
 class ProblemStructural:
@@ -38,8 +39,10 @@ class ProblemStructuralDynamic:
         self.model = model
         self._stiffness_matrix = None
         self._mass_matrix = None
+        self._damping_matrix = None
         self.stiffness_provider = ElementStiffnessProvider()
         self.mass_provider = ElementMassProvider()
+        self.damping_provider = None
 
     @property
     def stiffness_matrix(self):
@@ -57,6 +60,14 @@ class ProblemStructuralDynamic:
             self.rebuild_mass_matrix()
         return self._mass_matrix
     
+    @property
+    def damping_matrix(self):
+        if self._damping_matrix is None:
+            self.build_damping_matrix()
+        else:
+            self.rebuild_damping_matrix()
+        return self._damping_matrix
+
     @stiffness_matrix.setter
     def stiffness_matrix(self, value):
         self._stiffness_matrix = value
@@ -64,6 +75,10 @@ class ProblemStructuralDynamic:
     @mass_matrix.setter
     def mass_matrix(self, value):
         self._mass_matrix = value
+    
+    @damping_matrix.setter
+    def damping_matrix(self, value):
+        self._damping_matrix = value
     
     def build_stiffness_matrix(self):
         """ Builds the global Stiffness Matrix"""
@@ -74,33 +89,38 @@ class ProblemStructuralDynamic:
         """ Builds the global Mass Matrix"""
         provider = ElementMassProvider()
         self.mass_matrix = GlobalMatrixAssembler.calculate_global_matrix(self.model, provider)
-    
+        
+    def build_damping_matrix(self):
+        """ Builds the global Mass Matrix"""
+        provider = ElementMassProvider()
+        self.damping_matrix = GlobalMatrixAssembler.calculate_global_matrix(self.model, provider)
+
     def rebuild_stiffness_matrix(self):
         """ Rebuilds the global Stiffness Matrix"""
         self.stiffness_matrix = GlobalMatrixAssembler.calculate_global_matrix(self.model, self.stiffness_provider)
 
     def rebuild_mass_matrix(self):
         """ Rebuilds the global Mass Matrix"""
-        self.stiffness_matrix = GlobalMatrixAssembler.calculate_global_matrix(self.model, self.mass_provider)
-
-    def calculate_matrix(self, linear_system):
-        linear_system.stiffness_matrix = self.stiffness_matrix
-        linear_system.mass_matrix = self.mass_matrix
+        self.mass_matrix = GlobalMatrixAssembler.calculate_global_matrix(self.model, self.mass_provider)
     
-    def get_RHS_from_load_history(self, timestep):
-        static_forces = model.forces 
+    def rebuild_damping_matrix(self):
+        """ Rebuilds the global Mass Matrix"""
+        self.damping_matrix = GlobalMatrixAssembler.calculate_global_matrix(self.model, self.mass_provider)
+
+    def get_rhs_from_load_history(self, timestep):
+        static_forces = self.model.forces 
         dynamic_forces = np.zeros(static_forces.shape)
-        for dof, history in model.dynamic_forces.items():
+        for dof, history in self.model.dynamic_forces.items():
             dynamic_forces[dof] = history[timestep]
         
         rhs = static_forces + dynamic_forces
         
         return rhs
     
-    def linear_combination_into_stiffness(coeffs):
-        K_eff = coeffs['stiffness'] * self.stiffness_matrix 
+    def linear_combination_into_stiffness(self, coeffs):
+        K_eff = (coeffs['stiffness'] * self.stiffness_matrix 
                 + coeffs['mass'] * self.mass_matrix
-                + coeffs['damping'] * self.mass_matrix
+                + coeffs['damping'] * self.damping_matrix)
         return K_eff
         
         
