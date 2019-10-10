@@ -1,5 +1,8 @@
 import numpy as np
 
+from fempy.fem.core.providers import ElementMassProvider, ElementStiffnessProvider
+from fempy.fem.assemblers import GlobalMatrixAssembler
+
 
 class ProblemStructural:
     """Responsible for the assembly of the global stiffness matrix."""
@@ -93,7 +96,8 @@ class ProblemStructuralDynamic:
     def build_damping_matrix(self):
         """ Builds the global Mass Matrix"""
         provider = ElementMassProvider()
-        self.damping_matrix = GlobalMatrixAssembler.calculate_global_matrix(self.model, provider)
+        self.damping_matrix = self.mass_matrix + self.build_stiffness_matrix
+
 
     def rebuild_stiffness_matrix(self):
         """ Rebuilds the global Stiffness Matrix"""
@@ -105,7 +109,7 @@ class ProblemStructuralDynamic:
     
     def rebuild_damping_matrix(self):
         """ Rebuilds the global Mass Matrix"""
-        self.damping_matrix = GlobalMatrixAssembler.calculate_global_matrix(self.model, self.mass_provider)
+        self.damping_matrix = self.mass_matrix + self.build_stiffness_matrix
 
     def get_rhs_from_load_history(self, timestep):
         static_forces = self.model.forces 
@@ -122,5 +126,13 @@ class ProblemStructuralDynamic:
                 + coeffs['mass'] * self.mass_matrix
                 + coeffs['damping'] * self.damping_matrix)
         return K_eff
-        
-        
+    
+    def mass_matrix_vector_product(self, vector):
+        return self._mass_matrix @ vector
+    
+    def stiffness_matrix_vector_product(self, vector):
+        return self._stiffness_matrix @ vector
+    
+    def damping_matrix_vector_product(self, vector):
+        return self._damping_matrix @ vector
+    

@@ -1,8 +1,11 @@
 import numpy as np
 import numba as nb
 import numba.cuda as cuda
-from .entities import Element, DOFtype, GaussQuadrature, GaussPoint3D
-from .assemblers import GenericDOFEnumerator
+
+from fempy.fem.core.gauss import Quadrature, Point3D
+from fempy.fem.assemblers import GenericDOFEnumerator
+from fempy.fem.core.entities import Element, DOFtype
+
 
 
 class Quad4(Element):
@@ -89,7 +92,7 @@ class Quad4(Element):
         
         """
         
-        fN05 = 0.5;
+        fN05 = 0.5
         f_ksi_plus = (1.0 + ksi) * fN05
         f_eta_plus = (1.0 + eta) * fN05
         f_ksi_minus = (1.0 - ksi) * fN05
@@ -125,7 +128,7 @@ class Quad4(Element):
         
         """
         
-        fN025 = 0.25;
+        fN025 = 0.25
         f_ksi_plus = (1.0 + ksi) * fN025
         f_eta_plus = (1.0 + eta) * fN025
         f_ksi_minus = (1.0 - ksi) * fN025
@@ -234,7 +237,7 @@ class Quad4(Element):
     
     def calculate_gauss_matrices(self, node_coordinates):
         """ Calculates the integration points. """
-        integration_points_per_axis = GaussQuadrature.get_gauss_points(2)
+        integration_points_per_axis = Quadrature.get_gauss_points(2)
         #total_sampling_points = len(integration_points_per_axis)**2
         integration_points_list = []
         for point_ksi in integration_points_per_axis:
@@ -251,7 +254,7 @@ class Quad4(Element):
                 deform_matrix = Quad4.calculate_deformation_matrix(ksi, eta, J, 1/detJ, shape_func_der)
                 
                 weight_factor = point_ksi.weight * point_eta.weight * detJ
-                current_gauss_point =  GaussPoint3D(ksi, eta, 0, shape_funcs, deform_matrix, weight_factor)
+                current_gauss_point = Point3D(ksi, eta, 0, shape_funcs, deform_matrix, weight_factor)
                 integration_points_list.append(current_gauss_point)
                 
         return integration_points_list

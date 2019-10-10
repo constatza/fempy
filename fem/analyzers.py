@@ -1,6 +1,6 @@
 
 
-from ABC import abc, abstractmethod
+from abc import ABC, abstractmethod
 import numpy as np
 
 
@@ -142,16 +142,18 @@ class Static(Analyzer):
 class NewmarkDynamic(Analyzer):
     """Implements the Newmark method for dynamic analysis."""
     
-    def __init__(self, model, solver , provider, child_analyzer, timestep, total_time, alpha, delta):
+    def __init__(self, model, solver, provider, child_analyzer, timestep, total_time, alpha, delta):
         
         super().__init__(provider, child_analyzer)
-        
+        self.model = model
+        self.solver = solver
         self.timestep = timestep
         self.total_time = total_time
         self.alpha = alpha
         self.delta = delta
         self.calculate_coefficients()
         self.linear_system = solver.linear_system
+        self.rhs = None
         self.u = None
         self.ud = None
         self.udd = None
@@ -179,7 +181,7 @@ class NewmarkDynamic(Analyzer):
         solution of the linear system of equations. This method MUST be called 
         before the actual solution of the aforementioned system
         """
-        
+        provider = self.provider
         a0, a1 = self.alphas[:2]
 #        coeffs = {'mass' : a0, 'damping' : a1, 'stiffness' : 1}
 #        self.linear_system.Matrix = provider.linear_combination_into_stiffness(coeffs)
@@ -190,12 +192,12 @@ class NewmarkDynamic(Analyzer):
     def get_other_rhs_components(self, linear_system, current_solution):
         """Calculates inertia forces and damping forces."""
         alphas = self.alphas
-           
+        provider = self.provider  
         u  = current_solution[0]
         v = current_solution[1]
         a = current_solution[2]
-        inertia_forces = provider.mass_matrix @ ( alphas[0]*u + alphas[2]*v + alphas[3]*a)
-        damping_forces = provider.damping_matrix  @ ( alphas[1]*u + alphas[4]*v + alphas[5]*a)
+        inertia_forces = provider.mass_matrix_vector_product( alphas[0]*u + alphas[2]*v + alphas[3]*a)
+        damping_forces = provider.damping_matrix_vector_product( alphas[1]*u + alphas[4]*v + alphas[5]*a)
         return inertia_forces + damping_forces   
    
     def initialize(self, is_first_analysis=True):
@@ -203,17 +205,20 @@ class NewmarkDynamic(Analyzer):
         Initializes the models, the solvers, child analyzers, builds
         the matrices, assigns loads and initializes right-hand-side vectors.
         """
+        linear_system = self.linear_system
+        model = self.model
         if is_first_analysis:
             model.connect_data_structures()
+
             
-        # linear_system.reset()
+        linear_system.reset()
         linear_system.forces = np.zeros(linear_system.size)  
         self.build_matrices()
-        model.assign_loads() # ?????
+        model.assign_loads() 
         linear_system.rhs = model.forces
         self.initialize_internal_vectors()
-        initialize_rhs()
-        child.initialize(is_first_analysis)
+        self.initialize_rhs()
+        self.child.initialize(is_first_analysis)
             
         
     def solve(self):
@@ -222,7 +227,7 @@ class NewmarkDynamic(Analyzer):
         method of the specific solver attached during construction of the
         current instance.
         """
-        num_timsteps = int(total_time / self.timestep)
+        num_timesteps = int(self.total_time / self.timestep)
         for i in range(num_timesteps):
         
             print("Newmark step: {0}", i)
@@ -231,24 +236,27 @@ class NewmarkDynamic(Analyzer):
             rhs = self.provider.get_rhs_from_history_load(i)
             
             self.linear_system.rhs = self.calculcate_rhs_implicit(rhs)            
-            self.child_analyzer.Solve()
+            self.child.Solve()
             self.update_velocity_and_accelaration(i)
 
-    def calculate_rhs_implicit(self, rhs):
+    def calculate_rhs_implicit(self, rhs, add_rhs=True):
         """
         Calculates the right-hand-side of the implicit dynamic method. 
         This will be used for the solution of the linear dynamic system.
         """
         alphas = self.alphas
-        
+        provider = self.provider
 
         udd_eff = alphas[0] * self.u + alphas[2] * self.ud + alphas[3] * self.udd
         ud_eff = alphas[1] * self.u + alphas[4] * self.ud + alphas[5] * self.udd
         
-        inertia_forces = self.mass_matrix @ udd_eff
-        damping_forces = self.damp_matrix @ ud_eff
-
-        rhs_effective = rhs + inertia_forces + damping_forces
+        inertia_forces = provider.mass_matrix_vector_product(udd_eff)
+        damping_forces = provider.damping_matrix_vector_product(ud_eff)
+        rhs_effective = inertia_forces + damping_forces
+        if add_rhs:
+            rhs_effective += self.rhs 
+       
+            
         self.linear_system.rhs = rhs_effective
         #rhs_effective = uum + ucc
        
@@ -256,7 +264,6 @@ class NewmarkDynamic(Analyzer):
     
     
     def initialize_internal_vectors(self):
-        
         if self.linear_system.solution is None:
             total_dofs = self.model.total_dofs
             self.u = np.zeros((total_dofs, 1))
@@ -291,8 +298,11 @@ class NewmarkDynamic(Analyzer):
         udd_next = a0 * (u_next - u) - a2 * ud - a3 * udd 
         ud_next = ud + a6 * udd +  a7 * udd_next
         
-        self.udd_next = udd_next
-        self.ud_next = ud_next
+        # self.udd_next = udd_next
+        # self.ud_next = ud_next
+        # self.u_next = u_next
         self.u = u_next
         self.ud = ud_next
         self.udd = udd_next
+        
+

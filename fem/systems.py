@@ -1,4 +1,4 @@
-
+from dataclasses import dataclass
 
 class LinearSystem:
     """
@@ -8,7 +8,7 @@ class LinearSystem:
     
     def __init__(self, rhs):
         """
-        Initializes a linear system with a specific right-hand side
+        Initializes a linear system with a specific right-hand side.
         
         Parameters
         ----------
@@ -20,6 +20,6 @@ class LinearSystem:
             2D matrix of the linear system
         """
         self.rhs = rhs
-        self.solution = None #np.empty(rhs.shape)
+        self.solution = None 
         self.matrix = None
     
