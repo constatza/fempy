@@ -332,7 +332,7 @@ class Quad4(Element):
         return mass_matrix
 
     @staticmethod
-    @nb.njit('float64[:,:](float64[:,:], float64[:], float64, float64)')
+#    @nb.njit('float64[:,:](float64[:,:], float64[:], float64, float64)')
     def sum_masses(Ns, ws, mass_density, thickness):
         
         mass_matrix = np.zeros((8,8))
@@ -347,14 +347,14 @@ class Quad4(Element):
             NN_3j = Ns[i, 2] * Ns[i, :] * w2
             NN_4j = Ns[i, 3] * Ns[i, :] * w2
             
-            mass_matrix[0, 0:2:7] += NN_1j
-            mass_matrix[1, 1:2:7] += NN_1j
-            mass_matrix[2, 0:2:7] += NN_2j
-            mass_matrix[3, 1:2:7] += NN_2j
-            mass_matrix[4, 0:2:7] += NN_3j
-            mass_matrix[5, 1:2:7] += NN_3j
-            mass_matrix[6, 0:2:7] += NN_4j
-            mass_matrix[7, 1:2:7] += NN_4j
+            mass_matrix[0, 0:7:2] += NN_1j
+            mass_matrix[1, 1:8:2] += NN_1j
+            mass_matrix[2, 0:7:2] += NN_2j
+            mass_matrix[3, 1:8:2] += NN_2j
+            mass_matrix[4, 0:7:2] += NN_3j
+            mass_matrix[5, 1:8:2] += NN_3j
+            mass_matrix[6, 0:7:2] += NN_4j
+            mass_matrix[7, 1:8:2] += NN_4j
         
         return mass_matrix
 

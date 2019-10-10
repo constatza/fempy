@@ -36,7 +36,8 @@ model.loads.append(load2)
 
 material = ElasticMaterial2D(stress_state=StressState2D.plain_stress,
                              young_modulus=3.76,
-                             poisson_ratio=0.3779)
+                             poisson_ratio=0.3779,
+                             mass_density = 100)
 
 quad = Quad4(material=material, thickness=1)
 element1 = Quad4(ID=1, material=material, element_type=quad, thickness=1)
@@ -57,19 +58,18 @@ parent_analyzer = NewmarkDynamicAnalyzer(model,
                                  solver, 
                                  provider, 
                                  child_analyzer, 
-                                 timestep=1, 
+                                 timestep=0.01, 
                                  total_time=10, 
-                                 alpha=.25, 
-                                 delta=1/6)
+                                 alpha=.5, 
+                                 delta=.25)
 
 
-for i in range(2000):
-    
+for i in range(2):
     parent_analyzer.build_matrices()
     parent_analyzer.initialize()
     parent_analyzer.solve()
 
-u = linear_system.solution
+u = parent_analyzer.displacements[:, 1]
 
 plt.figure()
 plt.plot(u, linestyle=' ', marker='.')

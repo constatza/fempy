@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from numpy import empty
 
 class LinearSystem:
     """
@@ -22,4 +23,8 @@ class LinearSystem:
         self.rhs = rhs
         self.solution = None 
         self.matrix = None
-    
+        self.size = rhs.shape[0]
+        
+    def reset(self):
+        self.rhs = empty(self.rhs.shape)
+        self.matrix = None

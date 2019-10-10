@@ -2,6 +2,7 @@
 
 from abc import ABC, abstractmethod
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 class Analyzer(ABC):
@@ -149,6 +150,7 @@ class NewmarkDynamicAnalyzer(Analyzer):
         self.solver = solver
         self.timestep = timestep
         self.total_time = total_time
+        self.total_steps = int(total_time/timestep)
         self.alpha = alpha
         self.delta = delta
         self.calculate_coefficients()
@@ -160,6 +162,7 @@ class NewmarkDynamicAnalyzer(Analyzer):
         self.u_next = None
         self.ud_next = None
         self.udd_next = None
+        self.displacements = np.empty((self.total_steps, self.model.total_DOFs))
     
     def calculate_coefficients(self):
         alpha = self.alpha
@@ -185,7 +188,7 @@ class NewmarkDynamicAnalyzer(Analyzer):
         a0, a1 = self.alphas[:2]
 #        coeffs = {'mass' : a0, 'damping' : a1, 'stiffness' : 1}
 #        self.linear_system.Matrix = provider.linear_combination_into_stiffness(coeffs)
-        self.linear_system.Matrix = (provider.stiffness_matrix 
+        self.linear_system.matrix = (provider.stiffness_matrix 
                                     + a0 * provider.mass_matrix
                                     + a1 * provider.damping_matrix)
         
@@ -218,8 +221,9 @@ class NewmarkDynamicAnalyzer(Analyzer):
         linear_system.rhs = model.forces
         self.initialize_internal_vectors()
         self.initialize_rhs()
-        self.child.initialize(is_first_analysis)
-            
+        self.child.initialize()
+        
+        print(self.provider._mass_matrix)   
         
     def solve(self):
         """
@@ -227,17 +231,18 @@ class NewmarkDynamicAnalyzer(Analyzer):
         method of the specific solver attached during construction of the
         current instance.
         """
-        num_timesteps = int(self.total_time / self.timestep)
-        for i in range(num_timesteps):
         
-            print("Newmark step: {0}", i)
+        for i in range(self.total_steps):
+        
+            #print("Newmark step: {0:d}".format(i))
             
             
-            rhs = self.provider.get_rhs_from_history_load(i)
+            self.rhs = self.provider.get_rhs_from_history_load(i)
             
-            self.linear_system.rhs = self.calculcate_rhs_implicit(rhs)            
-            self.child.Solve()
+            self.linear_system.rhs = self.calculate_rhs_implicit(add_rhs=True)            
+            self.child.solve()
             self.update_velocity_and_accelaration(i)
+            self.store_results(i)
 
     def calculate_rhs_implicit(self, add_rhs=True):
         """
@@ -265,10 +270,10 @@ class NewmarkDynamicAnalyzer(Analyzer):
     
     def initialize_internal_vectors(self):
         if self.linear_system.solution is None:
-            total_dofs = self.model.total_dofs
-            self.u = np.zeros((total_dofs, 1))
-            self.ud = np.zeros((total_dofs, 1))
-            self.udd = np.zeros((total_dofs, 1))
+            total_DOFs = self.model.total_DOFs
+            self.u = np.zeros((total_DOFs, 1))
+            self.ud = np.zeros((total_DOFs, 1))
+            self.udd = np.zeros((total_DOFs, 1))
         else:
             pass
             #sth not zero 
@@ -287,13 +292,12 @@ class NewmarkDynamicAnalyzer(Analyzer):
         pass
 
     def update_velocity_and_accelaration(self, timestep):
-        a0, a2, a3, a6, a7 = self.alphas[[0,2,3,6,7]]
-        external_velocities = self.provider.get_velocities_of_timestep(timestep)
-        external_accelerations = self.provider.get_accelerations_of_timestep(timestep)
+        a0, a2, a3, a6, a7 = [self.alphas[i] for i in [0,2,3,6,7]]
+        ud = self.ud #self.provider.get_velocities_of_timestep(timestep)
+        udd = self.udd #self.provider.get_accelerations_of_timestep(timestep)
         u = self.u
-        udd = external_accelerations
-        ud = external_velocities
-        u_next = self.linear_system.solution
+
+        u_next = np.reshape(self.linear_system.solution, (-1,1))
 
         udd_next = a0 * (u_next - u) - a2 * ud - a3 * udd 
         ud_next = ud + a6 * udd +  a7 * udd_next
@@ -304,5 +308,10 @@ class NewmarkDynamicAnalyzer(Analyzer):
         self.u = u_next
         self.ud = ud_next
         self.udd = udd_next
+    
+    def store_results(self, timestep):
+        
+        self.displacements[timestep, :] = self.u.ravel()
+        
         
 
