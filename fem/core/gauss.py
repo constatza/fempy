@@ -24,10 +24,10 @@ class Point3D:
 class Quadrature:
     """Provides one-dimensional Gauss-Legendre points and weights."""
 
-    gauss_point1 = GaussPoint1D(coordinate=0, weight=2)
+    gauss_point1 = Point1D(coordinate=0, weight=2)
     
-    gauss_point2a = GaussPoint1D(coordinate=-.5773502691896, weight=1)    
-    gauss_point2b = GaussPoint1D(coordinate=0.5773502691896, weight=1)
+    gauss_point2a = Point1D(coordinate=-.5773502691896, weight=1)    
+    gauss_point2b = Point1D(coordinate=0.5773502691896, weight=1)
 
     
     @staticmethod
@@ -46,10 +46,10 @@ class Quadrature:
          0.6521451548625 = (18 + sqrt30)/36  
         """
         if integration_degree==1:
-            return [GaussQuadrature.gauss_point1]
+            return [Quadrature.gauss_point1]
         elif integration_degree==2:
-            return [GaussQuadrature.gauss_point2a,
-                    GaussQuadrature.gauss_point2b]
+            return [Quadrature.gauss_point2a,
+                    Quadrature.gauss_point2b]
         else:
             raise NotImplementedError("Unsupported degree of integration: {:}".format(integration_degree))
             

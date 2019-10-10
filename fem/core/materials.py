@@ -10,10 +10,11 @@ class StressState2D(IntEnum):
 
 class ElasticMaterial2D:
     
-    def __init__(self, stress_state=None, young_modulus=None, poisson_ratio=None):
+    def __init__(self, stress_state=None, young_modulus=None, poisson_ratio=None, mass_density=0):
         self.young_modulus = young_modulus
         self.poisson_ratio = poisson_ratio
         self.stress_state = stress_state
+        self.mass_density = mass_density
         self._constitutive_matrix = None
         
     

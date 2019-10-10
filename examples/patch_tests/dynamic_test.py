@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sat Jul  6 21:12:36 2019
+Created on Thu Oct 10 12:04:34 2019
 
 @author: constatza
 """
 import matplotlib.pyplot as plt
 
-from fempy.fem.problems import ProblemStructural
-from fempy.fem.analyzers import Linear, Static
+from fempy.fem.problems import ProblemStructuralDynamic
+from fempy.fem.analyzers import Linear, NewmarkDynamicAnalyzer
 from fempy.fem.solvers import CholeskySolver
 from fempy.fem.systems import LinearSystem
 
-from fempy.fem.core.loads import Load
+from fempy.fem.core.loads import Load, TimeDependentLoad
 from fempy.fem.core.entities import Model, Node, DOFtype
 from fempy.fem.core.providers import ElementMaterialOnlyStiffnessProvider
 from fempy.fem.core.materials import ElasticMaterial2D, StressState2D
@@ -50,10 +50,17 @@ model.connect_data_structures()
 linear_system = LinearSystem(model.forces)
 solver = CholeskySolver(linear_system)
     
-provider = ProblemStructural(model)
+provider = ProblemStructuralDynamic(model)
 provider.stiffness_provider = ElementMaterialOnlyStiffnessProvider()
 child_analyzer = Linear(solver)
-parent_analyzer = Static(provider, child_analyzer, linear_system)
+parent_analyzer = NewmarkDynamicAnalyzer(model, 
+                                 solver, 
+                                 provider, 
+                                 child_analyzer, 
+                                 timestep=1, 
+                                 total_time=10, 
+                                 alpha=.25, 
+                                 delta=1/6)
 
 
 for i in range(2000):

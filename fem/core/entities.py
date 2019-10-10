@@ -1,5 +1,8 @@
+
+
 import numpy as np
 from enum import IntEnum
+from fempy.fem.assemblers import GenericDOFEnumerator
 
 class DOFtype(IntEnum):
     Unknown = 0,

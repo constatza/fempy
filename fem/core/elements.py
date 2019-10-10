@@ -374,7 +374,7 @@ class Quad4(Element):
     @staticmethod
     def mass_matrix(element):
         mass_matrix = Quad4.calculate_mass_matrix(element.integration_points,
-                                                            element.material.density,
-                                                            element.thickness)
+                                                  element.material.mass_density,
+                                                  element.thickness)
         return mass_matrix
 

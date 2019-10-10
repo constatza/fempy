@@ -12,7 +12,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 import fempy.fem.preprocessor as pre
 import fempy.fem.postprocessor as post
-matplotlib.style.use('ggplot')
+
 numelX = 20
 numelY = 50
 Emean = 30

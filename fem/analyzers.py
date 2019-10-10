@@ -139,10 +139,10 @@ class Static(Analyzer):
         self.child.solve()
 
 
-class NewmarkDynamic(Analyzer):
+class NewmarkDynamicAnalyzer(Analyzer):
     """Implements the Newmark method for dynamic analysis."""
     
-    def __init__(self, model, solver, provider, child_analyzer, timestep, total_time, alpha, delta):
+    def __init__(self, model=None, solver=None, provider=None, child_analyzer=None, timestep=None, total_time=None, alpha=None, delta=None):
         
         super().__init__(provider, child_analyzer)
         self.model = model
@@ -239,7 +239,7 @@ class NewmarkDynamic(Analyzer):
             self.child.Solve()
             self.update_velocity_and_accelaration(i)
 
-    def calculate_rhs_implicit(self, rhs, add_rhs=True):
+    def calculate_rhs_implicit(self, add_rhs=True):
         """
         Calculates the right-hand-side of the implicit dynamic method. 
         This will be used for the solution of the linear dynamic system.

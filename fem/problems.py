@@ -95,8 +95,8 @@ class ProblemStructuralDynamic:
         
     def build_damping_matrix(self):
         """ Builds the global Mass Matrix"""
-        provider = ElementMassProvider()
-        self.damping_matrix = self.mass_matrix + self.build_stiffness_matrix
+        
+        self.damping_matrix = self._mass_matrix + self._stiffness_matrix
 
 
     def rebuild_stiffness_matrix(self):
