@@ -8,10 +8,27 @@ This is a temporary script file.
 import scipy 
 
 
-x = 10
+from dataclasses import dataclass
 
-def foo(x):
-    x += 1
+@dataclass
+class foo():
+    a : float = 0
+
+    def nice(self):
+        self.a += 1
+
+    @property
+    def A(self):
+        return "is {:}".format(self.a)
     
-foo(x)
-print(x)
+    def mice(self):
+        nice = self.nice
+        nice()
+        nice()
+        
+b = foo()
+
+
+b.mice()
+
+print(b.A)

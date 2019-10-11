@@ -162,7 +162,9 @@ class NewmarkDynamicAnalyzer(Analyzer):
         self.u_next = None
         self.ud_next = None
         self.udd_next = None
-        self.displacements = np.empty((self.total_steps, self.model.total_DOFs))
+        self.displacement = np.empty((self.total_steps, self.model.total_DOFs))
+        self.velocity = np.empty((self.total_steps, self.model.total_DOFs))
+        self.acceleration = np.empty((self.total_steps, self.model.total_DOFs))
     
     def calculate_coefficients(self):
         alpha = self.alpha
@@ -191,17 +193,6 @@ class NewmarkDynamicAnalyzer(Analyzer):
         self.linear_system.matrix = (provider.stiffness_matrix 
                                     + a0 * provider.mass_matrix
                                     + a1 * provider.damping_matrix)
-        
-    def get_other_rhs_components(self, linear_system, current_solution):
-        """Calculates inertia forces and damping forces."""
-        alphas = self.alphas
-        provider = self.provider  
-        u  = current_solution[0]
-        v = current_solution[1]
-        a = current_solution[2]
-        inertia_forces = provider.mass_matrix_vector_product( alphas[0]*u + alphas[2]*v + alphas[3]*a)
-        damping_forces = provider.damping_matrix_vector_product( alphas[1]*u + alphas[4]*v + alphas[5]*a)
-        return inertia_forces + damping_forces   
    
     def initialize(self, is_first_analysis=True):
         """
@@ -213,17 +204,20 @@ class NewmarkDynamicAnalyzer(Analyzer):
         if is_first_analysis:
             model.connect_data_structures()
 
-            
         linear_system.reset()
-        linear_system.forces = np.zeros(linear_system.size)  
+
+        
+        model.assign_loads()
+        
+        self.initialize_internal_vectors() # call BEFORE build_matrices & initialize_rhs
         self.build_matrices()
-        model.assign_loads() 
-        linear_system.rhs = model.forces
-        self.initialize_internal_vectors()
+
+        
         self.initialize_rhs()
+        
         self.child.initialize()
         
-        print(self.provider._mass_matrix)   
+        
         
     def solve(self):
         """
@@ -231,18 +225,23 @@ class NewmarkDynamicAnalyzer(Analyzer):
         method of the specific solver attached during construction of the
         current instance.
         """
+        get_rhs_from_history_load = self.provider.get_rhs_from_history_load
+        calculate_rhs_implicit = self.calculate_rhs_implicit
+        child_solve = self.child.solve
+        update_velocity_and_acceleration = self.update_velocity_and_accelaration
+        store_results = self.store_results
         
         for i in range(self.total_steps):
         
-            #print("Newmark step: {0:d}".format(i))
+#            print("Newmark step: {0:d}".format(i))
             
             
-            self.rhs = self.provider.get_rhs_from_history_load(i)
+            self.rhs = get_rhs_from_history_load(i)
             
-            self.linear_system.rhs = self.calculate_rhs_implicit(add_rhs=True)            
-            self.child.solve()
-            self.update_velocity_and_accelaration(i)
-            self.store_results(i)
+            self.linear_system.rhs = calculate_rhs_implicit(add_rhs=True)            
+            child_solve()
+            update_velocity_and_acceleration(i)
+            store_results(i)
 
     def calculate_rhs_implicit(self, add_rhs=True):
         """
@@ -258,34 +257,41 @@ class NewmarkDynamicAnalyzer(Analyzer):
         inertia_forces = provider.mass_matrix_vector_product(udd_eff)
         damping_forces = provider.damping_matrix_vector_product(ud_eff)
         rhs_effective = inertia_forces + damping_forces
+
         if add_rhs:
             rhs_effective += self.rhs 
-       
-            
+
         self.linear_system.rhs = rhs_effective
         #rhs_effective = uum + ucc
        
         return rhs_effective
     
     
-    def initialize_internal_vectors(self):
-        if self.linear_system.solution is None:
-            total_DOFs = self.model.total_DOFs
-            self.u = np.zeros((total_DOFs, 1))
-            self.ud = np.zeros((total_DOFs, 1))
-            self.udd = np.zeros((total_DOFs, 1))
-        else:
-            pass
-            #sth not zero 
+    def initialize_internal_vectors(self, u0=None, ud0=None):
+        if self.linear_system.solution is not None:
+            self.linear_system.reset()
+            
+        total_DOFs = self.model.total_DOFs
+        
+        if u0 is None:
+            u0 = np.zeros((total_DOFs, 1))            
+        if ud0 is None:
+            ud0 = np.zeros((total_DOFs, 1))
+        
+        stiffness = self.provider._stiffness_matrix
+        damping = self.provider._damping_matrix
+        mass = self.provider._mass_matrix
+        rhs0 = self.provider.get_rhs_from_history_load(0)
+        self.linear_system.rhs = rhs0 - stiffness @ u0 - damping @ ud0
+        self.linear_system.matrix = mass
+        self.solver.solve()
+        self.udd = self.linear_system.solution
+        self.ud = ud0
+        self.u = u0
+
 
     def initialize_rhs(self):
-        self.coeffs = {
-            'mass' : self.alphas[0],
-            'damping' : self.alphas[1],
-            'stiffness' : 1
-        }
-        
-        self.rhs = self.linear_system.rhs
+        self.linear_system.rhs = self.provider.get_rhs_from_history_load(1)
 
 
     def update_result_storages(self):
@@ -293,25 +299,26 @@ class NewmarkDynamicAnalyzer(Analyzer):
 
     def update_velocity_and_accelaration(self, timestep):
         a0, a2, a3, a6, a7 = [self.alphas[i] for i in [0,2,3,6,7]]
-        ud = self.ud #self.provider.get_velocities_of_timestep(timestep)
-        udd = self.udd #self.provider.get_accelerations_of_timestep(timestep)
+        
+        udd = self.udd
+        ud = self.ud 
         u = self.u
-
-        u_next = np.reshape(self.linear_system.solution, (-1,1))
+        
+        u_next = self.linear_system.solution
 
         udd_next = a0 * (u_next - u) - a2 * ud - a3 * udd 
         ud_next = ud + a6 * udd +  a7 * udd_next
         
-        # self.udd_next = udd_next
-        # self.ud_next = ud_next
-        # self.u_next = u_next
+
         self.u = u_next
         self.ud = ud_next
         self.udd = udd_next
     
     def store_results(self, timestep):
         
-        self.displacements[timestep, :] = self.u.ravel()
+        self.displacement[timestep, :] = self.u.ravel()
+        self.velocity[timestep, :] = self.ud.ravel()
+        self.acceleration[timestep, :] = self.ud.ravel()
         
         
 

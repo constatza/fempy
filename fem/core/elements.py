@@ -332,7 +332,7 @@ class Quad4(Element):
         return mass_matrix
 
     @staticmethod
-#    @nb.njit('float64[:,:](float64[:,:], float64[:], float64, float64)')
+    @nb.njit('float64[:,:](float64[:,:], float64[:], float64, float64)')
     def sum_masses(Ns, ws, mass_density, thickness):
         
         mass_matrix = np.zeros((8,8))

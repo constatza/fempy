@@ -187,7 +187,7 @@ class Model:
         for hload in self.time_dependent_loads:
             load_global_DOF = self.nodal_DOFs_dictionary[hload.node.ID][hload.DOF]
             if load_global_DOF >= 0:
-                dynamic_forces[load_global_DOF] = hload.history
+                dynamic_forces[load_global_DOF] = hload.time_history
         self.dynamic_forces = dynamic_forces 
         
     def connect_data_structures(self):

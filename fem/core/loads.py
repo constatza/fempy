@@ -15,11 +15,10 @@ class TimeDependentLoad(Load):
         if self.magnitude is None:
             self.magnitude = 1
         self._history = self.magnitude * time_history
-        self.length = len(time_history)
+        self.total_steps = len(time_history)
     
-    @property
-    def history(self, timestep):
-        if timestep <= self.length:
+    def time_history(self, timestep):
+        if timestep < self.total_steps:
             return self._history[timestep]
         else:
             return 0

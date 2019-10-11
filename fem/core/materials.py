@@ -1,21 +1,27 @@
 
 
 from enum import IntEnum
+from dataclasses import dataclass
 import numpy as np
 
 class StressState2D(IntEnum):
     plain_stress = 0,
     plain_strain = 1
     
-
+@dataclass
 class ElasticMaterial2D:
-    
-    def __init__(self, stress_state=None, young_modulus=None, poisson_ratio=None, mass_density=0):
-        self.young_modulus = young_modulus
-        self.poisson_ratio = poisson_ratio
-        self.stress_state = stress_state
-        self.mass_density = mass_density
-        self._constitutive_matrix = None
+    young_modulus : np.float64 = None
+    poisson_ratio : np.float64 = None
+    stress_state : np.float64 = None
+    mass_density : np.float64 = 0
+    _constitutive_matrix : np.ndarray = None
+#    
+#    def __init__(self, stress_state=None, young_modulus=None, poisson_ratio=None, mass_density=0):
+#        self.young_modulus = young_modulus
+#        self.poisson_ratio = poisson_ratio
+#        self.stress_state = stress_state
+#        self.mass_density = mass_density
+#        self._constitutive_matrix = None
         
     
     @property    

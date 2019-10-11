@@ -97,7 +97,7 @@ class ProblemStructuralDynamic:
     def build_damping_matrix(self):
         """ Builds the global Mass Matrix"""
         
-        self.damping_matrix = self._mass_matrix + self._stiffness_matrix
+        self.damping_matrix = 0*self._mass_matrix + 0*self._stiffness_matrix
 
 
     def rebuild_stiffness_matrix(self):
@@ -110,13 +110,13 @@ class ProblemStructuralDynamic:
     
     def rebuild_damping_matrix(self):
         """ Rebuilds the global Mass Matrix"""
-        self.damping_matrix = self._mass_matrix + self._stiffness_matrix
+        self.damping_matrix = 0*self._mass_matrix + 0*self._stiffness_matrix
 
     def get_rhs_from_history_load(self, timestep):
         static_forces = self.model.forces 
         dynamic_forces = np.zeros(static_forces.shape)
         for dof, history in self.model.dynamic_forces.items():
-            dynamic_forces[dof] = history[timestep]
+            dynamic_forces[dof] = history(timestep)
         
         rhs = static_forces + dynamic_forces
         
@@ -136,4 +136,5 @@ class ProblemStructuralDynamic:
     
     def damping_matrix_vector_product(self, vector):
         return self._damping_matrix @ vector
+    
     
