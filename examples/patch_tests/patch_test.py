@@ -64,6 +64,3 @@ for i in range(2000):
 
 u = linear_system.solution
 
-plt.figure()
-plt.plot(u, linestyle=' ', marker='.')
-plt.show()

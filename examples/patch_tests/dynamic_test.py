@@ -32,25 +32,30 @@ model.nodes_dictionary[4].constraints = [DOFtype.X, DOFtype.Y]
 
 load1 = Load(magnitude=1000, node=model.nodes_dictionary[2], DOF=DOFtype.X)
 load2 = Load(magnitude=1000, node=model.nodes_dictionary[3], DOF=DOFtype.X)
-model.loads.append(load1)
-model.loads.append(load2)
-t = np.linspace(0, 1)
+#model.loads.append(load1)
+#model.loads.append(load2)
+t = np.linspace(0, .5)
 timestep = t[1] -t[0]
+total_time = 30
 F0 = 1000.0
-history = F0 * np.cos(2*3.14*t) * np.random.rand(t.shape[0])
-hload = TimeDependentLoad(time_history=history, 
+history = F0 * np.ones(5)#np.cos(1000*3.14*t) * np.random.rand(t.shape[0])
+hload1 = TimeDependentLoad(time_history=history, 
                           node = model.nodes_dictionary[2], 
                           DOF=DOFtype.X)
+hload2 = TimeDependentLoad(time_history=history, 
+                          node = model.nodes_dictionary[3], 
+                          DOF=DOFtype.X)
                           
-model.time_dependent_loads.append(hload)
+model.time_dependent_loads.append(hload1)
+model.time_dependent_loads.append(hload2)
 material = ElasticMaterial2D(stress_state=StressState2D.plain_stress,
-                             young_modulus=21000,
+                             young_modulus=210000,
                              poisson_ratio=0.3779,
                              mass_density = 7.85)
 
 quad = Quad4(material=material, thickness=1)
 element1 = Quad4(ID=1, material=material, element_type=quad, thickness=1)
-for i in range(1,5):
+for i in range(1, 5):
     element1.add_node(model.nodes_dictionary[i])			
 
 model.elements_dictionary[1] = element1
@@ -68,7 +73,7 @@ parent_analyzer = NewmarkDynamicAnalyzer(model,
                                          provider, 
                                          child_analyzer, 
                                          timestep=timestep, 
-                                         total_time=1000, 
+                                         total_time=total_time, 
                                          delta=1/2,
                                          alpha=1/4)
 
@@ -77,29 +82,38 @@ for i in range(1):
     parent_analyzer.build_matrices()
     parent_analyzer.initialize()
     parent_analyzer.solve()
-
-u = parent_analyzer.displacement[:, 2]
-v = parent_analyzer.velocity[:, 2]
-a = parent_analyzer.velocity[:, 2]
+node = 1
+ux = parent_analyzer.displacement[:, 2*node-2]
+uy = parent_analyzer.displacement[:, 2*node-1]
+vx = parent_analyzer.velocity[:, 2*node-2]
+vy = parent_analyzer.velocity[:, 2*node-1]
+ax = parent_analyzer.acceleration[:, 2*node-2]
+ay = parent_analyzer.acceleration[:, 2*node-1]
 
 import matplotlib.animation as animation
 plt.close('all')
 fig = plt.figure()
-ax = fig.add_subplot(111)
-line1, = ax.plot([], [])
-
-def init(x,y):
+ax1 = fig.add_subplot(111)
+line1, = ax1.plot([], [])
+line2, = ax1.plot([], [])
+def init(x, y):
     line1.axes.axis([np.min(x), np.max(x), np.min(y), np.max(y)])
     return line1,
     
 
-def update(num, x, y, line1):
-    line1.set_data(x[:num], y[:num])
-    line1.axes.axis([np.min(x), np.max(x), np.min(y), np.max(y)])
-    return line1,
+def update(num, x, y, lines):
+    try: 
+        lines.set_data(x[:num], y[:num])
+        lines.axes.axis([np.min(x), np.max(x), np.min(y), np.max(y)])
+    except AttributeError:
+        for i in range(len(lines)):
+            lines[i].set_data(x[i][:num], y[i][:num])
+        lines[i].axes.axis([np.min(x), np.max(x), np.min(y), np.max(y)])    
+        
+    return lines
 
-timeline = range(len(u))*timestep 
-ani =animation.FuncAnimation(fig, update, len(u), fargs=[u, v, line1],
+timeline = range(len(ux))*timestep 
+ani =animation.FuncAnimation(fig, update, len(ux), fargs=[ax, ay, line1],
                   interval=timestep*1000)
     
 plt.show()
