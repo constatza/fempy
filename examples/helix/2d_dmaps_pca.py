@@ -36,7 +36,7 @@ z = z.ravel()
 U = np.concatenate([[x],
                     [y],
                     [z]])
-U = normalize(U)
+U, Umean, Ustd = normalize(U)
 
 
 """Diffusion Maps"""   

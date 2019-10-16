@@ -10,45 +10,8 @@ from scipy.sparse import csr_matrix
 import scipy.sparse.linalg as splinalg
 import scipy.optimize as opt
 import scipy.linalg as linalg
+from scipy import spatial
 import numba as nb
-
-
-class DiffusionMaps:
-    
-    def __init__(self, data_set=None, epsilon=None):
-        """
-        Parameters
-        ----------
-        data_set : numpy.ndarray
-            Array with of shape (d, n). Each column represents a vector in R^d.
-                d : number of euclidean space dimensions
-                n : number of data or vectors
-        """
-        self._data_set = data_set
-        self.number_of_dimensions = data_set.shape[0]
-        self.number_of_data = data_set.shape[1]
-        self._diffusion_matrix = None
-        self.epsilon = epsilon
-    
-    @property
-    def data_set(self):
-        return self._data_set
-    
-    @data_set.setter
-    def data_set(self, value):
-        self._diffusion_matrix = None
-        self._dataset = value
-    
-    @property
-    def diffusion_matrix(self):
-        if self._diffusion_matrix is None:
-            self._diffusion_matrix = self.calculate_diffusion_matrix(self.data_set, 
-                                                                     epsilon=self.epsilon)
-        return self._diffusion_matrix
-    
-    @property
-    def transition_matrix(self):
-        return self.calculate_transition_matrix(self.data_set, episolon=self.epsilon)
 
 
 def M(data_set, epsilon):
@@ -117,7 +80,7 @@ def diffusion_maps(data_set, numeigs=10, t=1, epsilon=None):
     return eigenvalues, eigenvectors
  
 
-def ls_approx(natural_coordinates, diffusion_coordinates):
+def least_squares(natural_coordinates, diffusion_coordinates):
     """Least squares, linear approximation of the generally nonlinear
     transformation matrix from sample space to diffusion space.
     
@@ -201,6 +164,7 @@ def normalize(U):
 def denormalize(U, Umean, Ustd):
     return U*Ustd + Umean
 
+
 def pca(data_set, numeigs):
     correl = data_set.T @ data_set
     val, vec = splinalg.eigsh(correl, k=numeigs, which='LM')
@@ -209,6 +173,19 @@ def pca(data_set, numeigs):
     return val, vec
 
 
+def nearest_neighbour_mapping(vectors, natural_coordinates, transformed_coordinates, k=3):
+     coordinates_tree = spatial.cKDTree(natural_coordinates)
+     
+     distances, neighbours_id  = coordinates_tree.query(vectors, k=k)
+     
+     d_inv = 1/distances
+     weights = d_inv/np.sum(d_inv, axis=1, keepdims=True)
+     weights[np.isnan(weights)] = 1
+     transformed_vectors = weights[:, :, None] * transformed_coordinates[neighbours_id, :]
+     transformed_vectors = np.sum(transformed_vectors, axis=1)
+     return transformed_vectors
+     
+     
 if __name__=='__main__':
     import matplotlib.pyplot as plt
     from mpl_toolkits.mplot3d import Axes3D
@@ -217,14 +194,14 @@ if __name__=='__main__':
     
     epsilon = .5
 
-    timesteps = 500
+    timesteps = 10
     numeigs = 2
     
     sigma = 0.05
-    t = np.linspace(0, 2*np.pi, 100)
+    t = np.linspace(0, 4*np.pi, 100)
     x = np.cos(t)*(1 + np.random.normal(scale=sigma, size=len(t)) )
     y = np.sin(t)*(1 + np.random.normal(scale=sigma, size=len(t)) )
-    z = t*(1 + np.random.normal(scale=sigma, size=len(t)) )
+    z = t*t*(1 + np.random.normal(scale=sigma, size=len(t)) )
     U = np.concatenate([[x],[y],[z]])
     U, Umean, Ustd = normalize(U)
     d = U.shape[0]
@@ -235,28 +212,30 @@ if __name__=='__main__':
     
     eigvals, eigvecs = diffusion_maps(U, epsilon=epsilon, t=timesteps, numeigs=numeigs+1)
     #k = len(eigvals[eigvals>0.05]) +1
-    Fi =  eigvecs[:, :]
+    Fi =  eigvals[1:] * eigvecs[:, 1:]
     
-    sol = nl_least_squares(U, Fi)
-    d = U.shape[0]
-    n = Fi.shape[1]
-    A = sol[:d*n].reshape((d, n))
-    B = sol[d*n:].reshape((d, n))
-    res = U - A @ Fi.T - B @ Fi.T**3
-    res = np.einsum('ij->', res*res)
+    A, res = least_squares(U, Fi)
+
     print(A.shape)
-    Unew = denormalize(A @ Fi.T + B @ Fi.T**3, Umean, Ustd)
+    
+    cloud = (U * np.random.randn(*U.shape)).T
+    cloud_diff = nearest_neighbour_mapping(cloud, U.T, Fi)
+    cloud_natural = nearest_neighbour_mapping(cloud_diff, Fi, U.T)
+    
+    Unew = denormalize(A @ Fi.T , Umean, Ustd)
+#    Unew = denormalize(cloud_natural.T, Umean, Ustd)
     xnew = Unew[0,:]
     ynew = Unew[1,:]
     znew = Unew[2,:]
-    
     """PCA"""
     val, vec = pca(U, numeigs=numeigs)
     m = len(val[val>[.05]]) 
     Lr = vec[:, :m]
-    P, res2 = ls_approx(U, Lr) 
+    P, res2 = least_squares(U, Lr) 
 
-    U_new2 = denormalize(P @ Lr.T, Umean, Ustd) 
+    U_new2 = denormalize(P @ Lr.T, Umean, Ustd)
+    cloud_pca = nearest_neighbour_mapping(cloud, U.T, Lr)
+#    U_new2 = denormalize(natural_r_pca.T, Umean, Ustd)
     x_pca = U_new2[0, :]
     y_pca = U_new2[1, :]
     z_pca = U_new2[2, :]
@@ -287,13 +266,23 @@ if __name__=='__main__':
     ax.legend()
   
     fig2 = plt.figure()
-    ax2 = fig2.add_subplot(111, projection='3d')
+    ax2 = fig2.add_subplot(111)
     try:
-        ax2.scatter(Fi[:,1], Fi[:,2], Fi[:,3])
-        ax2.scatter(Lr[:,0], Lr[:,1], Lr[:,2])
+        ax2.scatter(Fi[:,0], Fi[:,1])
+        #ax2.scatter(Lr[:,0], Lr[:,1])
     except IndexError:
         pass
     plt.grid()
     plt.ylabel('$\Psi_2$')
     plt.xlabel('$\Psi_1$')
     plt.show() 
+    
+    fig3 = plt.figure()
+    ax3 = fig3.add_subplot(111, projection='3d')
+    ax3.scatter(cloud[:,0],cloud[:,1],cloud[:,2], color='k', label='Original Data')
+    ax3.scatter(cloud_natural[:,0],cloud_natural[:,1],cloud_natural[:,2], color='g', label='Diffusion Maps')
+    ax3.legend()
+    
+    plt.figure()
+    plt.plot(cloud[:,0])
+    plt.plot(cloud_natural[:,0])

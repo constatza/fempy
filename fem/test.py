@@ -5,30 +5,10 @@ Spyder Editor
 This is a temporary script file.
 """
 
-import scipy 
+import numpy as np
 
 
-from dataclasses import dataclass
-
-@dataclass
-class foo():
-    a : float = 0
-
-    def nice(self):
-        self.a += 1
-
-    @property
-    def A(self):
-        return "is {:}".format(self.a)
-    
-    def mice(self):
-        nice = self.nice
-        nice()
-        nice()
-        
-b = foo()
+a = np.array(np.arange(9).reshape(3,3))
 
 
-b.mice()
-
-print(b.A)
+a[[0,1], :]
