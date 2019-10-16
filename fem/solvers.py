@@ -27,12 +27,15 @@ class CholeskySolver(Solver):
     
     def __init__(self, linear_system):
         super().__init__(linear_system)
-
+        
+    def initialize(self):
+        """ Factorizes linear system's matrix once for many different rhs."""
+        self.L = linalg.cho_factor(self.linear_system.matrix)
+    
     def solve(self):
-#        S = sparse.bsr_matrix(self.linear_system.matrix)
-        L = linalg.cho_factor(self.linear_system.matrix)
-        solution = linalg.cho_solve(L, self.linear_system.rhs)
+        solution = linalg.cho_solve(self.L, self.linear_system.rhs)
         self.linear_system.solution = solution
+
 
 class SparseSolver(Solver):
     def __init__(self, linear_system):

@@ -159,9 +159,6 @@ class NewmarkDynamicAnalyzer(Analyzer):
         self.u = None
         self.ud = None
         self.udd = None
-        self.u_next = None
-        self.ud_next = None
-        self.udd_next = None
         self.displacement = np.empty((self.total_steps, self.model.total_DOFs))
         self.velocity = np.empty((self.total_steps, self.model.total_DOFs))
         self.acceleration = np.empty((self.total_steps, self.model.total_DOFs))
@@ -208,6 +205,7 @@ class NewmarkDynamicAnalyzer(Analyzer):
 
         
         model.assign_loads()
+        
         
         self.initialize_internal_vectors() # call BEFORE build_matrices & initialize_rhs
         self.build_matrices()
@@ -284,6 +282,7 @@ class NewmarkDynamicAnalyzer(Analyzer):
         rhs0 = self.provider.get_rhs_from_history_load(0)
         self.linear_system.rhs = rhs0 - stiffness @ u0 - damping @ ud0
         self.linear_system.matrix = mass
+        self.solver.initialize()
         self.solver.solve()
         self.udd = self.linear_system.solution
         self.ud = ud0
@@ -318,7 +317,7 @@ class NewmarkDynamicAnalyzer(Analyzer):
         
         self.displacement[timestep, :] = self.u.ravel()
         self.velocity[timestep, :] = self.ud.ravel()
-        self.acceleration[timestep, :] = self.ud.ravel()
+        self.acceleration[timestep, :] = self.udd.ravel()
         
         
 
