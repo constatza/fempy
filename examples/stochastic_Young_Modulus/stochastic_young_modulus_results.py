@@ -20,10 +20,10 @@ Input
 """
 epsilon = 100
 numeigs = 5
-timesteps = 1
+timesteps = 3
 Nsim = 200
 Ntests = Nsim
-
+dof = 1000
 filename = r"stochastic_E_displacements_20x50.npy"
 stiffname = r"stochastic_K.npy"
 
@@ -49,15 +49,15 @@ eigvals_dm, eigvecs_dm = dm.diffusion_maps(U,
 k = len(eigvals_dm[eigvals_dm>0.05])
 k = numeigs+1
 Fi =  eigvals_dm[1:] * eigvecs_dm[:, 1:]
-A_dm, res_dm = dm.ls_approx(U, Fi)
+A_dm, res_dm = dm.least_squares(U, Fi)
 
 print(A_dm.shape)
 
 Unew_dm = A_dm @ Fi[:, :k].T
 Unew_dm = dm.denormalize(Unew_dm, Umean, Ustd)
-x_dm = Unew_dm[0, :]
-y_dm = Unew_dm[1, :]
-z_dm = Unew_dm[2, :]
+x_dm = Unew_dm[2*dof-2, :]
+y_dm = Unew_dm[2*dof-1, :]
+
 
 
 
@@ -68,13 +68,13 @@ eigvals_pca, eigvecs_pca = dm.pca(U, numeigs=numeigs)
 m = len(eigvals_pca[eigvals_pca>[.05]]) 
 m = numeigs
 Lr = eigvecs_pca[:, :m]
-A_pca, res_pca = dm.ls_approx(U, Lr) 
+A_pca, res_pca = dm.least_squares(U, Lr) 
 
 Unew_pca = A_pca @ Lr.T 
 Unew_pca = dm.denormalize(Unew_pca, Umean, Ustd)
-x_pca = Unew_pca[0, :]
-y_pca = Unew_pca[1, :]
-z_pca = Unew_pca[2, :]
+x_pca = Unew_pca[2*dof-2, :]
+y_pca = Unew_pca[2*dof-1, :]
+
 
 
 
@@ -118,12 +118,12 @@ plt.figure()
 plt.loglog(epsilons, M)
 
 U = dm.denormalize(U, Umean, Ustd)
-x, y, z = U[0, :], U[1, :], U[2, :]
+x, y = U[2*dof-2, :], U[2*dof-1, :]
 fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
-ax.scatter(x, y, z, alpha=0.5, label='Data')
-ax.scatter(x_dm, y_dm, z_dm, color='g', label='Diffusion Maps')  
-ax.scatter(x_pca, y_pca, z_pca, color='r', label='PCA')
+ax = fig.add_subplot(111)
+ax.scatter(x, y, alpha=0.5, label='Data')
+ax.scatter(x_dm, y_dm, color='g', label='Diffusion Maps')  
+ax.scatter(x_pca, y_pca, color='r', label='PCA')
 ax.legend()
 ax.set_xlabel('X')
 ax.set_ylabel('Y')
@@ -138,8 +138,8 @@ plt.legend()
 plt.grid()
 
 
-ax3 = smartplot.eigenvector_plot(Fi, title='Eigenvectors - Diffusion Maps')
-ax4 = smartplot.eigenvector_plot(Lr, title='Eigenvectors - PCA')
+ax3 = smartplot.eigenvector_plot(Fi[:,:3], title='Eigenvectors - Diffusion Maps')
+ax4 = smartplot.eigenvector_plot(Lr[:, :3], title='Eigenvectors - PCA')
 
 plt.figure()
 

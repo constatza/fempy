@@ -35,7 +35,7 @@ k = len(eigvals[eigvals>0.05]) + 1
 #k = numeigs + 1
 Fi =  eigvals[1:] * eigvecs[:, 1:]
 
-A,res = ls_approx(U, Fi)
+A,res = least_squares(U, Fi)
 print(A.shape)
 Unew = A @ Fi.T
 Unew = denormalize(Unew, Umean, Ustd)
@@ -52,7 +52,7 @@ val, vec = pca(Sigma, numeigs=numeigs)
 m = len(val[val>[.05]]) 
 m = numeigs
 Lr = vec[:, :m]
-P, res2 = ls_approx(U, Lr) 
+P, res2 = least_squares(U, Lr) 
 
 U_new2 = P @ Lr.T
 U_new2 = denormalize(U_new2, Umean, Ustd)

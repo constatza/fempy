@@ -6,9 +6,17 @@ This is a temporary script file.
 """
 
 import numpy as np
+from numpy.linalg import eigh, eig
+
+a = np.array([[2,2],
+              [2,5]])
 
 
-a = np.array(np.arange(9).reshape(3,3))
+d = np.sqrt(np.sum(a, axis=1, keepdims=True))
 
+Ptilda = a/d/d.T 
+P = 1/d**2 * a
 
-a[[0,1], :]
+vals1, vecs1 = eig(P)
+vals2, vecs2 = eigh(Ptilda)
+vecs2 = vecs2

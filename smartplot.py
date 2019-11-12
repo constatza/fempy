@@ -7,6 +7,9 @@ Created on Tue Sep 24 17:56:44 2019
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
+from maths import znormalized 
+
+
 
 def histogram(x, *args, **kwargs):
     sns.set()
@@ -25,38 +28,52 @@ def formal_serif():
     plt.rc('axes', labelsize=12)
 
 
-def eigenvector_plot(F, title=None,label=None):
+def plot_eigenvalues(V, ax=None, *args, **kwargs):
+    if ax is None:
+        fig = plt.figure()
+        ax = fig.add_subplot('111')
+    ax.plot(V, *args, **kwargs)
+    ax.set_title('Eigenvalues')
+    return ax
+
+
+
+def plot_eigenvectors(F, ax=None, title='Normalized Eigenvectors',*args, **kwargs):
+    
+    F = znormalized(F, axis=0)
     numeigs = F.shape[1]
-    fig = plt.figure()
+    
+    
     if numeigs==2:
-        
-        ax = fig.add_subplot(111)
-        lines = ax.scatter(F[:, 0], F[:, 1])
+        if ax is None:
+            fig = plt.figure()
+            ax = fig.add_subplot(111)
+        lines = ax.scatter(F[:, 0], F[:, 1], *args, **kwargs)
         ax.set_xlabel('$\psi_1$')
         ax.set_ylabel('$\psi_2$')
 
     elif numeigs==3:
-        ax = fig.add_subplot(111, projection='3d')
-        lines = ax.scatter(F[:,0], F[:, 1], F[:, 2])
+        if ax is None:
+            fig = plt.figure()
+            ax = fig.add_subplot(111, projection='3d')
+        lines = ax.scatter(F[:,0], F[:, 1], F[:, 2], *args, **kwargs)
         ax.set_xlabel('$\psi_1$')
         ax.set_ylabel('$\psi_2$')
         ax.set_zlabel('$\psi_3$')
         
     else:
-        ax = fig.add_subplot(111)
-        lines = ax.plot(F)
+        if ax is None:
+            fig = plt.figure()
+            ax = fig.add_subplot(111)
+        lines = ax.plot(F, linestyle='', *args, **kwargs)
         ax.legend(lines, list(np.arange(F.shape[1])+1))
 
     ax.set_title(title)
     ax.grid()
     return ax
 
+
 if __name__ == "__main__":
     plt.close('all')
     formal_serif()
-    F = np.reshape(np.arange(20), (5,-1) )   
-    
-    ax = eigenplot(F, title='Nice')
-    
-    plt.show()
 
