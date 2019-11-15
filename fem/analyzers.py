@@ -223,6 +223,7 @@ class NewmarkDynamicAnalyzer(Analyzer):
         method of the specific solver attached during construction of the
         current instance.
         """
+        # initialize functions to avoid self.function() overhead
         get_rhs_from_history_load = self.provider.get_rhs_from_history_load
         calculate_rhs_implicit = self.calculate_rhs_implicit
         child_solve = self.child.solve
@@ -257,10 +258,8 @@ class NewmarkDynamicAnalyzer(Analyzer):
         rhs_effective = inertia_forces + damping_forces
 
         if add_rhs:
-            rhs_effective += self.rhs 
-
-        self.linear_system.rhs = rhs_effective
-        #rhs_effective = uum + ucc
+             #rhs_effective = uum + ucc
+            rhs_effective += self.rhs     
        
         return rhs_effective
     

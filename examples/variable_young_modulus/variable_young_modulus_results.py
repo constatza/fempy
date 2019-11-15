@@ -8,7 +8,6 @@ Created on Thu Sep  5 09:33:58 2019
 import numpy as np 
 import matplotlib.pyplot as plt
 import fempy.dmaps as dm
-from mpl_toolkits.mplot3d import Axes3D
 from fempy import smartplot
 
 """
@@ -37,10 +36,7 @@ eigvals_dm, eigvecs_dm = dm.diffusion_maps(U,
                                      numeigs=numeigs+1)
 
 
-k = len(eigvals_dm[eigvals_dm>0.05])
-k = numeigs+1
-Fi =  eigvals_dm[1:] * eigvecs_dm[:, 1:]
-A_dm, res_dm = dm.least_squares(U, Fi)
+
 
 print(A_dm.shape)
 
@@ -68,18 +64,6 @@ y_pca = Unew_pca[2*dof-1, :]
 
 
 
-plt.figure()
-plt.plot(eigvals_dm, 'o-', label='Diffusion Maps')
-plt.plot(eigvals_pca/np.max(eigvals_pca), 'x-', label='PCA')
-plt.ylabel('Eigenvalues')
-plt.legend()
-plt.grid()
 
-colorange = range(Fi.shape[0])
-ax3 = smartplot.eigenvector_plot(Fi[:,:3], title='Eigenvectors - Diffusion Maps', c=colorange)
-plt.colorbar()
-ax4 = smartplot.eigenvector_plot(Lr[:, :3], title='Eigenvectors - PCA', c=colorange)
-
-plt.colorbar()
 
    

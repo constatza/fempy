@@ -6,8 +6,8 @@ Created on Tue Jul 30 13:49:31 2019
 """
 
 
-from numpy import array, zeros, newaxis, arange, empty
-from scipy import sparse
+from numpy import array, zeros, newaxis, arange, empty, sqrt
+import scipy.linalg as linalg
 from numba import njit, prange, parfor
 
 
@@ -45,4 +45,20 @@ class ElementMassProvider:
     def matrix(element):
         return element.element_type.mass_matrix(element)
 
-
+import matplotlib.pyplot as plt
+class RayleighDampingMatrixProvider:
+    
+    @staticmethod
+#    @njit('float64[:, :](float64[:, :], float64[:, :], float64[:])')
+    def calculate_global_matrix(stiffness_matrix, mass_matrix, damping_coeffs):
+        eigvals, eigvecs = linalg.eigh(stiffness_matrix, b=mass_matrix,
+                                 eigvals=(0,1))
+        
+        
+        
+        wmegas = sqrt(eigvals)
+        plt.plot(wmegas)
+        Matrix = .5* array([1/wmegas,wmegas]) 
+        a = linalg.solve(Matrix.T, damping_coeffs)
+        
+        return a[0]*mass_matrix + a[1]*stiffness_matrix

@@ -7,12 +7,59 @@ Created on Tue Sep 24 17:56:44 2019
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
-from maths import znormalized 
+from scipy.stats import zscore 
+import matplotlib.animation as animation
 
+
+def gridplot(axes, iterable, titles=None, only2d=True, *args, **kwargs):
+    """
+    e.g. 
+    fig, axes = subplots(2,2)
+    gridplot(axes, (data1, data2, data3, data4))
+    """
+    for i, data in enumerate(iterable):
+        
+        axes[i] = plotnd(data, ax=axes[i],  *args, **kwargs)
+        if titles is not None:
+            axes[i].set_title[titles[i]]
+    return axes
+        
+def plotnd(data, ax=None, *args, **kwargs):
+    returnax = True
+    if ax is None: 
+        ax = plt
+        returnax = False
+    numdimensions = len(data)
+    
+    if numdimensions>1:
+        if isinstance(data, list) or isinstance(data, tuple):
+            data=np.array(data)
+        
+        ax.plot(data[0, :], data[1:,:].T, *args, **kwargs)
+    elif numdimensions==1:
+        ax.plot(data, *args, **kwargs)
+    
+    if returnax: return ax
+    
+         
+         
+
+
+def plot23d(x, y, z=None, ax=None, title=None, *args, **kwargs):
+    if ax is None: ax = plt
+    if z is None:
+        ax.plot(x, y, *args, **kwargs)
+    elif ax.projection=='3d':
+        ax.plot(x, y, z, *args, **kwargs)
+    else:
+        print("Axis projection!='3d'")
+    ax.set_title(title)
+    return ax
+                
 
 
 def histogram(x, *args, **kwargs):
-    sns.set()
+#    sns.set()
     return sns.distplot(x, *args, **kwargs)
 
 def formal_serif():    
@@ -38,10 +85,13 @@ def plot_eigenvalues(V, ax=None, *args, **kwargs):
 
 
 
-def plot_eigenvectors(F, ax=None, title='Normalized Eigenvectors',*args, **kwargs):
+def plot_eigenvectors(F, ax=None, title='Normalized Eigenvectors', *args, **kwargs):
     
-    F = znormalized(F, axis=0)
-    numeigs = F.shape[1]
+    F = zscore(F.T, axis=0)
+    try:
+        numeigs = F.shape[1]
+    except IndexError:
+        numeigs = 1
     
     
     if numeigs==2:
@@ -66,7 +116,7 @@ def plot_eigenvectors(F, ax=None, title='Normalized Eigenvectors',*args, **kwarg
             fig = plt.figure()
             ax = fig.add_subplot(111)
         lines = ax.plot(F, linestyle='', *args, **kwargs)
-        ax.legend(lines, list(np.arange(F.shape[1])+1))
+        ax.legend(lines, list(np.arange(numeigs)+1))
 
     ax.set_title(title)
     ax.grid()

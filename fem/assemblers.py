@@ -113,6 +113,7 @@ class GlobalMatrixAssembler:
         return K
 
 
-class RayleighDampingMatrixAssembler:
-    pass
+        
+        
+    
 

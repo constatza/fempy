@@ -1,21 +1,21 @@
 # -*- coding: utf-8 -*-
 """
+Manifold-learning library
+
 Created on Tue Nov 12 14:39:25 2019
 
 @author: constatza
 """
-
-from sklearn.metrics.pairwise import pairwise_distances
 import numpy as np
-from scipy.sparse import csr_matrix
 import scipy.sparse.linalg as splinalg
 import scipy.linalg as linalg
-import numba as nb
+
 from dataclasses import dataclass, field
+from sklearn.metrics.pairwise import pairwise_distances
+from scipy.sparse import csr_matrix
 
 
-"""Manifold learning library"""
-
+"""Dimensionality reduction classes"""
 
 @dataclass
 class Reducer:
@@ -28,7 +28,7 @@ class Reducer:
 @dataclass
 class DiffusionMap(Reducer):
     epsilon : float = 1
-    alpha : float = 0
+    alpha : float = 1
     
     def __post_init__(self):
         self.eigenvalues = None
@@ -48,16 +48,17 @@ class DiffusionMap(Reducer):
         else:
             return eigenvalues, eigenvectors
     
-    @staticmethod
-    def kernel_sums_per_epsilon(data_set, epsilon, ax=None):
+    
+    def kernel_sums_per_epsilon(self, dataset=None, epsilon=None, ax=None):
         """
             M(epsilon) = Sum(Sum(Lij))
             If epsilon is an array, loop over it to return an array.
         """
+        if dataset is None: dataset = self.dataset
         kernel_matrix = DiffusionMap.calculate_kernel_matrix
         Me = np.empty(epsilon.shape)
         for i,e in enumerate(epsilon):
-            L = kernel_matrix(data_set, epsilon=e)
+            L = kernel_matrix(dataset, epsilon=e)
             Me[i] = np.einsum('ij->', L)
         return Me
 
@@ -85,7 +86,7 @@ class DiffusionMap(Reducer):
         if t>1:
             symmetric_markov = np.linalg.matrix_power(symmetric_markov,t)
         
-        reltol = 1e-6
+        reltol = 1e-4
         relmarkov = symmetric_markov/np.max(symmetric_markov)
         symmetric_markov[relmarkov < reltol] = 0
     
@@ -94,7 +95,7 @@ class DiffusionMap(Reducer):
         eigenvalues = eigenvalues[::-1]  
         eigenvectors =  eigenvectors[:, ::-1] 
         eigenvectors = eigenvectors / Droot # real eigenvectors of markov matrix
-        Psi = eigenvalues[np.newaxis, 1:] * eigenvectors[:, 1:]
+        Psi = eigenvalues[np.newaxis, :] * eigenvectors[:, :]
         
         return eigenvalues, Psi.T
 
@@ -123,4 +124,65 @@ class PCA(Reducer):
         return   val, vec.T
 
 
+"""Maps"""
 
+@dataclass
+class Map:
+    domain : np.ndarray = field(default_factory=np.ndarray)
+    codomain : np.ndarray = field(default_factory=np.ndarray)
+
+
+@dataclass
+class LinearMap(Map):
+    
+    def __post_init__(self):
+        
+         p, res, rank = LinearMap.transform(self.domain, self.codomain)
+         pinv, resinv, rankinv = LinearMap.transform(self.codomain, self.domain)
+         
+         self.matrix = p
+         self.residuals = res
+         self.rank = rank
+         
+         self.inverse_matrix = p.T
+         self.inverse_residuals = resinv
+         self.inverse_rank = rankinv
+    
+    @staticmethod
+    def transform(domain, codomain):
+        n = domain.shape[0]
+        m = codomain.shape[0]
+        if n==m:
+            matrix = linalg.solve(domain, codomain)
+            res = np.zeros(n)
+            rank = n
+            return matrix, res, rank
+        else:
+            p, res, rank, s = linalg.lstsq(domain.T, codomain.T)
+            return p.T, res, rank
+                  
+    
+    def direct_transform_vector(self, vector: np.ndarray) -> np.ndarray:
+        return self.matrix @ vector
+    
+    def inverse_transform_vector(self, vector: np.ndarray, *args, **kwargs) -> np.ndarray:
+        return self.inverse_matrix @ vector
+    
+    def direct_transform_matrix(self, matrix):
+        return self.matrix @ matrix @ self.matrix.T
+    
+    def inverse_transform_matrix(self, matrix):
+        return self.inverse_matrix @ matrix @ self.inverse_matrix.T
+            
+
+def nearest_neighbour_mapping(vectors, natural_coordinates, transformed_coordinates, k=3):
+     coordinates_tree = spatial.cKDTree(natural_coordinates)
+     
+     distances, neighbours_id  = coordinates_tree.query(vectors, k=k)
+     
+     d_inv = 1/distances
+     weights = d_inv/np.sum(d_inv, axis=1, keepdims=True)
+     weights[np.isnan(weights)] = 1
+     transformed_vectors = weights[:, :, None] * transformed_coordinates[neighbours_id, :]
+     transformed_vectors = np.sum(transformed_vectors, axis=1)
+     return transformed_vectors

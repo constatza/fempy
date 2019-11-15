@@ -8,7 +8,6 @@ Created on Wed Sep  4 10:30:38 2019
 import pickle
 import time
 import numpy as np
-import matplotlib
 import matplotlib.pyplot as plt
 import fempy.fem.preprocessor as pre
 import fempy.fem.postprocessor as post
@@ -16,7 +15,7 @@ import fempy.fem.postprocessor as post
 numelX = 20
 numelY = 50
 Emean = 30
-Nsim = 100
+Nsim = 10
 
 with open('analyzer.pkl', 'rb') as pickle_file:
     parent_analyzer = pickle.load(pickle_file)
@@ -36,7 +35,7 @@ U = np.empty((Nsim, 2100))
 t1 = time.time()
 
 #list with all analyzers for the tests from last until Nsim from the end
-K = np.empty((U.shape[1], U.shape[1], Nsim))
+K = np.empty((Nsim, U.shape[1], U.shape[1]))
 total_simulations = E.shape[0]
 for sim in range(Nsim):
     counter = -1
@@ -50,7 +49,7 @@ for sim in range(Nsim):
     
     parent_analyzer.build_matrices()
     parent_analyzer.initialize()
-    K[:, :, sim] = parent_analyzer.linear_system.matrix 
+    K[sim, :, :] = parent_analyzer.linear_system.matrix 
 #    parent_analyzer.solve()
 #    U[sim, :] = parent_analyzer.linear_system.solution
 

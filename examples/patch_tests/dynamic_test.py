@@ -34,11 +34,11 @@ load1 = Load(magnitude=1000, node=model.nodes_dictionary[2], DOF=DOFtype.X)
 load2 = Load(magnitude=1000, node=model.nodes_dictionary[3], DOF=DOFtype.X)
 #model.loads.append(load1)
 #model.loads.append(load2)
-t = np.linspace(0, .5)
+t = np.linspace(0, 1, 200)
 timestep = t[1] -t[0]
-total_time = 30
+total_time = 5
 F0 = 1000.0
-history = F0 * np.ones(5)#np.cos(1000*3.14*t) * np.random.rand(t.shape[0])
+history = F0* np.cos(20*3.14*t)
 hload1 = TimeDependentLoad(time_history=history, 
                           node = model.nodes_dictionary[2], 
                           DOF=DOFtype.X)
@@ -82,6 +82,8 @@ for i in range(1):
     parent_analyzer.build_matrices()
     parent_analyzer.initialize()
     parent_analyzer.solve()
+
+
 node = 1
 ux = parent_analyzer.displacement[:, 2*node-2]
 uy = parent_analyzer.displacement[:, 2*node-1]
@@ -89,31 +91,45 @@ vx = parent_analyzer.velocity[:, 2*node-2]
 vy = parent_analyzer.velocity[:, 2*node-1]
 ax = parent_analyzer.acceleration[:, 2*node-2]
 ay = parent_analyzer.acceleration[:, 2*node-1]
+timeline = range(len(ux))*timestep
 
-import matplotlib.animation as animation
+import fempy.smartplot as sp
 plt.close('all')
 fig = plt.figure()
 ax1 = fig.add_subplot(111)
-line1, = ax1.plot([], [])
-line2, = ax1.plot([], [])
-def init(x, y):
-    line1.axes.axis([np.min(x), np.max(x), np.min(y), np.max(y)])
-    return line1,
-    
+sp.plot23d(timeline, ux, ax=ax1, title='Velocities')
 
-def update(num, x, y, lines):
-    try: 
-        lines.set_data(x[:num], y[:num])
-        lines.axes.axis([np.min(x), np.max(x), np.min(y), np.max(y)])
-    except AttributeError:
-        for i in range(len(lines)):
-            lines[i].set_data(x[i][:num], y[i][:num])
-        lines[i].axes.axis([np.min(x), np.max(x), np.min(y), np.max(y)])    
-        
-    return lines
+fig, axes = plt.subplots(3, 1)
 
-timeline = range(len(ux))*timestep 
-ani =animation.FuncAnimation(fig, update, len(ux), fargs=[ax, ay, line1],
-                  interval=timestep*1000)
-    
-plt.show()
+data = ((timeline, ux, uy),
+        (timeline, vx, vy),
+        (timeline, ax, ay))
+
+
+sp.gridplot(axes.ravel(), data )
+
+
+#import matplotlib.animation as animation
+#plt.close('all')
+#fig = plt.figure()
+#ax1 = fig.add_subplot(111)
+#line1, = ax1.plot([], [])
+#line2, = ax1.plot([], [])
+#
+#
+#def update2d(num, x, y, lines):
+#    if not isinstance(x, list):
+#        lines.set_data(x[:num], y[:num])
+#        lines.axes.axis([np.min(x), np.max(x), np.min(y), np.max(y)])
+#    else:
+#        for i in range(len(lines)):
+#            lines[i].set_data(x[i][:num], y[i][:num])
+#        lines[i].axes.axis([np.min(x), np.max(x), np.min(y), np.max(y)])    
+#        
+#    return lines
+#
+# 
+#ani =animation.FuncAnimation(fig, update2d, len(ux), fargs=[ax, ay, line1],
+#                interval=timestep*1000)
+#    
+#plt.show()

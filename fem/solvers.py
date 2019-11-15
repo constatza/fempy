@@ -46,13 +46,20 @@ class SparseSolver(Solver):
         self.linear_system.solution = splinalg.spsolve(sparseM, self.linear_system.rhs)
 
 class SparseLUSolver(Solver):
+    
     def __init__(self, linear_system):
         super().__init__(linear_system)
     
-    def solve(self):
+    def initialize(self):
+        """ Factorizes linear system's matrix once for many different rhs."""
+        self.L = linalg.cho_factor(self.linear_system.matrix)
         sparseM = sparse.csc_matrix(self.linear_system.matrix)
-        solveLU = splinalg.factorized(sparseM)
-        self.linear_system.solution = solveLU(self.linear_system.rhs)
+        self.sparse_solveLU = splinalg.factorized(sparseM)
+        
+    
+    def solve(self):
+       
+        self.linear_system.solution = self.sparse_solveLU(self.linear_system.rhs)
      
 
 

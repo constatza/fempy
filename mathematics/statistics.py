@@ -9,9 +9,29 @@ import warnings
 import numpy as np
 import pandas as pd
 import scipy.stats as st
-import statsmodels as sm
+from dataclasses import dataclass
+
+@dataclass
+class StochasticField:
+    """
+    axis : axis along the field varies (not the dimension of the field)
+    """
+    data : np.ndarray
+    axis : int = -1
+    
+    def __post_init__(self):
+        mean = np.mean(self.data, axis=self.axis, keepdims=True)
+        std = np.std(self.data, axis=self.axis, keepdims=True)
+        self.zscore = (self.data - mean)/std
+        self.mean = mean
+        self.std = std
 
 
+
+
+def zscore_inverse(array, mean, std):
+    return array*std + mean
+        
 # Create models from data
 def best_fit_distribution(data, bins=200, ax=None):
     """Model data by finding best fit distribution to data"""
@@ -63,7 +83,7 @@ def best_fit_distribution(data, bins=200, ax=None):
                 try:
                     if ax:
                         pd.Series(pdf, x).plot(ax=ax)
-                    end
+                    
                 except Exception:
                     pass
 

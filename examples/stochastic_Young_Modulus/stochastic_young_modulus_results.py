@@ -7,90 +7,87 @@ Created on Thu Sep  5 09:33:58 2019
 
 import numpy as np 
 import matplotlib.pyplot as plt
-import fempy.dmaps as dm
-from mpl_toolkits.mplot3d import Axes3D
-import scipy.sparse.linalg as splinalg
-import scipy.linalg as linalg
 import fempy.smartplot as smartplot
+import fempy.mathematics.manilearn as ml
+
+from scipy.stats import zscore
+import fempy.mathematics.statistics as stat
 
 
 plt.close('all')
-"""
-Input
-"""
-epsilon = 100
+
+# =============================================================================
+# Input
+# =============================================================================
+
+epsilon = 10
+alpha = 1
 numeigs = 5
 timesteps = 3
-Nsim = 200
-Ntests = Nsim
+Nsim = 50
+
 dof = 1000
 filename = r"stochastic_E_displacements_20x50.npy"
 stiffname = r"stochastic_K.npy"
 
-"""Preparations"""
+# =============================================================================
+# Preparations
+# =============================================================================
 
 displacements = np.load(filename)
 #Ks = np.load(stiffname)
-    
+
 displacements = np.transpose(displacements)
-U, Umean, Ustd = dm.normalize(displacements[:, :Nsim])
-utop = displacements[:,:]
-utop_norm1 = np.linalg.norm(utop, 1, axis=0)
+data = stat.StochasticField(data=displacements)
 
+# subset of displacements
+training_data = stat.StochasticField(data=displacements[:, :Nsim]) 
+color = training_data.data[1,:]
+# =============================================================================
+# Diffusion Maps
+# =============================================================================
+dmap = ml.DiffusionMap(training_data.data,epsilon=epsilon, alpha=alpha)
+dmap.fit(numeigs=numeigs, t=timesteps)
 
+dmap_to_origin = ml.LinearMap(domain = dmap.reduced_coordinates,
+                              codomain = training_data.data)
 
-"""Diffusion Maps"""
-eigvals_dm, eigvecs_dm = dm.diffusion_maps(U,
-                                     epsilon=epsilon, 
-                                     t=timesteps, 
-                                     numeigs=numeigs+1)
-
-
-k = len(eigvals_dm[eigvals_dm>0.05])
-k = numeigs+1
-Fi =  eigvals_dm[1:] * eigvecs_dm[:, 1:]
-A_dm, res_dm = dm.least_squares(U, Fi)
-
-print(A_dm.shape)
-
-Unew_dm = A_dm @ Fi[:, :k].T
-Unew_dm = dm.denormalize(Unew_dm, Umean, Ustd)
+Unew_dm = dmap_to_origin.direct_transform_vector(dmap.reduced_coordinates)
+#Unew_dm = stat.zscore_inverse(Unew_dm, training_data.mean, Ustd)
 x_dm = Unew_dm[2*dof-2, :]
 y_dm = Unew_dm[2*dof-1, :]
 
+# =============================================================================
+# PCA
+# =============================================================================
+pca = ml.PCA(training_data.data)
+pca.fit(numeigs=numeigs)
+pca_to_origin = ml.LinearMap(domain=pca.reduced_coordinates,
+                             codomain=training_data.data)
 
-
-
-"""PCA"""
-
-eigvals_pca, eigvecs_pca = dm.pca(U, numeigs=numeigs)
-
-m = len(eigvals_pca[eigvals_pca>[.05]]) 
-m = numeigs
-Lr = eigvecs_pca[:, :m]
-A_pca, res_pca = dm.least_squares(U, Lr) 
-
-Unew_pca = A_pca @ Lr.T 
-Unew_pca = dm.denormalize(Unew_pca, Umean, Ustd)
+Unew_pca = pca_to_origin.direct_transform_vector(pca.reduced_coordinates)
+#Unew_pca = stat.zscore_inverse(Unew_pca, training_data.mean, training_data.std)
 x_pca = Unew_pca[2*dof-2, :]
 y_pca = Unew_pca[2*dof-1, :]
 
 
 
 
-"""Tests"""
+# =============================================================================
+# Tests
+# =============================================================================
 
 stiffness_matrix = Ks[:, :, -1]
 u_true = displacements[:,-1]
 force_vector = np.zeros((stiffness_matrix.shape[0],1))
 force_vector[-2,0] = 100
 
-reduced_matrix_dm = A_dm.T @ stiffness_matrix @ A_dm
-reduced_vector_dm = A_dm.T @ force_vector
+reduced_matrix_dm = dmap_to_origin.inverse_transform_matrix(stiffness_matrix)
+reduced_vector_dm = dmap_to_origin.inverse_transform_vector(force_vector)
 
 reduced_displacements_dm = np.linalg.solve(reduced_matrix_dm, reduced_vector_dm)
 
-u_dm = dm.denormalize(A_dm @ reduced_displacements_dm, Umean, Ustd)
+u_dm = dmap_to_origin.direct_transform_vector(reduced_displacements_dm)
 u_dm = np.squeeze(u_dm)
 errors_dm = np.squeeze(u_dm) - u_true
 errnorm_dm = np.linalg.norm(errors_dm)
@@ -98,12 +95,12 @@ relative_err_dm = np.abs(errors_dm)
 
 
 
-reduced_matrix_pca = A_pca.T @ stiffness_matrix @ A_pca
-reduced_vector_pca = A_pca.T @ force_vector
+reduced_matrix_pca = pca_to_origin.inverse_transform_matrix(stiffness_matrix)
+reduced_vector_pca = pca_to_origin.inverse_transform_vector(force_vector)
 
 reduced_displacements_pca = np.linalg.solve(reduced_matrix_pca, reduced_vector_pca)
 
-u_pca = dm.denormalize(A_pca @ reduced_displacements_pca, Umean, Ustd)
+u_pca = pca_to_origin.direct_transform_vector(reduced_displacements_pca)
 u_pca = np.squeeze(u_pca)
 
 errors_pca = np.squeeze(u_pca) - u_true
@@ -112,36 +109,33 @@ relative_err_pca = np.abs(errors_pca)
 
 """Plots"""
 # plot M(e)
-epsilons = np.logspace(-1.5, 4, 30)
-M = dm.M(U, epsilon=epsilons)
-plt.figure()  
-plt.loglog(epsilons, M)
 
-U = dm.denormalize(U, Umean, Ustd)
-x, y = U[2*dof-2, :], U[2*dof-1, :]
-fig = plt.figure()
-ax = fig.add_subplot(111)
-ax.scatter(x, y, alpha=0.5, label='Data')
-ax.scatter(x_dm, y_dm, color='g', label='Diffusion Maps')  
-ax.scatter(x_pca, y_pca, color='r', label='PCA')
+plt.close('all')
+epsilons = np.logspace(-1.5, 4, 30)
+plt.figure()  
+plt.loglog(epsilons, dmap.kernel_sums_per_epsilon(epsilon=epsilons))
+
+
+x, y = training_data.data[2*dof-2, :], training_data.data[2*dof-1, :]
+fig2 = plt.figure()
+ax = fig2.add_subplot(111)
+ax.scatter(x, y, alpha=0.5, label='Data', marker='x')
+ax.scatter(x_dm, y_dm, color='g', label='Diffusion Maps', marker='.')  
+ax.scatter(x_pca, y_pca, color='r', label='PCA', marker='.')
 ax.legend()
 ax.set_xlabel('X')
 ax.set_ylabel('Y')
-ax.set_zlabel('Z')
 
 
-plt.figure()
-plt.plot(eigvals_dm/np.max(eigvals_dm), 'o-', label='Diffusion Maps')
-plt.plot(eigvals_pca/np.max(eigvals_pca), 'x-', label='PCA')
-plt.ylabel('Eigenvalues')
-plt.legend()
-plt.grid()
+fig3, ax3 = plt.subplots(1,2)
+smartplot.plot_eigenvalues(dmap.eigenvalues, ax=ax3[0], color='b', marker='.')
+smartplot.plot_eigenvalues(pca.eigenvalues, ax=ax3[1], color='g', marker='+')
 
 
-ax3 = smartplot.eigenvector_plot(Fi[:,:3], title='Eigenvectors - Diffusion Maps')
-ax4 = smartplot.eigenvector_plot(Lr[:, :3], title='Eigenvectors - PCA')
+fig4, ax4 = plt.subplots(1,2)
+smartplot.plot_eigenvectors(dmap.eigenvectors[1:3,:], ax=ax4[0], title='Diffusion Maps', c=color)
+smartplot.plot_eigenvectors(pca.eigenvectors[0:2, :], ax=ax4[1], title='PCA', c=color)
 
 plt.figure()
-
 smartplot.histogram(relative_err_pca, norm_hist=True)
 plt.draw()

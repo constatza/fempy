@@ -22,18 +22,18 @@ import fempy.fem.analyzers as analyzers
 sys.setrecursionlimit(100000)
 plt.close()
 
-"""
-Create rectangular mesh for the model.
-"""
+
+
+# =============================================================================
+# MODEL PROPERTIES
+# Units: kN, mm
+# =============================================================================
+
 numelX = 20
 numelY = 50
 boundX = [0, 2000]
 boundY = [0, 5000]
 
-"""
-Model properties
-Units: kN, mm
-"""
 Nsim = 10
 Emean = 30
 poisson_ratio = .3
