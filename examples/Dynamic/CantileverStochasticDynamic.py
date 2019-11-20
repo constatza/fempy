@@ -17,11 +17,11 @@ from fempy.fem.systems import LinearSystem
 
 from fempy.fem.core.loads import Load, TimeDependentLoad
 from fempy.fem.core.entities import Model, Node, DOFtype
-from fempy.fem.core.providers import ElementMaterialOnlyStiffnessProvider
+from fempy.fem.core.providers import ElementMaterialOnlyStiffnessProvider, RayleighDampingMatrixProvider
 from fempy.fem.core.materials import ElasticMaterial2D, StressState2D
 from fempy.fem.core.elements import Quad4
 
-plt.close('all')
+
 # =============================================================================
 # INPUT
 # =============================================================================
@@ -30,18 +30,19 @@ Nsim = 10
 
 # DYNAMIC LOAD
 
-t = np.linspace(0, 5, 2000)
+t = np.linspace(0, .1, 200)
 timestep = t[1]-t[0]
-total_time = 8
+total_time = 2*t[-1] 
 f0 = 100
-w = 10
-F = f0 * np.sin(w*t)
+T0 = .5
+T1 = .05
+F = f0 * np.sin(2*np.pi*t/T1)
 
 # MATERIAL PROPERTIES
-Emean = 30
+Emean = 210
 poisson_ratio = .3
 thickness = 100
-mass_density = 7.8e-9
+mass_density = 7.5e-9
 
 # CANTILEVER SIZES
 numelX = 20
@@ -75,14 +76,14 @@ for node in model.nodes[:numelX+1]:
     node.constraints = [DOFtype.X, DOFtype.Y]
     
 model.connect_data_structures()
-
+damping_provider = RayleighDampingMatrixProvider(coeffs=[0.05, 0.05])
 # =============================================================================
 # BUILD ANALYZER
 # =============================================================================
 linear_system = LinearSystem(model.forces)
 solver = CholeskySolver(linear_system)
-    
-provider = ProblemStructuralDynamic(model)
+
+provider = ProblemStructuralDynamic(model, damping_provider=None)
 provider.stiffness_provider = ElementMaterialOnlyStiffnessProvider()
 child_analyzer = Linear(solver)
 parent_analyzer = NewmarkDynamicAnalyzer(model, 
@@ -98,26 +99,29 @@ for i in range(1):
     parent_analyzer.initialize()
     parent_analyzer.solve()
     
-node = 1030
-ux = parent_analyzer.displacement[:, 2*node-2]
-uy = parent_analyzer.displacement[:, 2*node-1]
-vx = parent_analyzer.velocity[:, 2*node-2]
-vy = parent_analyzer.velocity[:, 2*node-1]
-ax = parent_analyzer.acceleration[:, 2*node-2]
-ay = parent_analyzer.acceleration[:, 2*node-1]
+node = 1050
+ux = parent_analyzer.displacements[:, 2*node-2]
+uy = parent_analyzer.displacements[:, 2*node-1]
+vx = parent_analyzer.velocities[:, 2*node-2]
+vy = parent_analyzer.velocities[:, 2*node-1]
+ax = parent_analyzer.accelerations[:, 2*node-2]
+ay = parent_analyzer.accelerations[:, 2*node-1]
 timeline = range(len(ux))*timestep
 
-
-
+# =============================================================================
+# PLOTS
+# =============================================================================
+#plt.close('all')
 fig = plt.figure()
 ax1 = fig.add_subplot(111)
-splt.plot23d(timeline, ux, ax=ax1, title='Velocities')
+splt.plot23d(ux, vx, ax=ax1, title='Phase Space')
 
-fig, axes = plt.subplots(3, 1)
+fig, axes = plt.subplots(4, 1, sharex=True )
 
-data = ((timeline, ux, uy),
+data = ((t, F),
+        (timeline, ux, uy),
         (timeline, vx, vy),
         (timeline, ax, ay))
 
 
-splt.gridplot(axes.ravel(), data )
+splt.gridplot(axes.ravel(), data)

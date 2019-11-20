@@ -5,7 +5,7 @@ Created on Tue Jul 30 13:49:31 2019
 @author: constatza
 """
 
-
+from fempy.fem.assemblers import GlobalMatrixAssembler
 from numpy import array, zeros, newaxis, arange, empty, sqrt
 import scipy.linalg as linalg
 from numba import njit, prange, parfor
@@ -45,20 +45,74 @@ class ElementMassProvider:
     def matrix(element):
         return element.element_type.mass_matrix(element)
 
-import matplotlib.pyplot as plt
+
+
+class GlobalMatrixProvider:
+    
+    def get_rhs_from_history_load(timestep, static_forces, dynamic_forces):
+        dynamic_forces_vector = zeros(static_forces.shape)
+        for dof, history in dynamic_forces.items():
+            dynamic_forces_vector[dof] = history(timestep)
+        
+        return static_forces + dynamic_forces_vector
+    
+    def get_mass_matrix(model, element_mass_provider):
+        mass = GlobalMatrixAssembler.calculate_global_matrix(model, element_mass_provider)
+        return mass
+        
+    def get_stiffness_matrix(model, element_stiffness_provider):
+        stiff = GlobalMatrixAssembler.calculate_global_matrix(model, element_stiffness_provider)
+        return stiff
+    
+    def get_damping_matrix(K, M, damping_provider):
+        if damping_provider is None:
+            damp = zeros(K.shape)
+        else:
+            damp = damping_provider.calculate_global_matrix(K, M)
+        return damp
+
+
+class ReducedGlobalMatrixProvider(GlobalMatrixProvider):
+    
+    def __init__(self, linear_map):
+        self.linear_map = linear_map
+    
+    def get_rhs_from_history_load(timestep, static_forces, dynamic_forces):
+        pass
+        
+        
+    def get_mass_matrix(self, model, element_mass_provider):
+        mass = GlobalMatrixAssembler.calculate_global_matrix(model, 
+                                                             element_mass_provider)
+        return self.linear_map.direct_transform_matrix(mass)
+    
+    def get_stiffness_matrix(self, model, element_stiffness_provider):
+        stiff = GlobalMatrixAssembler.calculate_global_matrix(model, 
+                                                              element_stiffness_provider)
+        return self.linear_map.direct_transform_matrix(stiff)
+    
+    def get_damping_matrix(self, K, M, damping_provider):
+        damp = damping_provider.calculate_global_matrix(K, M)
+        return self.linear_map.direct_transform_matrix(damp)
+   
+    
+    
+    
+
 class RayleighDampingMatrixProvider:
     
-    @staticmethod
-#    @njit('float64[:, :](float64[:, :], float64[:, :], float64[:])')
-    def calculate_global_matrix(stiffness_matrix, mass_matrix, damping_coeffs):
-        eigvals, eigvecs = linalg.eigh(stiffness_matrix, b=mass_matrix,
-                                 eigvals=(0,1))
-        
-        
-        
+    def __init__(self, coeffs=None):
+        self.coeffs = coeffs
+    
+    def calculate_global_matrix(self, stiffness_matrix, mass_matrix):
+        damping_coeffs = self.coeffs
+        eigvals = linalg.eigh(stiffness_matrix, b=mass_matrix,
+                                 eigvals=(0,1), eigvals_only=True)
+
         wmegas = sqrt(eigvals)
-        plt.plot(wmegas)
         Matrix = .5* array([1/wmegas,wmegas]) 
         a = linalg.solve(Matrix.T, damping_coeffs)
         
         return a[0]*mass_matrix + a[1]*stiffness_matrix
+
+     

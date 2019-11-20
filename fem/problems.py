@@ -1,18 +1,22 @@
 import numpy as np
-
+#from numba import cuda
+from numba import guvectorize, jit, float64, void
 from fempy.fem.core.providers import ElementMassProvider, ElementStiffnessProvider, RayleighDampingMatrixProvider
-from fempy.fem.assemblers import GlobalMatrixAssembler
+from fempy.fem.core.providers import GlobalMatrixProvider
 
 
 class ProblemStructural:
     """Responsible for the assembly of the global stiffness matrix."""
     
-    def __init__(self, model):
+    def __init__(self, model, global_matrix_provider=None):
         self.model = model
         self._matrix = None
         self.stiffness_provider = ElementStiffnessProvider()
         self.mass_provider = ElementMassProvider()
-
+        if global_matrix_provider is None:
+            self.global_matrix_provider = GlobalMatrixProvider(self.model, self.stiffness)
+        else:
+            self.global_matrix_provider = global_matrix_provider
 
     @property
     def matrix(self):
@@ -25,11 +29,13 @@ class ProblemStructural:
     def build_matrix(self):
         """ Builds the global Stiffness Matrix"""
         provider = ElementStiffnessProvider()
-        self._matrix = GlobalMatrixAssembler.calculate_global_matrix(self.model, provider)
+        global_provider = self.global_matrix_provider
+        self._matrix = global_provider.get_stiffness_matrix(self.model, provider)
  
     def rebuild_matrix(self):
         """ Rebuilds the global Stiffness Matrix"""
-        self._matrix = GlobalMatrixAssembler.calculate_global_matrix(self.model, self.stiffness_provider)
+        global_provider = self.global_matrix_provider
+        self._matrix = global_provider.get_stiffness_matrix(self.model, self.provider)
     
     def calculate_matrix(self, linear_system):
         linear_system.matrix = self.matrix
@@ -38,14 +44,15 @@ class ProblemStructural:
 class ProblemStructuralDynamic:
     """Provider responsible for the assembly of the global matrices."""
     
-    def __init__(self, model):
+    def __init__(self, model, global_matrix_provider=GlobalMatrixProvider, damping_provider=None):
         self.model = model
+        self.global_matrix_provider = global_matrix_provider
         self._stiffness_matrix = None
         self._mass_matrix = None
         self._damping_matrix = None
         self.stiffness_provider = ElementStiffnessProvider()
         self.mass_provider = ElementMassProvider()
-        self.damping_provider = None
+        self.damping_provider = damping_provider
 
     @property
     def stiffness_matrix(self):
@@ -86,54 +93,46 @@ class ProblemStructuralDynamic:
     def build_stiffness_matrix(self):
         """ Builds the global Stiffness Matrix"""
         provider = ElementStiffnessProvider()
-        self.stiffness_matrix = GlobalMatrixAssembler.calculate_global_matrix(self.model, provider)
+        global_provider = self.global_matrix_provider
+        self.stiffness_matrix = global_provider.get_stiffness_matrix(self.model, provider)
         
     def build_mass_matrix(self):
         """ Builds the global Mass Matrix"""
         provider = ElementMassProvider()
-        self.mass_matrix = GlobalMatrixAssembler.calculate_global_matrix(self.model, provider)
+        global_provider = self.global_matrix_provider
+        self.mass_matrix = global_provider.get_mass_matrix(self.model, provider)
         
     
     def build_damping_matrix(self):
         """ Builds the global Mass Matrix"""
-        damping_coeffs = np.array([0.1, 0.1])
-        provider = RayleighDampingMatrixProvider()
-        self.damping_matrix = provider.calculate_global_matrix(self._stiffness_matrix,
-                                                               self._mass_matrix,
-                                                               damping_coeffs)
+        global_provider = self.global_matrix_provider
+        self.damping_matrix = global_provider.get_damping_matrix(self._stiffness_matrix,
+                                                               self._mass_matrix, 
+                                                               self.damping_provider)
 
 
     def rebuild_stiffness_matrix(self):
         """ Rebuilds the global Stiffness Matrix"""
-        self.stiffness_matrix = GlobalMatrixAssembler.calculate_global_matrix(self.model, self.stiffness_provider)
+        global_provider = self.global_matrix_provider
+        self.stiffness_matrix = global_provider.get_stiffness_matrix(self.model, self.stiffness_provider)
 
     def rebuild_mass_matrix(self):
         """ Rebuilds the global Mass Matrix"""
-        self.mass_matrix = GlobalMatrixAssembler.calculate_global_matrix(self.model, self.mass_provider)
+        global_provider = self.global_matrix_provider
+        self.mass_matrix = global_provider.get_mass_matrix(self.model, self.mass_provider)
     
     def rebuild_damping_matrix(self):
         """ Rebuilds the global Mass Matrix"""
-        damping_coeffs = np.array([0.1, 0.1])
-        provider = RayleighDampingMatrixProvider()
-        self.damping_matrix = provider.calculate_global_matrix(self._stiffness_matrix,
+        global_provider = self.global_matrix_provider
+        self.damping_matrix = global_provider.get_damping_matrix(self._stiffness_matrix,
                                                                self._mass_matrix,
-                                                               damping_coeffs)
-
+                                                               self.damping_provider)
+        
     def get_rhs_from_history_load(self, timestep):
-        static_forces = self.model.forces 
-        dynamic_forces = np.zeros(static_forces.shape)
-        for dof, history in self.model.dynamic_forces.items():
-            dynamic_forces[dof] = history(timestep)
-        
-        rhs = static_forces + dynamic_forces
-        
-        return rhs
-    
-    def linear_combination_into_stiffness(self, coeffs):
-        K_eff = (coeffs['stiffness'] * self.stiffness_matrix 
-                + coeffs['mass'] * self.mass_matrix
-                + coeffs['damping'] * self.damping_matrix)
-        return K_eff
+        provider = self.global_matrix_provider
+        stforces = self.model.forces
+        dyforces = self.model.dynamic_forces
+        return provider.get_rhs_from_history_load(timestep, stforces, dyforces)
     
     def mass_matrix_vector_product(self, vector):
         return self._mass_matrix @ vector
@@ -144,4 +143,13 @@ class ProblemStructuralDynamic:
     def damping_matrix_vector_product(self, vector):
         return self._damping_matrix @ vector
     
-    
+#@guvectorize([void(float64[:,:], float64[:,:], float64[:,:])], '(m,l),(l,n)->(m,n)', target='cuda')
+#def matmul_gu3(A, B, out):
+#    """Perform square matrix multiplication of out = A * B
+#    """
+#    i, j = cuda.grid(2)
+#    if i < out.shape[0] and j < out.shape[1]:
+#        tmp = 0.
+#        for k in range(A.shape[1]):
+#            tmp += A[i, k] * B[k, j]
+#        out[i, j] = tmp

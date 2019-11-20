@@ -23,7 +23,7 @@ plt.close('all')
 epsilon = 1
 alpha = 0
 timesteps = 1
-numeigs = 2
+numeigs = 3
 
 # set parameters
 length_phi = 10 #length of swiss roll in angular direction
@@ -60,7 +60,7 @@ dmaps.fit(numeigs=numeigs, t=1)
 linear_dmaps = ml.LinearMap(domain=dmaps.reduced_coordinates, 
                                 codomain=U)
 
-res_dm = linear_dmaps.residuals
+res_dm = linear_dmaps.res
    
 U_dm = linear_dmaps.direct_transform_vector(dmaps.reduced_coordinates) 
 x_dm = U_dm[0,:]
@@ -112,9 +112,9 @@ plt.grid()
  
 fig4, axes4 = plt.subplots(1, 3)
 fig4.suptitle('Normalized Eigenvectors')
-smartplot.plot_eigenvectors(dmaps.reduced_coordinates.T, ax=axes4[0], title='DMAPS', c=phi, marker='.')
-smartplot.plot_eigenvectors(Xr.T, ax=axes4[1], title='LLE', c=color.T, marker='.')
-smartplot.plot_eigenvectors(pca.reduced_coordinates.T, ax=axes4[2], title='PCA', c=color, marker='.')
+smartplot.plot_eigenvectors(dmaps.reduced_coordinates[1:,:], ax=axes4[0], title='DMAPS', c=color, marker='.')
+smartplot.plot_eigenvectors(Xr, ax=axes4[1], title='LLE', c=color, marker='.')
+smartplot.plot_eigenvectors(pca.reduced_coordinates, ax=axes4[2], title='PCA', c=color, marker='.')
 
  
 fig5, axes5 = plt.subplots(1, 3)

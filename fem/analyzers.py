@@ -159,9 +159,9 @@ class NewmarkDynamicAnalyzer(Analyzer):
         self.u = None
         self.ud = None
         self.udd = None
-        self.displacement = np.empty((self.total_steps, self.model.total_DOFs))
-        self.velocity = np.empty((self.total_steps, self.model.total_DOFs))
-        self.acceleration = np.empty((self.total_steps, self.model.total_DOFs))
+        self.displacements = np.empty((self.total_steps, self.model.total_DOFs))
+        self.velocities = np.empty((self.total_steps, self.model.total_DOFs))
+        self.accelerations = np.empty((self.total_steps, self.model.total_DOFs))
     
     def calculate_coefficients(self):
         alpha = self.alpha
@@ -229,19 +229,18 @@ class NewmarkDynamicAnalyzer(Analyzer):
         child_solve = self.child.solve
         update_velocity_and_acceleration = self.update_velocity_and_accelaration
         store_results = self.store_results
-        
-        for i in range(self.total_steps):
-        
-#            print("Newmark step: {0:d}".format(i))
-            
-            
+
+        for i in range(1, self.total_steps):
+                                    
             self.rhs = get_rhs_from_history_load(i)
             
             self.linear_system.rhs = calculate_rhs_implicit(add_rhs=True)            
             child_solve()
             update_velocity_and_acceleration(i)
+
             store_results(i)
 
+        
     def calculate_rhs_implicit(self, add_rhs=True):
         """
         Calculates the right-hand-side of the implicit dynamic method. 
@@ -249,9 +248,12 @@ class NewmarkDynamicAnalyzer(Analyzer):
         """
         alphas = self.alphas
         provider = self.provider
+        u = self.u
+        ud = self.ud
+        udd = self.udd
 
-        udd_eff = alphas[0] * self.u + alphas[2] * self.ud + alphas[3] * self.udd
-        ud_eff = alphas[1] * self.u + alphas[4] * self.ud + alphas[5] * self.udd
+        udd_eff = alphas[0] * u + alphas[2] * ud + alphas[3] * udd
+        ud_eff = alphas[1] * u + alphas[4] * ud + alphas[5] * udd
         
         inertia_forces = provider.mass_matrix_vector_product(udd_eff)
         damping_forces = provider.damping_matrix_vector_product(ud_eff)
@@ -260,7 +262,7 @@ class NewmarkDynamicAnalyzer(Analyzer):
         if add_rhs:
              #rhs_effective = uum + ucc
             rhs_effective += self.rhs     
-       
+
         return rhs_effective
     
     
@@ -314,9 +316,9 @@ class NewmarkDynamicAnalyzer(Analyzer):
     
     def store_results(self, timestep):
         
-        self.displacement[timestep, :] = self.u.ravel()
-        self.velocity[timestep, :] = self.ud.ravel()
-        self.acceleration[timestep, :] = self.udd.ravel()
+        self.displacements[timestep, :] = self.u.ravel()
+        self.velocities[timestep, :] = self.ud.ravel()
+        self.accelerations[timestep, :] = self.udd.ravel()
         
         
 

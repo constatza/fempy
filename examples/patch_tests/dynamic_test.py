@@ -23,9 +23,9 @@ from fempy.fem.core.elements import Quad4
 model = Model()
 
 model.nodes_dictionary[1] = Node(ID=1, X=0.0, Y=0.0, Z=0.0)
-model.nodes_dictionary[2] = Node(ID=2, X=10.0, Y=0.0, Z=0.0)
-model.nodes_dictionary[3] = Node(ID=3, X=10.0, Y=10.0, Z=0.0)
-model.nodes_dictionary[4] = Node(ID=4, X=0.0, Y=10.0, Z=0.0)
+model.nodes_dictionary[2] = Node(ID=2, X=10e3, Y=0.0, Z=0.0)
+model.nodes_dictionary[3] = Node(ID=3, X=10e3, Y=10e3, Z=0.0)
+model.nodes_dictionary[4] = Node(ID=4, X=0.0, Y=10e3, Z=0.0)
 
 model.nodes_dictionary[1].constraints = [DOFtype.X, DOFtype.Y]
 model.nodes_dictionary[4].constraints = [DOFtype.X, DOFtype.Y]
@@ -49,12 +49,12 @@ hload2 = TimeDependentLoad(time_history=history,
 model.time_dependent_loads.append(hload1)
 model.time_dependent_loads.append(hload2)
 material = ElasticMaterial2D(stress_state=StressState2D.plain_stress,
-                             young_modulus=210000,
+                             young_modulus=210e0,
                              poisson_ratio=0.3779,
-                             mass_density = 7.85)
+                             mass_density = 7.85e-9)
 
-quad = Quad4(material=material, thickness=1)
-element1 = Quad4(ID=1, material=material, element_type=quad, thickness=1)
+quad = Quad4(material=material)
+element1 = Quad4(ID=1, material=material, element_type=quad, thickness=1e1)
 for i in range(1, 5):
     element1.add_node(model.nodes_dictionary[i])			
 
@@ -85,12 +85,12 @@ for i in range(1):
 
 
 node = 1
-ux = parent_analyzer.displacement[:, 2*node-2]
-uy = parent_analyzer.displacement[:, 2*node-1]
-vx = parent_analyzer.velocity[:, 2*node-2]
-vy = parent_analyzer.velocity[:, 2*node-1]
-ax = parent_analyzer.acceleration[:, 2*node-2]
-ay = parent_analyzer.acceleration[:, 2*node-1]
+ux = parent_analyzer.displacements[:, 2*node-2]
+uy = parent_analyzer.displacements[:, 2*node-1]
+vx = parent_analyzer.velocities[:, 2*node-2]
+vy = parent_analyzer.velocities[:, 2*node-1]
+ax = parent_analyzer.accelerations[:, 2*node-2]
+ay = parent_analyzer.accelerations[:, 2*node-1]
 timeline = range(len(ux))*timestep
 
 import fempy.smartplot as sp

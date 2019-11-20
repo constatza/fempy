@@ -137,32 +137,29 @@ class LinearMap(Map):
     
     def __post_init__(self):
         
-         p, res, rank = LinearMap.transform(self.domain, self.codomain)
-         pinv, resinv, rankinv = LinearMap.transform(self.codomain, self.domain)
+         p, res = LinearMap.transform(self.domain, self.codomain)
+         pinv, resinv = LinearMap.transform(self.codomain, self.domain)
          
          self.matrix = p
-         self.residuals = res
-         self.rank = rank
+         self.res = res
+
          
-         self.inverse_matrix = p.T
-         self.inverse_residuals = resinv
-         self.inverse_rank = rankinv
+         self.inverse_matrix = pinv
+         self.inverse_res = resinv
+
     
     @staticmethod
     def transform(domain, codomain):
-        n = domain.shape[0]
-        m = codomain.shape[0]
-        if n==m:
-            matrix = linalg.solve(domain, codomain)
-            res = np.zeros(n)
-            rank = n
-            return matrix, res, rank
-        else:
-            p, res, rank, s = linalg.lstsq(domain.T, codomain.T)
-            return p.T, res, rank
-                  
+
+        L = linalg.cho_factor(domain @ domain.T)
+        linear_map_T = linalg.cho_solve(L, domain @ codomain.T)
+        linear_map = linear_map_T.T
+        diff = codomain - linear_map @ domain
+        res = np.sum(diff*diff, axis=1)
+        
+        return linear_map, res
     
-    def direct_transform_vector(self, vector: np.ndarray) -> np.ndarray:
+    def direct_transform_vector(self, vector: np.ndarray):
         return self.matrix @ vector
     
     def inverse_transform_vector(self, vector: np.ndarray, *args, **kwargs) -> np.ndarray:
