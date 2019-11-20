@@ -76,25 +76,40 @@ class ReducedGlobalMatrixProvider(GlobalMatrixProvider):
     
     def __init__(self, linear_map):
         self.linear_map = linear_map
-    
-    def get_rhs_from_history_load(timestep, static_forces, dynamic_forces):
-        pass
+        self.get_mass_matrix = self.reduced_matrix(super().get_mass_matrix)
+        self.get_stiffness_matrix = self.reduced_matrix(super().get_stiffness_matrix)
+        self.get_damping_matrix = self.reduced_matrix(super().get_damping_matrix)
+        self.get_rhs_fron_history_load = self.reduced_vector(super().get_rhs_fron_history_load)
         
         
-    def get_mass_matrix(self, model, element_mass_provider):
-        mass = GlobalMatrixAssembler.calculate_global_matrix(model, 
-                                                             element_mass_provider)
-        return self.linear_map.direct_transform_matrix(mass)
     
-    def get_stiffness_matrix(self, model, element_stiffness_provider):
-        stiff = GlobalMatrixAssembler.calculate_global_matrix(model, 
-                                                              element_stiffness_provider)
-        return self.linear_map.direct_transform_matrix(stiff)
+  
+    def reduced_matrix(self, func):
+        def wrapper(*args, **kwargs):
+            matrix = func(*args, **kwargs)
+            return self.linear_map.direct_transform_matrix(matrix)
+        return wrapper
     
-    def get_damping_matrix(self, K, M, damping_provider):
-        damp = damping_provider.calculate_global_matrix(K, M)
-        return self.linear_map.direct_transform_matrix(damp)
-   
+    def reduced_vector(self, func):
+        def wrapper(*args, **kwargs):
+            vector = func(*args, **kwargs)
+            return self.linear_map.direct_transform_vector(vector)
+        return wrapper
+    
+#    def get_mass_matrix(self, model, element_mass_provider):
+#        mass = GlobalMatrixAssembler.calculate_global_matrix(model, 
+#                                                             element_mass_provider)
+#        return self.linear_map.direct_transform_matrix(mass)
+#    
+#    def get_stiffness_matrix(self, model, element_stiffness_provider):
+#        stiff = GlobalMatrixAssembler.calculate_global_matrix(model, 
+#                                                              element_stiffness_provider)
+#        return self.linear_map.direct_transform_matrix(stiff)
+#    
+#    def get_damping_matrix(self, K, M, damping_provider):
+#        damp = damping_provider.calculate_global_matrix(K, M)
+#        return self.linear_map.direct_transform_matrix(damp)
+#   
     
     
     

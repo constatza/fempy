@@ -53,13 +53,19 @@ class ProblemStructuralDynamic:
         self.stiffness_provider = ElementStiffnessProvider()
         self.mass_provider = ElementMassProvider()
         self.damping_provider = damping_provider
+        self.change_stiffness = True
+        self.change_mass = True
+        self.change_damping = True
 
     @property
     def stiffness_matrix(self):
-        if self._stiffness_matrix is None:
-            self.build_stiffness_matrix()
-        else:
+        
+        if (self._stiffness_matrix is not None) and not self.change_stiffness:
+            pass
+        elif (self._stiffness_matrix is not None) and self.change_stiffness:
             self.rebuild_stiffness_matrix()
+        else:
+            self.build_stiffness_matrix()
         return self._stiffness_matrix
     
     @property

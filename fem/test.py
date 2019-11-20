@@ -42,6 +42,15 @@ class reduced(full):
 a = full(10)
 b = reduced(data=10, lmap=0.5)
 
+x = 0
 
-
-
+def outer():
+    # Enclosed scope
+    nonlocal x
+    def inner():
+        # Local scope
+        nonlocal x
+        x += 1
+        print(x)
+    inner()
+outer()

@@ -84,6 +84,7 @@ linear_system = LinearSystem(model.forces)
 solver = CholeskySolver(linear_system)
 
 provider = ProblemStructuralDynamic(model, damping_provider=None)
+provider.change_stiffness = False
 provider.stiffness_provider = ElementMaterialOnlyStiffnessProvider()
 child_analyzer = Linear(solver)
 parent_analyzer = NewmarkDynamicAnalyzer(model, 
@@ -94,7 +95,7 @@ parent_analyzer = NewmarkDynamicAnalyzer(model,
                                          total_time=total_time, 
                                          delta=1/2,
                                          alpha=1/4)
-for i in range(1):
+for i in range(2):
     parent_analyzer.build_matrices()
     parent_analyzer.initialize()
     parent_analyzer.solve()
