@@ -21,7 +21,7 @@ from fempy.fem.core.providers import ElementMaterialOnlyStiffnessProvider, Rayle
 from fempy.fem.core.materials import ElasticMaterial2D, StressState2D
 from fempy.fem.core.elements import Quad4
 
-
+plt.close('all')   
 # =============================================================================
 # INPUT
 # =============================================================================
@@ -30,19 +30,19 @@ Nsim = 10
 
 # DYNAMIC LOAD
 
-t = np.linspace(0, .1, 200)
+t = np.linspace(0, .5, 500)
 timestep = t[1]-t[0]
 total_time = 2*t[-1] 
 f0 = 100
 T0 = .5
-T1 = .05
-F = f0 * np.sin(2*np.pi*t/T1)
+T1 = .2
+F = f0 * np.cos(2*np.pi*t/T1)
 
 # MATERIAL PROPERTIES
-Emean = 210
+Emean = 30
 poisson_ratio = .3
 thickness = 100
-mass_density = 7.5e-9
+mass_density = 2.5e-9
 
 # CANTILEVER SIZES
 numelX = 20
@@ -50,6 +50,9 @@ numelY = 50
 boundX = [0, 2000]
 boundY = [0, 5000]
 
+# STOCHASTIC E FILES
+stochastic_path = r"C:\Users\constatza\Documents\thesis\fempy\examples\stochastic_Young_Modulus\stochastic_E.npy"
+Estochastic = np.load(stochastic_path)
 # =============================================================================
 # MODEL CREATION
 # =============================================================================
@@ -76,15 +79,15 @@ for node in model.nodes[:numelX+1]:
     node.constraints = [DOFtype.X, DOFtype.Y]
     
 model.connect_data_structures()
-damping_provider = RayleighDampingMatrixProvider(coeffs=[0.05, 0.05])
+damping_provider = RayleighDampingMatrixProvider(coeffs=[0.001, 0.001])
 # =============================================================================
 # BUILD ANALYZER
 # =============================================================================
 linear_system = LinearSystem(model.forces)
 solver = CholeskySolver(linear_system)
 
-provider = ProblemStructuralDynamic(model, damping_provider=None)
-provider.change_stiffness = False
+provider = ProblemStructuralDynamic(model, damping_provider=damping_provider)
+provider.change_stiffness = True
 provider.stiffness_provider = ElementMaterialOnlyStiffnessProvider()
 child_analyzer = Linear(solver)
 parent_analyzer = NewmarkDynamicAnalyzer(model, 
@@ -94,35 +97,45 @@ parent_analyzer = NewmarkDynamicAnalyzer(model,
                                          timestep=timestep, 
                                          total_time=total_time, 
                                          delta=1/2,
-                                         alpha=1/4)
-for i in range(2):
-    parent_analyzer.build_matrices()
+                                     alpha=1/4)
+
+
+for case in range(1):
+    counter = -1
+    
+    for width in range(numelX):
+        for height in range(numelY):
+            #slicing through elements list the geometry rectangle grid is columnwise
+            counter += 1
+            element = model.elements[counter] 
+            element.material.young_modulus = Estochastic[-1-case, height]
+    print(element.material.young_modulus)        
     parent_analyzer.initialize()
     parent_analyzer.solve()
     
-node = 1050
-ux = parent_analyzer.displacements[:, 2*node-2]
-uy = parent_analyzer.displacements[:, 2*node-1]
-vx = parent_analyzer.velocities[:, 2*node-2]
-vy = parent_analyzer.velocities[:, 2*node-1]
-ax = parent_analyzer.accelerations[:, 2*node-2]
-ay = parent_analyzer.accelerations[:, 2*node-1]
-timeline = range(len(ux))*timestep
+    node = 850
+    ux = parent_analyzer.displacements[:, 2*node-2]
+    uy = parent_analyzer.displacements[:, 2*node-1]
+    vx = parent_analyzer.velocities[:, 2*node-2]
+    vy = parent_analyzer.velocities[:, 2*node-1]
+    ax = parent_analyzer.accelerations[:, 2*node-2]
+    ay = parent_analyzer.accelerations[:, 2*node-1]
+    timeline = range(len(ux))*timestep
 
 # =============================================================================
 # PLOTS
 # =============================================================================
-#plt.close('all')
-fig = plt.figure()
-ax1 = fig.add_subplot(111)
-splt.plot23d(ux, vx, ax=ax1, title='Phase Space')
 
-fig, axes = plt.subplots(4, 1, sharex=True )
+    fig = plt.figure()
+    ax1 = fig.add_subplot(111)
+    splt.plot23d(ux, vx, ax=ax1, title='Phase Space')
+    
+    fig, axes = plt.subplots(4, 1, sharex=True )
+    
+    data = ((t, F),
+            (timeline, ux, uy),
+            (timeline, vx, vy),
+            (timeline, ax, ay))
 
-data = ((t, F),
-        (timeline, ux, uy),
-        (timeline, vx, vy),
-        (timeline, ax, ay))
 
-
-splt.gridplot(axes.ravel(), data)
+    splt.gridplot(axes.ravel(), data)

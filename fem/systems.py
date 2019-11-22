@@ -28,3 +28,4 @@ class LinearSystem:
     def reset(self):
         self.rhs = empty(self.rhs.shape)
         self.matrix = None
+#        self.solution = None

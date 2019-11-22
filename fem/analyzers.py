@@ -187,9 +187,9 @@ class NewmarkDynamicAnalyzer(Analyzer):
         a0, a1 = self.alphas[:2]
 #        coeffs = {'mass' : a0, 'damping' : a1, 'stiffness' : 1}
 #        self.linear_system.Matrix = provider.linear_combination_into_stiffness(coeffs)
-        self.linear_system.matrix = (provider.stiffness_matrix 
-                                    + a0 * provider.mass_matrix
-                                    + a1 * provider.damping_matrix)
+        self.linear_system.matrix = (provider._stiffness_matrix 
+                                    + a0 * provider._mass_matrix
+                                    + a1 * provider._damping_matrix)
    
     def initialize(self, is_first_analysis=True):
         """
@@ -231,13 +231,13 @@ class NewmarkDynamicAnalyzer(Analyzer):
         store_results = self.store_results
 
         for i in range(1, self.total_steps):
-                                    
+            
             self.rhs = get_rhs_from_history_load(i)
             
             self.linear_system.rhs = calculate_rhs_implicit(add_rhs=True)            
             child_solve()
-            update_velocity_and_acceleration(i)
-
+            
+            update_velocity_and_acceleration()
             store_results(i)
 
         
@@ -277,9 +277,10 @@ class NewmarkDynamicAnalyzer(Analyzer):
         if ud0 is None:
             ud0 = np.zeros((total_DOFs, 1))
         
-        stiffness = self.provider._stiffness_matrix
-        damping = self.provider._damping_matrix
-        mass = self.provider._mass_matrix
+        stiffness = self.provider.stiffness_matrix
+        mass = self.provider.mass_matrix
+        damping = self.provider.damping_matrix #after M and K !
+        
         rhs0 = self.provider.get_rhs_from_history_load(0)
         self.linear_system.rhs = rhs0 - stiffness @ u0 - damping @ ud0
         self.linear_system.matrix = mass
@@ -288,6 +289,7 @@ class NewmarkDynamicAnalyzer(Analyzer):
         self.udd = self.linear_system.solution
         self.ud = ud0
         self.u = u0
+        self.linear_system.reset()
 
 
     def initialize_rhs(self):
@@ -297,7 +299,7 @@ class NewmarkDynamicAnalyzer(Analyzer):
     def update_result_storages(self):
         pass
 
-    def update_velocity_and_accelaration(self, timestep):
+    def update_velocity_and_accelaration(self):
         a0, a2, a3, a6, a7 = [self.alphas[i] for i in [0,2,3,6,7]]
         
         udd = self.udd

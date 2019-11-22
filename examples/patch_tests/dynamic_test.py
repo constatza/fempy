@@ -61,7 +61,6 @@ for i in range(1, 5):
 model.elements_dictionary[1] = element1
 
 model.connect_data_structures()
-
 linear_system = LinearSystem(model.forces)
 solver = CholeskySolver(linear_system)
     
@@ -79,7 +78,7 @@ parent_analyzer = NewmarkDynamicAnalyzer(model,
 
 
 for i in range(1):
-    parent_analyzer.build_matrices()
+    
     parent_analyzer.initialize()
     parent_analyzer.solve()
 

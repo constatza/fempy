@@ -1,5 +1,5 @@
 import numpy as np
-#from numba import cuda
+from numba import cuda
 from numba import guvectorize, jit, float64, void
 from fempy.fem.core.providers import ElementMassProvider, ElementStiffnessProvider, RayleighDampingMatrixProvider
 from fempy.fem.core.providers import GlobalMatrixProvider
@@ -70,18 +70,22 @@ class ProblemStructuralDynamic:
     
     @property
     def mass_matrix(self):
-        if self._mass_matrix is None:
-            self.build_mass_matrix()
-        else:
+        if (self._mass_matrix is not None) and not self.change_mass:
+            pass
+        elif (self._mass_matrix is not None) and self.change_mass:
             self.rebuild_mass_matrix()
+        else:
+            self.build_mass_matrix()
         return self._mass_matrix
     
     @property
     def damping_matrix(self):
-        if self._damping_matrix is None:
-            self.build_damping_matrix()
-        else:
+        if (self._damping_matrix is not None) and not self.change_damping:
+            pass
+        elif (self._damping_matrix is not None) and self.change_damping:
             self.rebuild_damping_matrix()
+        else:
+            self.build_damping_matrix()
         return self._damping_matrix
 
     @stiffness_matrix.setter
@@ -141,7 +145,7 @@ class ProblemStructuralDynamic:
         return provider.get_rhs_from_history_load(timestep, stforces, dyforces)
     
     def mass_matrix_vector_product(self, vector):
-        return self._mass_matrix @ vector
+        return np.matmul(self._mass_matrix, vector)
     
     def stiffness_matrix_vector_product(self, vector):
         return self._stiffness_matrix @ vector

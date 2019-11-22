@@ -125,9 +125,10 @@ class RayleighDampingMatrixProvider:
                                  eigvals=(0,1), eigvals_only=True)
 
         wmegas = sqrt(eigvals)
+        self.frequencies = wmegas
         Matrix = .5* array([1/wmegas,wmegas]) 
         a = linalg.solve(Matrix.T, damping_coeffs)
         
         return a[0]*mass_matrix + a[1]*stiffness_matrix
-
+    
      
