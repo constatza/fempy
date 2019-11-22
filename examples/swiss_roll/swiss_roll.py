@@ -23,7 +23,7 @@ plt.close('all')
 epsilon = 1
 alpha = 0
 timesteps = 1
-numeigs = 3
+numeigs = 2
 
 # set parameters
 length_phi = 10 #length of swiss roll in angular direction

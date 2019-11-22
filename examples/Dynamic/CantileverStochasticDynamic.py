@@ -114,6 +114,7 @@ for case in range(1):
     parent_analyzer.solve()
     
     node = 850
+    
     ux = parent_analyzer.displacements[:, 2*node-2]
     uy = parent_analyzer.displacements[:, 2*node-1]
     vx = parent_analyzer.velocities[:, 2*node-2]
