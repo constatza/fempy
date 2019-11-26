@@ -8,7 +8,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
 from scipy.stats import zscore 
-import matplotlib.animation as animation
 
 
 def gridplot(axes, iterable, titles=None, only2d=True, *args, **kwargs):
