@@ -33,7 +33,7 @@ Nsim = 10
 
 # DYNAMIC LOAD
 
-t = np.linspace(0, .14, 200)
+t = np.linspace(0, .5, 200)
 timestep = t[1]-t[0]
 total_time = 2*t[-1] 
 f0 = 100
@@ -82,7 +82,7 @@ for node in model.nodes[:numelX+1]:
     node.constraints = [DOFtype.X, DOFtype.Y]
     
 model.connect_data_structures()
-damping_provider = RayleighDampingMatrixProvider(coeffs=[0.001, 0.001])
+damping_provider = RayleighDampingMatrixProvider(coeffs=[0.1, 0.1])
 # =============================================================================
 # BUILD ANALYZER
 # =============================================================================
