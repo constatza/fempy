@@ -1,3 +1,4 @@
+# cython: language_level=3
 
 
 
@@ -7,8 +8,9 @@ import matplotlib.pyplot as plt
 
 cdef class Analyzer:
     """Abstract class for Parent Analyzers"""
-    
-    def __init__(self, provider, child_analyzer):
+    cdef public:
+        object provider, child
+    def __init__(self, provider=None, child_analyzer=None):
         """
         Creates an instance that uses a specific problem type and an
         appropriate child analyzer for the construction of the system of 
@@ -27,18 +29,18 @@ cdef class Analyzer:
         self.child.parent = self       
 
  
-    def build_matrices(self):
-        """
-        Builds the appropriate system matrix and updates the system instance 
-        used in the constructor.
-        """
-        pass
-    
-    def initialize(self, is_first_analysis=False):
-        pass
-    
-    def solve(self):
-        pass
+#    def build_matrices(self):
+#        """
+#        Builds the appropriate system matrix and updates the system instance 
+#        used in the constructor.
+#        """
+#        pass
+#    
+#    def initialize(self, is_first_analysis=False):
+#        pass
+#    
+#    def solve(self):
+#        pass
     
 
 class Linear:
@@ -141,13 +143,14 @@ class Static(Analyzer):
 
 cdef class NewmarkDynamicAnalyzer(Analyzer):
     """Implements the Newmark method for dynamic analysis."""
-    cdef int total_steps
-    cdef float timestep
-    cdef float alpha
-    cdef float delta
+    cdef public:
+        object model, solver, linear_system
+        double timestep, total_time, alpha, delta
+        object rhs, u, ud, udd, displacements, velocities, accelerations
+        int total_steps
+    cpdef double[:] alphas 
     
-    
-    def __init__(self, model=None, solver=None, provider=None, child_analyzer=None, float timestep=0.01, float total_time=1, float alpha=.25, float delta=.5):
+    def __init__(self, model=None, solver=None, provider=None, child_analyzer=None, timestep=None, total_time=None, alpha=None, delta=None):
         
         super().__init__(provider, child_analyzer)
         self.model = model
@@ -167,19 +170,20 @@ cdef class NewmarkDynamicAnalyzer(Analyzer):
         self.velocities = np.empty((self.total_steps, self.model.total_DOFs))
         self.accelerations = np.empty((self.total_steps, self.model.total_DOFs))
     
-    def calculate_coefficients(self):
-        alpha = self.alpha
-        delta = self.delta
-        timestep = self.timestep
-        a0 = 1 / (alpha * timestep * timestep)
-        a1 = delta / (alpha * timestep)
-        a2 = 1 / (alpha * timestep)
-        a3 = 1 / (2 * alpha) - 1
-        a4 = delta/alpha - 1
-        a5 = timestep * 0.5 * (delta/alpha - 2)
-        a6 = timestep * (1 - delta)
-        a7 = delta * timestep
-        self.alphas = (a0, a1, a2, a3, a4, a5, a6, a7)
+    cpdef void calculate_coefficients(self):
+        cdef double alpha = self.alpha
+        cdef double delta = self.delta
+        cdef double timestep = self.timestep
+        cdef double[:] alphas = np.empty(8, dtype=np.float64)
+        alphas[0] = 1 / (alpha * timestep * timestep)
+        alphas[1] = delta / (alpha * timestep)
+        alphas[2]= 1 / (alpha * timestep)
+        alphas[3] = 1 / (2 * alpha) - 1
+        alphas[4] = delta/alpha - 1
+        alphas[5] = timestep * 0.5 * (delta/alpha - 2)
+        alphas[6] = timestep * (1 - delta)
+        alphas[7] = delta * timestep
+        self.alphas = alphas
     
     def build_matrices(self):
         """
@@ -188,14 +192,14 @@ cdef class NewmarkDynamicAnalyzer(Analyzer):
         before the actual solution of the aforementioned system
         """
         provider = self.provider
-        a0, a1 = self.alphas[:2]
-#        coeffs = {'mass' : a0, 'damping' : a1, 'stiffness' : 1}
-#        self.linear_system.Matrix = provider.linear_combination_into_stiffness(coeffs)
+        cdef double a0 = self.alphas[0]
+        cdef double a1 = self.alphas[1]
+        
         self.linear_system.matrix = (provider._stiffness_matrix 
                                     + a0 * provider._mass_matrix
                                     + a1 * provider._damping_matrix)
    
-    def initialize(self, is_first_analysis=True):
+    cpdef initialize(self, bint is_first_analysis=True):
         """
         Initializes the models, the solvers, child analyzers, builds
         the matrices, assigns loads and initializes right-hand-side vectors.
@@ -233,7 +237,7 @@ cdef class NewmarkDynamicAnalyzer(Analyzer):
         child_solve = self.child.solve
         update_velocity_and_acceleration = self.update_velocity_and_accelaration
         store_results = self.store_results
-        cdef int i
+        cdef size_t i
         for i in range(1, self.total_steps):
             
             self.rhs = get_rhs_from_history_load(i)
@@ -245,7 +249,7 @@ cdef class NewmarkDynamicAnalyzer(Analyzer):
             store_results(i)
 
         
-    def calculate_rhs_implicit(self, add_rhs=True):
+    cpdef calculate_rhs_implicit(self, add_rhs=True):
         """
         Calculates the right-hand-side of the implicit dynamic method. 
         This will be used for the solution of the linear dynamic system.
@@ -270,7 +274,7 @@ cdef class NewmarkDynamicAnalyzer(Analyzer):
         return rhs_effective
     
     
-    def initialize_internal_vectors(self, u0=None, ud0=None):
+    cpdef initialize_internal_vectors(self, u0=None, ud0=None):
         if self.linear_system.solution is not None:
             self.linear_system.reset()
             
@@ -296,15 +300,12 @@ cdef class NewmarkDynamicAnalyzer(Analyzer):
         self.linear_system.reset()
 
 
-    def initialize_rhs(self):
+    cpdef initialize_rhs(self):
         self.linear_system.rhs = self.provider.get_rhs_from_history_load(1)
 
 
-    def update_result_storages(self):
-        pass
-
-    def update_velocity_and_accelaration(self):
-        a0, a2, a3, a6, a7 = [self.alphas[i] for i in [0,2,3,6,7]]
+    cpdef update_velocity_and_accelaration(self):
+        
         
         udd = self.udd
         ud = self.ud 
@@ -312,15 +313,15 @@ cdef class NewmarkDynamicAnalyzer(Analyzer):
         
         u_next = self.linear_system.solution
 
-        udd_next = a0 * (u_next - u) - a2 * ud - a3 * udd 
-        ud_next = ud + a6 * udd +  a7 * udd_next
+        udd_next = self.alphas[0] * (u_next - u) - self.alphas[2] * ud - self.alphas[3] * udd 
+        ud_next = ud + self.alphas[6] * udd +  self.alphas[7] * udd_next
         
 
         self.u = u_next
         self.ud = ud_next
         self.udd = udd_next
     
-    def store_results(self, timestep):
+    cpdef void store_results(self, size_t timestep):
         
         self.displacements[timestep, :] = self.u.ravel()
         self.velocities[timestep, :] = self.ud.ravel()

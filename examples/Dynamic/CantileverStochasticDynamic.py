@@ -4,6 +4,8 @@ Created on Fri Nov 15 11:19:22 2019
 
 @author: constatza
 """
+import pyximport
+pyximport.install()
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -87,17 +89,16 @@ linear_system = LinearSystem(model.forces)
 solver = CholeskySolver(linear_system)
 
 provider = ProblemStructuralDynamic(model, damping_provider=damping_provider)
-provider.change_stiffness = True
 provider.stiffness_provider = ElementMaterialOnlyStiffnessProvider()
 child_analyzer = Linear(solver)
-parent_analyzer = NewmarkDynamicAnalyzer(model, 
-                                         solver, 
-                                         provider, 
-                                         child_analyzer, 
+parent_analyzer = NewmarkDynamicAnalyzer(model=model, 
+                                         solver=solver, 
+                                         provider=provider, 
+                                         child_analyzer=child_analyzer, 
                                          timestep=timestep, 
                                          total_time=total_time, 
                                          delta=1/2,
-                                     alpha=1/4)
+                                         alpha=1/4)
 
 
 for case in range(1):
