@@ -7,6 +7,7 @@ Created on Fri Nov 15 11:19:22 2019
 import pyximport
 pyximport.install()
 
+from time import time
 import numpy as np
 import matplotlib.pyplot as plt
 import fempy.smartplot as splt
@@ -14,11 +15,11 @@ import fempy.smartplot as splt
 from fempy.fem.preprocessor import rectangular_mesh_model
 from fempy.fem.problems import ProblemStructuralDynamic
 from fempy.fem.analyzers import Linear, NewmarkDynamicAnalyzer
-from fempy.fem.solvers import SparseLUSolver, CholeskySolver
+from fempy.fem.solvers import CholeskySolver
 from fempy.fem.systems import LinearSystem
 
-from fempy.fem.core.loads import Load, TimeDependentLoad
-from fempy.fem.core.entities import Model, Node, DOFtype
+from fempy.fem.core.loads import TimeDependentLoad
+from fempy.fem.core.entities import DOFtype
 from fempy.fem.core.providers import ElementMaterialOnlyStiffnessProvider, RayleighDampingMatrixProvider
 from fempy.fem.core.materials import ElasticMaterial2D, StressState2D
 from fempy.fem.core.elements import Quad4
@@ -32,7 +33,7 @@ Nsim = 10
 
 # DYNAMIC LOAD
 
-t = np.linspace(0, .5, 500)
+t = np.linspace(0, .14, 200)
 timestep = t[1]-t[0]
 total_time = 2*t[-1] 
 f0 = 100
@@ -100,6 +101,7 @@ parent_analyzer = NewmarkDynamicAnalyzer(model=model,
                                          delta=1/2,
                                          alpha=1/4)
 
+start = time()
 
 for case in range(1):
     counter = -1
@@ -123,21 +125,23 @@ for case in range(1):
     ax = parent_analyzer.accelerations[:, 2*node-2]
     ay = parent_analyzer.accelerations[:, 2*node-1]
     timeline = range(len(ux))*timestep
+end = time()
 
+print("Finished in {:.2f}".format(end - start) )
 # =============================================================================
 # PLOTS
 # =============================================================================
 
-    fig = plt.figure()
-    ax1 = fig.add_subplot(111)
-    splt.plot23d(ux, vx, ax=ax1, title='Phase Space')
-    
-    fig, axes = plt.subplots(4, 1, sharex=True )
-    
-    data = ((t, F),
-            (timeline, ux, uy),
-            (timeline, vx, vy),
-            (timeline, ax, ay))
+fig = plt.figure()
+ax1 = fig.add_subplot(111)
+splt.plot23d(ux, vx, ax=ax1, title='Phase Space')
+
+fig, axes = plt.subplots(4, 1, sharex=True )
+
+data = ((t, F),
+        (timeline, ux, uy),
+        (timeline, vx, vy),
+        (timeline, ax, ay))
 
 
-    splt.gridplot(axes.ravel(), data)
+splt.gridplot(axes.ravel(), data)

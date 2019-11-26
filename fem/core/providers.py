@@ -122,7 +122,12 @@ class RayleighDampingMatrixProvider:
     def calculate_global_matrix(self, stiffness_matrix, mass_matrix):
         damping_coeffs = self.coeffs
         eigvals = linalg.eigh(stiffness_matrix, b=mass_matrix,
-                                 eigvals=(0,1), eigvals_only=True)
+                                 eigvals=(0,1),
+                                 type=1,
+                                 eigvals_only=True, 
+                                 check_finite=False,
+                                 overwrite_a=True,
+                                 overwrite_b=True)
 
         wmegas = sqrt(eigvals)
         self.frequencies = wmegas

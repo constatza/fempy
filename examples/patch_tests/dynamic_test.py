@@ -4,6 +4,8 @@ Created on Thu Oct 10 12:04:34 2019
 
 @author: constatza
 """
+import pyximport
+pyximport.install()
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -77,7 +79,7 @@ parent_analyzer = NewmarkDynamicAnalyzer(model,
                                          alpha=1/4)
 
 
-for i in range(1):
+for i in range(1000):
     
     parent_analyzer.initialize()
     parent_analyzer.solve()

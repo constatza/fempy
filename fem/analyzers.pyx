@@ -3,13 +3,14 @@
 
 
 import numpy as np
-import matplotlib.pyplot as plt
+
 
 
 cdef class Analyzer:
     """Abstract class for Parent Analyzers"""
     cdef public:
         object provider, child
+        
     def __init__(self, provider=None, child_analyzer=None):
         """
         Creates an instance that uses a specific problem type and an
@@ -28,19 +29,6 @@ cdef class Analyzer:
         self.child = child_analyzer
         self.child.parent = self       
 
- 
-#    def build_matrices(self):
-#        """
-#        Builds the appropriate system matrix and updates the system instance 
-#        used in the constructor.
-#        """
-#        pass
-#    
-#    def initialize(self, is_first_analysis=False):
-#        pass
-#    
-#    def solve(self):
-#        pass
     
 
 class Linear:
