@@ -10,19 +10,19 @@ pyximport.install()
 from time import time
 import numpy as np
 import matplotlib.pyplot as plt
-import fempy.smartplot as splt
+import smartplot as splt
 
-from fempy.fem.preprocessor import rectangular_mesh_model
-from fempy.fem.problems import ProblemStructuralDynamic
-from fempy.fem.analyzers import Linear, NewmarkDynamicAnalyzer
-from fempy.fem.solvers import CholeskySolver
-from fempy.fem.systems import LinearSystem
+from fem.preprocessor import rectangular_mesh_model
+from fem.problems import ProblemStructuralDynamic
+from fem.analyzers import Linear, NewmarkDynamicAnalyzer
+from fem.solvers import CholeskySolver
+from fem.systems import LinearSystem
 
-from fempy.fem.core.loads import TimeDependentLoad
-from fempy.fem.core.entities import DOFtype
-from fempy.fem.core.providers import ElementMaterialOnlyStiffnessProvider, RayleighDampingMatrixProvider
-from fempy.fem.core.materials import ElasticMaterial2D, StressState2D
-from fempy.fem.core.elements import Quad4
+from fem.core.loads import TimeDependentLoad, InertiaLoad
+from fem.core.entities import DOFtype
+from fem.core.providers import ElementMaterialOnlyStiffnessProvider, RayleighDampingMatrixProvider
+from fem.core.materials import ElasticMaterial2D, StressState2D
+from fem.core.elements import Quad4
 
 plt.close('all')   
 # =============================================================================
@@ -75,7 +75,7 @@ last_node = (numelX + 1) * (numelY + 1)
 hload1 = TimeDependentLoad(time_history=F, 
                           node = model.nodes_dictionary[last_node-1], 
                           DOF=DOFtype.X)
-model.time_dependent_loads.append(hload1)
+model.inertia_loads.append(hload1)
 
 # CONSTRAIN BASE DOFS
 for node in model.nodes[:numelX+1]:

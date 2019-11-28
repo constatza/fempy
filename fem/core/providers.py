@@ -5,7 +5,7 @@ Created on Tue Jul 30 13:49:31 2019
 @author: constatza
 """
 
-from fempy.fem.assemblers import GlobalMatrixAssembler
+from fem.assemblers import GlobalMatrixAssembler
 from numpy import array, zeros, newaxis, arange, empty, sqrt
 import scipy.linalg as linalg
 from numba import njit, prange, parfor
@@ -49,10 +49,25 @@ class ElementMassProvider:
 
 class GlobalMatrixProvider:
     
-    def get_rhs_from_history_load(timestep, static_forces, dynamic_forces):
-        dynamic_forces_vector = zeros(static_forces.shape)
+    def get_rhs_from_history_loads(timestep, static_forces, dynamic_forces, inertia_forces, mass_matrix):
+        nodal_rhs = GlobalMatrixProvider.get_rhs_from_nodal_loads
+        inertia_rhs = GlobalMatrixProvider.get_rhs_from_inertia_loads
+        nodal = nodal_rhs(timestep, static_forces, dynamic_forces)
+        inertia = inertia_rhs(timestep, inertia_forces, mass_matrix)
+        return nodal + inertia
+    
+    def get_rhs_from_inertia_loads(timestep, inertia_forces, mass_matrix):
+        inertia_forces_vector = zeros((mass_matrix.shape[0],1), order='F')
+        for dof, history in inertia_forces.items():
+            inertia_forces_vector[dof] = history(timestep)
+            
+        return mass_matrix @ inertia_forces_vector
+    
+    def get_rhs_from_nodal_loads(timestep, static_forces, dynamic_forces):
+        dynamic_forces_vector = zeros(static_forces.shape, order='F')
         for dof, history in dynamic_forces.items():
             dynamic_forces_vector[dof] = history(timestep)
+         
         
         return static_forces + dynamic_forces_vector
     
@@ -132,7 +147,7 @@ class RayleighDampingMatrixProvider:
         wmegas = sqrt(eigvals)
         self.frequencies = wmegas
         Matrix = .5* array([1/wmegas,wmegas]) 
-        a = linalg.solve(Matrix.T, damping_coeffs)
+        a = linalg.solve(Matrix.T, damping_coeffs, check_finite=False)
         
         return a[0]*mass_matrix + a[1]*stiffness_matrix
     

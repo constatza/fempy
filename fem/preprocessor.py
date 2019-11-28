@@ -7,8 +7,8 @@ Created on Mon Apr  8 19:56:25 2019
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from fempy.fem.core.entities import Model, Node
-from fempy.fem.core.elements import Quad4
+from fem.core.entities import Model, Node
+from fem.core.elements import Quad4
 
 def rectangular_mesh_model(xlim, ylim, xnumel, ynumel, element_type):
     """ Builds a rectangular mesh model. 

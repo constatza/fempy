@@ -2,9 +2,9 @@ import numpy as np
 import numba as nb
 import numba.cuda as cuda
 
-from fempy.fem.core.gauss import Quadrature, Point3D
-from fempy.fem.assemblers import GenericDOFEnumerator
-from fempy.fem.core.entities import Element, DOFtype
+from fem.core.gauss import Quadrature, Point3D
+from fem.assemblers import GenericDOFEnumerator
+from fem.core.entities import Element, DOFtype
 
 
 

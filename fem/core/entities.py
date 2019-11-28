@@ -2,7 +2,7 @@
 
 import numpy as np
 from enum import IntEnum
-from fempy.fem.assemblers import GenericDOFEnumerator
+from fem.assemblers import GenericDOFEnumerator
 
 class DOFtype(IntEnum):
     Unknown = 0,
@@ -94,7 +94,7 @@ class Model:
         Dictionary that links node.ID and DOFType with the equivalent 
         global nodal DOF number. 
     loads : list<Load>
-        List containing the loads applied to the model nodes.
+        List containing the static loads applied to the model nodes.
     forces : np.ndarray<float>
         Force vector applied to model DOFs.
     """
@@ -116,6 +116,7 @@ class Model:
         self.nodal_DOFs_dictionary = {}
         self.loads = []
         self.time_dependent_loads = []
+        self.inertia_loads = []
         self.global_DOFs = None
     
     @property
@@ -171,6 +172,7 @@ class Model:
     def assign_loads(self):
         self.assign_nodal_loads()
         self.assign_history_loads()
+        self.assign_inertia_loads()
      
     def assign_nodal_loads(self):
         """Assigns the loads to the force vector."""
@@ -187,7 +189,18 @@ class Model:
             load_global_DOF = self.nodal_DOFs_dictionary[hload.node.ID][hload.DOF]
             if load_global_DOF >= 0:
                 dynamic_forces[load_global_DOF] = hload.time_history
-        self.dynamic_forces = dynamic_forces 
+        self.dynamic_forces = dynamic_forces
+    
+    def assign_inertia_loads(self):
+        inertia_forces_direction = {}
+        dofs_dictionary =  self.nodal_DOFs_dictionary
+        for mload in self.inertia_loads:
+            history = mload.time_history
+            for value in dofs_dictionary.values():
+                load_global_DOF = value[mload.DOF]
+                if load_global_DOF >= 0:
+                    inertia_forces_direction[load_global_DOF] = history
+        self.inertia_forces = inertia_forces_direction
         
     def connect_data_structures(self):
          self.build_element_dictionary_of_each_node()

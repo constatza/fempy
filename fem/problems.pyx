@@ -1,6 +1,6 @@
 
-from fempy.fem.core.providers import ElementMassProvider, ElementStiffnessProvider, RayleighDampingMatrixProvider
-from fempy.fem.core.providers import GlobalMatrixProvider
+from fem.core.providers import ElementMassProvider, ElementStiffnessProvider, RayleighDampingMatrixProvider
+from fem.core.providers import GlobalMatrixProvider
 
 
 class ProblemStructural:
@@ -140,7 +140,8 @@ class ProblemStructuralDynamic:
         provider = self.global_matrix_provider
         stforces = self.model.forces
         dyforces = self.model.dynamic_forces
-        return provider.get_rhs_from_history_load(timestep, stforces, dyforces)
+        inforces = self.model.inertia_forces
+        return provider.get_rhs_from_history_loads(timestep, stforces, dyforces, inforces, self._mass_matrix)
     
     def mass_matrix_vector_product(self, vector):
         return self._mass_matrix @ vector

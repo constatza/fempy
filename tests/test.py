@@ -4,30 +4,33 @@ Spyder Editor
 
 This is a temporary script file.
 """
-#import pyximport
-#pyximport.install()
-import fempy.mathematics.linalg as linalg
-from fempy.fem.problems import ProblemStructuralDynamic
-import timeit 
+
+import pyximport
+pyximport.install()
+
+
 import numpy as np
-R = np.random.rand(3,3)
+import matplotlib.pyplot as plt
+import smartplot as splt
 
-r = np.random.rand(2,3)
+from fem.preprocessor import rectangular_mesh_model
+from fem.problems import ProblemStructuralDynamic
+from fem.analyzers import Linear, NewmarkDynamicAnalyzer
+from fem.solvers import CholeskySolver
+from fem.systems import LinearSystem
+
+from fem.core.loads import TimeDependentLoad
+from fem.core.entities import DOFtype
+from fem.core.providers import ElementMaterialOnlyStiffnessProvider, RayleighDampingMatrixProvider
+from fem.core.materials import ElasticMaterial2D, StressState2D
+from fem.core.elements import Quad4
+import mathematics.linalg as linalg
+from fem.problems import ProblemStructuralDynamic
 
 
-#
-
-#
-#
-#import cython_module as cm
-#
-#myclass = cm.CyClass(1000, cm.PyClass())
-#myclass.boo()
-#
-#child = cm.Child(10, cm.PyClass())
 
 a = np.ones(10)
 dot = linalg.dot(a,a)
 
-
-print("cython is {:.2f} times faster".format(py/cy))
+import sys
+print(sys.path)
