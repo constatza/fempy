@@ -1,8 +1,13 @@
-class MassLoad:
+# cython : language_level=3
+cimport cython
+import numpy as np 
+cimport numpy as np
+
+cdef class MassLoad:
     cpdef public double magnitude
-    cpdef public int DOF
+    cpdef public object DOF
     
-    def __cinit__(self, double magnitude, DOF):
+    def __init__(self, double magnitude=1, DOF=None):
         self.magnitude = magnitude
         self.DOF = DOF
     
@@ -10,47 +15,67 @@ class MassLoad:
 
 cdef class NodalLoad:
     cpdef public double magnitude
-    cpdef public int node, DOF
+    cpdef public object DOF
     
-    def __cinit__(self, double magnitude, int node, int DOF):
+    def __init__(self, double magnitude=1, node=None, DOF=None):
         self.magnitude = magnitude
         self.node = node
         self.DOF = DOF
 
 
-cdef class TimeDependentLoad(MassLoad):
-    cpdef public double[:] _history
+cdef class TimeDependentLoad(NodalLoad):
+    cdef double[::1] _history
+    cdef int total_steps
     
-    def __init__(self, double[:] time_history, *args, **kwargs):
+    def __init__(self, time_history=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if self.magnitude is None:
             self.magnitude = 1
-        self._history = self.magnitude * time_history
+       
+        self._history = time_history
+        cdef size_t i
+        cdef double magnitude = self.magnitude
+        for i in range(time_history.shape[0]):
+            self._history[i] *= magnitude 
         self.total_steps = len(time_history)
     
+#    @cython.boundscheck(False)  # Deactivate bounds checking
+#    @cython.wraparound(False)   # Deactivate negative indexing.
     cpdef double time_history(self, size_t timestep):
         if timestep < self.total_steps:
             return self._history[timestep]
         else:
             return 0
 
-cdef class InertiaLoad(NodalLoad):
-    
-    
+
+
+cdef class InertiaLoad(MassLoad):
+    cdef double[::1] _history
+    cdef int total_steps
     
     def __init__(self, time_history=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if self.magnitude is None:
             self.magnitude = 1
-        self._history = self.magnitude * time_history
-        self.total_steps = len(time_history)
+       
+        self._history = time_history
+        cdef size_t i
+        cdef double magnitude = self.magnitude
+        for i in range(time_history.shape[0]):
+            self._history[i] *= magnitude 
+        self.total_steps = time_history.shape[0]
     
-    def time_history(self, timestep):
+#    @cython.boundscheck(False)  # Deactivate bounds checking
+#    @cython.wraparound(False)   # Deactivate negative indexing.
+    cpdef double time_history(self, size_t timestep, direction_vector):
         if timestep < self.total_steps:
-            return self._history[timestep]
+            return self._history[timestep] * direction_vector
         else:
-            return 0
+            return np.zeros(direction_vector.shape)
     
+    
+    
+
     
     
     
