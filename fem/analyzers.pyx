@@ -3,7 +3,7 @@
 
 
 import numpy as np
-
+cimport cython
 
 
 cdef class Analyzer:
@@ -212,7 +212,8 @@ cdef class NewmarkDynamicAnalyzer(Analyzer):
         self.child.initialize()
         
         
-        
+    @cython.boundscheck(False)  
+    @cython.wraparound(False)     
     cpdef solve(self):
         """
         Solves the linear system of equations by calling the corresponding 
@@ -236,7 +237,8 @@ cdef class NewmarkDynamicAnalyzer(Analyzer):
             update_velocity_and_acceleration()
             store_results(i)
 
-        
+    @cython.boundscheck(False)  
+    @cython.wraparound(False)     
     cpdef calculate_rhs_implicit(self, add_rhs=True):
         """
         Calculates the right-hand-side of the implicit dynamic method. 
@@ -261,7 +263,8 @@ cdef class NewmarkDynamicAnalyzer(Analyzer):
 
         return rhs_effective
     
-    
+    @cython.boundscheck(False)  
+    @cython.wraparound(False) 
     cpdef initialize_internal_vectors(self, u0=None, ud0=None):
         if self.linear_system.solution is not None:
             self.linear_system.reset()
@@ -291,7 +294,8 @@ cdef class NewmarkDynamicAnalyzer(Analyzer):
     cpdef initialize_rhs(self):
         self.linear_system.rhs = self.provider.get_rhs_from_history_load(1)
 
-
+    @cython.boundscheck(False)  
+    @cython.wraparound(False)   
     cpdef update_velocity_and_accelaration(self):
         
         
@@ -309,6 +313,8 @@ cdef class NewmarkDynamicAnalyzer(Analyzer):
         self.ud = ud_next
         self.udd = udd_next
     
+    @cython.boundscheck(False)  
+    @cython.wraparound(False) 
     cpdef void store_results(self, size_t timestep):
         
         self.displacements[timestep, :] = self.u.ravel()
