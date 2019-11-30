@@ -1,14 +1,15 @@
+# cython: language_level=3
 # -*- coding: utf-8 -*-
 """
 Created on Fri Nov 15 11:19:22 2019
 
 @author: constatza
 """
-import pyximport
-pyximport.install()
-
-from time import time
 import numpy as np
+import pyximport
+pyximport.install(setup_args={'include_dirs': np.get_include()})
+from time import time
+
 import matplotlib.pyplot as plt
 import smartplot as splt
 
@@ -71,11 +72,12 @@ quad = Quad4(material=material, thickness=thickness)
 model = rectangular_mesh_model(boundX, boundY, 
                                numelX, numelY, quad)
 # ASSIGN TIME DEPENDENT LOADS
-last_node = (numelX + 1) * (numelY + 1)
-hload1 = TimeDependentLoad(time_history=F, 
-                          node = model.nodes_dictionary[last_node-1], 
+#num_last_node = (numelX + 1) * (numelY + 1)
+#last_node=model.nodes_dictionary[last_node-1],
+Iload1 = InertiaLoad(time_history=F, 
                           DOF=DOFtype.X)
-model.inertia_loads.append(hload1)
+
+model.inertia_loads.append(Iload1)
 
 # CONSTRAIN BASE DOFS
 for node in model.nodes[:numelX+1]:
