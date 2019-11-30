@@ -49,19 +49,31 @@ class ElementMassProvider:
 
 class GlobalMatrixProvider:
     
-    def get_rhs_from_history_loads(timestep, static_forces, dynamic_forces, inertia_forces, mass_matrix):
+
+    
+    def get_rhs_from_history_loads(timestep, static_forces, dynamic_forces,
+                                   inertia_direction_vectors, mass_matrix):
+        
         nodal_rhs = GlobalMatrixProvider.get_rhs_from_nodal_loads
         inertia_rhs = GlobalMatrixProvider.get_rhs_from_inertia_loads
-        nodal = nodal_rhs(timestep, static_forces, dynamic_forces)
-        inertia = inertia_rhs(timestep, inertia_forces, mass_matrix)
+        
+        nodal = nodal_rhs(timestep,
+                          static_forces,
+                          dynamic_forces)
+        
+        inertia = inertia_rhs(timestep,
+                              inertia_direction_vectors,
+                              mass_matrix)
         return nodal + inertia
     
-    def get_rhs_from_inertia_loads(timestep, inertia_forces, mass_matrix):
-        inertia_forces_vector = zeros((mass_matrix.shape[0],1), order='F')
-        for dof, history in inertia_forces.items():
-            inertia_forces_vector[dof] = history(timestep)
+    def get_rhs_from_inertia_loads(timestep, inertia_loads,
+                                   inertia_direction_vectors, mass_matrix):
+        nloads = len(inertia_loads)
+        inertia_forces = zeros((mass_matrix.shape[0], nloads))
+        for i in range(len(inertia_loads)):
+             inertia_forces += inertia_loads[i].time_history(timestep, inertia_direction_vectors[:, i])
             
-        return mass_matrix @ inertia_forces_vector
+        return mass_matrix @ inertia_forces
     
     def get_rhs_from_nodal_loads(timestep, static_forces, dynamic_forces):
         dynamic_forces_vector = zeros(static_forces.shape, order='F')

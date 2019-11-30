@@ -192,15 +192,16 @@ class Model:
         self.dynamic_forces = dynamic_forces
     
     def assign_inertia_loads(self):
-        inertia_forces_direction = {}
+        numloads = len(self.inertia_loads)
+        inertia_forces_direction_vector = np.zeros((self.total_DOFs, numloads), order='F')
         dofs_dictionary =  self.nodal_DOFs_dictionary
-        for mload in self.inertia_loads:
-            history = mload.time_history
+        for i in range(numloads):
+            mload = self.inertia_loads[i]
             for value in dofs_dictionary.values():
                 load_global_DOF = value[mload.DOF]
                 if load_global_DOF >= 0:
-                    inertia_forces_direction[load_global_DOF] = history
-        self.inertia_forces = inertia_forces_direction
+                    inertia_forces_direction_vector[load_global_DOF, i] = 1
+        self.inertia_forces_direction_vector = inertia_forces_direction_vector
         
     def connect_data_structures(self):
          self.build_element_dictionary_of_each_node()
