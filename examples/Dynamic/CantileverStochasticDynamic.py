@@ -6,8 +6,8 @@ Created on Fri Nov 15 11:19:22 2019
 @author: constatza
 """
 import numpy as np
-import pyximport
-pyximport.install(setup_args={'include_dirs': np.get_include()})
+#import pyximport
+#pyximport.install(setup_args={'include_dirs': np.get_include()})
 from time import time
 
 import matplotlib.pyplot as plt

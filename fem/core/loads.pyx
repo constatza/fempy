@@ -65,13 +65,15 @@ cdef class InertiaLoad(MassLoad):
             self._history[i] *= magnitude 
         self.total_steps = time_history.shape[0]
     
-#    @cython.boundscheck(False)  # Deactivate bounds checking
-#    @cython.wraparound(False)   # Deactivate negative indexing.
-    cpdef double time_history(self, size_t timestep, direction_vector):
+    @cython.boundscheck(False)  # Deactivate bounds checking
+    @cython.wraparound(False)   # Deactivate negative indexing.
+    cpdef void time_history(self, size_t timestep,
+                            np.ndarray[np.float64_t, ndim=1] direction_vector,
+                            np.ndarray[np.float64_t, ndim=1] out):
         if timestep < self.total_steps:
-            return self._history[timestep] * direction_vector
+            out += self._history[timestep] * direction_vector
         else:
-            return np.zeros(direction_vector.shape)
+            pass
     
     
     

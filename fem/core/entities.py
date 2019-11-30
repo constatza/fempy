@@ -201,7 +201,7 @@ class Model:
                 load_global_DOF = value[mload.DOF]
                 if load_global_DOF >= 0:
                     inertia_forces_direction_vector[load_global_DOF, i] = 1
-        self.inertia_forces_direction_vector = inertia_forces_direction_vector
+        self.inertia_forces_direction_vectors = inertia_forces_direction_vector
         
     def connect_data_structures(self):
          self.build_element_dictionary_of_each_node()

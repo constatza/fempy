@@ -2113,6 +2113,7 @@ static const char __pyx_k_connect_data_structures[] = "connect_data_structures";
 static const char __pyx_k_contiguous_and_indirect[] = "<contiguous and indirect>";
 static const char __pyx_k_Cannot_index_with_type_s[] = "Cannot index with type '%s'";
 static const char __pyx_k_Invalid_shape_in_axis_d_d[] = "Invalid shape in axis %d: %d.";
+static const char __pyx_k_calculate_inertia_vectors[] = "calculate_inertia_vectors";
 static const char __pyx_k_get_rhs_from_history_load[] = "get_rhs_from_history_load";
 static const char __pyx_k_mass_matrix_vector_product[] = "mass_matrix_vector_product";
 static const char __pyx_k_initialize_internal_vectors[] = "initialize_internal_vectors";
@@ -2189,6 +2190,7 @@ static PyObject *__pyx_n_s_build_matrices;
 static PyObject *__pyx_n_s_c;
 static PyObject *__pyx_n_u_c;
 static PyObject *__pyx_n_s_calculate_coefficients;
+static PyObject *__pyx_n_s_calculate_inertia_vectors;
 static PyObject *__pyx_n_s_calculate_matrix;
 static PyObject *__pyx_n_s_calculate_rhs_implicit;
 static PyObject *__pyx_n_s_child;
@@ -6205,6 +6207,7 @@ static PyObject *__pyx_f_5fempy_3fem_9analyzers_22NewmarkDynamicAnalyzer_initial
   PyObject *__pyx_v_u0 = ((PyObject *)Py_None);
   PyObject *__pyx_v_ud0 = ((PyObject *)Py_None);
   PyObject *__pyx_v_total_DOFs = NULL;
+  PyObject *__pyx_v_provider = NULL;
   PyObject *__pyx_v_stiffness = NULL;
   PyObject *__pyx_v_mass = NULL;
   PyObject *__pyx_v_damping = NULL;
@@ -6432,7 +6435,7 @@ static PyObject *__pyx_f_5fempy_3fem_9analyzers_22NewmarkDynamicAnalyzer_initial
  *             u0 = np.zeros((total_DOFs, 1))
  *         if ud0 is None:             # <<<<<<<<<<<<<<
  *             ud0 = np.zeros((total_DOFs, 1))
- * 
+ *         provider = self.provider
  */
   __pyx_t_7 = (__pyx_v_ud0 == Py_None);
   __pyx_t_8 = (__pyx_t_7 != 0);
@@ -6442,8 +6445,8 @@ static PyObject *__pyx_f_5fempy_3fem_9analyzers_22NewmarkDynamicAnalyzer_initial
  *             u0 = np.zeros((total_DOFs, 1))
  *         if ud0 is None:
  *             ud0 = np.zeros((total_DOFs, 1))             # <<<<<<<<<<<<<<
- * 
- *         stiffness = self.provider.stiffness_matrix
+ *         provider = self.provider
+ *         stiffness = provider.stiffness_matrix
  */
     __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 277, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
@@ -6482,49 +6485,87 @@ static PyObject *__pyx_f_5fempy_3fem_9analyzers_22NewmarkDynamicAnalyzer_initial
  *             u0 = np.zeros((total_DOFs, 1))
  *         if ud0 is None:             # <<<<<<<<<<<<<<
  *             ud0 = np.zeros((total_DOFs, 1))
- * 
+ *         provider = self.provider
  */
   }
 
+  /* "fempy/fem/analyzers.pyx":278
+ *         if ud0 is None:
+ *             ud0 = np.zeros((total_DOFs, 1))
+ *         provider = self.provider             # <<<<<<<<<<<<<<
+ *         stiffness = provider.stiffness_matrix
+ *         mass = provider.mass_matrix
+ */
+  __pyx_t_1 = __pyx_v_self->__pyx_base.provider;
+  __Pyx_INCREF(__pyx_t_1);
+  __pyx_v_provider = __pyx_t_1;
+  __pyx_t_1 = 0;
+
   /* "fempy/fem/analyzers.pyx":279
  *             ud0 = np.zeros((total_DOFs, 1))
- * 
- *         stiffness = self.provider.stiffness_matrix             # <<<<<<<<<<<<<<
- *         mass = self.provider.mass_matrix
- *         damping = self.provider.damping_matrix #after M and K !
+ *         provider = self.provider
+ *         stiffness = provider.stiffness_matrix             # <<<<<<<<<<<<<<
+ *         mass = provider.mass_matrix
+ *         damping = provider.damping_matrix #after M and K !
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->__pyx_base.provider, __pyx_n_s_stiffness_matrix_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 279, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_provider, __pyx_n_s_stiffness_matrix_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 279, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_stiffness = __pyx_t_1;
   __pyx_t_1 = 0;
 
   /* "fempy/fem/analyzers.pyx":280
- * 
- *         stiffness = self.provider.stiffness_matrix
- *         mass = self.provider.mass_matrix             # <<<<<<<<<<<<<<
- *         damping = self.provider.damping_matrix #after M and K !
- * 
+ *         provider = self.provider
+ *         stiffness = provider.stiffness_matrix
+ *         mass = provider.mass_matrix             # <<<<<<<<<<<<<<
+ *         damping = provider.damping_matrix #after M and K !
+ *         provider.calculate_inertia_vectors() # before first call of get_rhs...
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->__pyx_base.provider, __pyx_n_s_mass_matrix_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 280, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_provider, __pyx_n_s_mass_matrix_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 280, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_mass = __pyx_t_1;
   __pyx_t_1 = 0;
 
   /* "fempy/fem/analyzers.pyx":281
- *         stiffness = self.provider.stiffness_matrix
- *         mass = self.provider.mass_matrix
- *         damping = self.provider.damping_matrix #after M and K !             # <<<<<<<<<<<<<<
- * 
+ *         stiffness = provider.stiffness_matrix
+ *         mass = provider.mass_matrix
+ *         damping = provider.damping_matrix #after M and K !             # <<<<<<<<<<<<<<
+ *         provider.calculate_inertia_vectors() # before first call of get_rhs...
  *         rhs0 = self.provider.get_rhs_from_history_load(0)
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->__pyx_base.provider, __pyx_n_s_damping_matrix_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 281, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_provider, __pyx_n_s_damping_matrix_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 281, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_damping = __pyx_t_1;
   __pyx_t_1 = 0;
 
+  /* "fempy/fem/analyzers.pyx":282
+ *         mass = provider.mass_matrix
+ *         damping = provider.damping_matrix #after M and K !
+ *         provider.calculate_inertia_vectors() # before first call of get_rhs...             # <<<<<<<<<<<<<<
+ *         rhs0 = self.provider.get_rhs_from_history_load(0)
+ *         self.linear_system.rhs = rhs0 - stiffness @ u0 - damping @ ud0
+ */
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_provider, __pyx_n_s_calculate_inertia_vectors); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 282, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = NULL;
+  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
+    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_2);
+    if (likely(__pyx_t_3)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
+      __Pyx_INCREF(__pyx_t_3);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_2, function);
+    }
+  }
+  __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 282, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
   /* "fempy/fem/analyzers.pyx":283
- *         damping = self.provider.damping_matrix #after M and K !
- * 
+ *         damping = provider.damping_matrix #after M and K !
+ *         provider.calculate_inertia_vectors() # before first call of get_rhs...
  *         rhs0 = self.provider.get_rhs_from_history_load(0)             # <<<<<<<<<<<<<<
  *         self.linear_system.rhs = rhs0 - stiffness @ u0 - damping @ ud0
  *         self.linear_system.matrix = mass
@@ -6550,7 +6591,7 @@ static PyObject *__pyx_f_5fempy_3fem_9analyzers_22NewmarkDynamicAnalyzer_initial
   __pyx_t_1 = 0;
 
   /* "fempy/fem/analyzers.pyx":284
- * 
+ *         provider.calculate_inertia_vectors() # before first call of get_rhs...
  *         rhs0 = self.provider.get_rhs_from_history_load(0)
  *         self.linear_system.rhs = rhs0 - stiffness @ u0 - damping @ ud0             # <<<<<<<<<<<<<<
  *         self.linear_system.matrix = mass
@@ -6651,7 +6692,7 @@ static PyObject *__pyx_f_5fempy_3fem_9analyzers_22NewmarkDynamicAnalyzer_initial
  *         self.udd = self.linear_system.solution
  *         self.ud = ud0             # <<<<<<<<<<<<<<
  *         self.u = u0
- *         self.linear_system.reset()
+ *         self.store_results(0)
  */
   __Pyx_INCREF(__pyx_v_ud0);
   __Pyx_GIVEREF(__pyx_v_ud0);
@@ -6663,8 +6704,8 @@ static PyObject *__pyx_f_5fempy_3fem_9analyzers_22NewmarkDynamicAnalyzer_initial
  *         self.udd = self.linear_system.solution
  *         self.ud = ud0
  *         self.u = u0             # <<<<<<<<<<<<<<
+ *         self.store_results(0)
  *         self.linear_system.reset()
- * 
  */
   __Pyx_INCREF(__pyx_v_u0);
   __Pyx_GIVEREF(__pyx_v_u0);
@@ -6675,11 +6716,20 @@ static PyObject *__pyx_f_5fempy_3fem_9analyzers_22NewmarkDynamicAnalyzer_initial
   /* "fempy/fem/analyzers.pyx":291
  *         self.ud = ud0
  *         self.u = u0
+ *         self.store_results(0)             # <<<<<<<<<<<<<<
+ *         self.linear_system.reset()
+ * 
+ */
+  ((struct __pyx_vtabstruct_5fempy_3fem_9analyzers_NewmarkDynamicAnalyzer *)__pyx_v_self->__pyx_vtab)->store_results(__pyx_v_self, 0, 0);
+
+  /* "fempy/fem/analyzers.pyx":292
+ *         self.u = u0
+ *         self.store_results(0)
  *         self.linear_system.reset()             # <<<<<<<<<<<<<<
  * 
  * 
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->linear_system, __pyx_n_s_reset); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 291, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->linear_system, __pyx_n_s_reset); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 292, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_2 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_1))) {
@@ -6693,7 +6743,7 @@ static PyObject *__pyx_f_5fempy_3fem_9analyzers_22NewmarkDynamicAnalyzer_initial
   }
   __pyx_t_3 = (__pyx_t_2) ? __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_t_2) : __Pyx_PyObject_CallNoArg(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 291, __pyx_L1_error)
+  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 292, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -6719,6 +6769,7 @@ static PyObject *__pyx_f_5fempy_3fem_9analyzers_22NewmarkDynamicAnalyzer_initial
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_total_DOFs);
+  __Pyx_XDECREF(__pyx_v_provider);
   __Pyx_XDECREF(__pyx_v_stiffness);
   __Pyx_XDECREF(__pyx_v_mass);
   __Pyx_XDECREF(__pyx_v_damping);
@@ -6826,12 +6877,12 @@ static PyObject *__pyx_pf_5fempy_3fem_9analyzers_22NewmarkDynamicAnalyzer_12init
   return __pyx_r;
 }
 
-/* "fempy/fem/analyzers.pyx":294
+/* "fempy/fem/analyzers.pyx":295
  * 
  * 
  *     cpdef initialize_rhs(self):             # <<<<<<<<<<<<<<
- *         self.linear_system.rhs = self.provider.get_rhs_from_history_load(1)
  * 
+ *         self.linear_system.rhs = self.provider.get_rhs_from_history_load(1)
  */
 
 static PyObject *__pyx_pw_5fempy_3fem_9analyzers_22NewmarkDynamicAnalyzer_15initialize_rhs(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
@@ -6852,7 +6903,7 @@ static PyObject *__pyx_f_5fempy_3fem_9analyzers_22NewmarkDynamicAnalyzer_initial
     if (unlikely(!__Pyx_object_dict_version_matches(((PyObject *)__pyx_v_self), __pyx_tp_dict_version, __pyx_obj_dict_version))) {
       PY_UINT64_T __pyx_type_dict_guard = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
       #endif
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_initialize_rhs); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 294, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_initialize_rhs); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 295, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       if (!PyCFunction_Check(__pyx_t_1) || (PyCFunction_GET_FUNCTION(__pyx_t_1) != (PyCFunction)(void*)__pyx_pw_5fempy_3fem_9analyzers_22NewmarkDynamicAnalyzer_15initialize_rhs)) {
         __Pyx_XDECREF(__pyx_r);
@@ -6869,7 +6920,7 @@ static PyObject *__pyx_f_5fempy_3fem_9analyzers_22NewmarkDynamicAnalyzer_initial
         }
         __pyx_t_2 = (__pyx_t_4) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
         __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 294, __pyx_L1_error)
+        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 295, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
         __pyx_r = __pyx_t_2;
@@ -6890,14 +6941,14 @@ static PyObject *__pyx_f_5fempy_3fem_9analyzers_22NewmarkDynamicAnalyzer_initial
     #endif
   }
 
-  /* "fempy/fem/analyzers.pyx":295
- * 
+  /* "fempy/fem/analyzers.pyx":297
  *     cpdef initialize_rhs(self):
+ * 
  *         self.linear_system.rhs = self.provider.get_rhs_from_history_load(1)             # <<<<<<<<<<<<<<
  * 
  *     @cython.boundscheck(False)
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->__pyx_base.provider, __pyx_n_s_get_rhs_from_history_load); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 295, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->__pyx_base.provider, __pyx_n_s_get_rhs_from_history_load); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 297, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -6911,18 +6962,18 @@ static PyObject *__pyx_f_5fempy_3fem_9analyzers_22NewmarkDynamicAnalyzer_initial
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_3, __pyx_int_1) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_int_1);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 295, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 297, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self->linear_system, __pyx_n_s_rhs, __pyx_t_1) < 0) __PYX_ERR(0, 295, __pyx_L1_error)
+  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self->linear_system, __pyx_n_s_rhs, __pyx_t_1) < 0) __PYX_ERR(0, 297, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "fempy/fem/analyzers.pyx":294
+  /* "fempy/fem/analyzers.pyx":295
  * 
  * 
  *     cpdef initialize_rhs(self):             # <<<<<<<<<<<<<<
- *         self.linear_system.rhs = self.provider.get_rhs_from_history_load(1)
  * 
+ *         self.linear_system.rhs = self.provider.get_rhs_from_history_load(1)
  */
 
   /* function exit code */
@@ -6960,7 +7011,7 @@ static PyObject *__pyx_pf_5fempy_3fem_9analyzers_22NewmarkDynamicAnalyzer_14init
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("initialize_rhs", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_5fempy_3fem_9analyzers_22NewmarkDynamicAnalyzer_initialize_rhs(__pyx_v_self, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 294, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_5fempy_3fem_9analyzers_22NewmarkDynamicAnalyzer_initialize_rhs(__pyx_v_self, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 295, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -6977,7 +7028,7 @@ static PyObject *__pyx_pf_5fempy_3fem_9analyzers_22NewmarkDynamicAnalyzer_14init
   return __pyx_r;
 }
 
-/* "fempy/fem/analyzers.pyx":299
+/* "fempy/fem/analyzers.pyx":301
  *     @cython.boundscheck(False)
  *     @cython.wraparound(False)
  *     cpdef update_velocity_and_accelaration(self):             # <<<<<<<<<<<<<<
@@ -7014,7 +7065,7 @@ static PyObject *__pyx_f_5fempy_3fem_9analyzers_22NewmarkDynamicAnalyzer_update_
     if (unlikely(!__Pyx_object_dict_version_matches(((PyObject *)__pyx_v_self), __pyx_tp_dict_version, __pyx_obj_dict_version))) {
       PY_UINT64_T __pyx_type_dict_guard = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
       #endif
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_update_velocity_and_accelaration); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 299, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_update_velocity_and_accelaration); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 301, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       if (!PyCFunction_Check(__pyx_t_1) || (PyCFunction_GET_FUNCTION(__pyx_t_1) != (PyCFunction)(void*)__pyx_pw_5fempy_3fem_9analyzers_22NewmarkDynamicAnalyzer_17update_velocity_and_accelaration)) {
         __Pyx_XDECREF(__pyx_r);
@@ -7031,7 +7082,7 @@ static PyObject *__pyx_f_5fempy_3fem_9analyzers_22NewmarkDynamicAnalyzer_update_
         }
         __pyx_t_2 = (__pyx_t_4) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
         __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 299, __pyx_L1_error)
+        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 301, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
         __pyx_r = __pyx_t_2;
@@ -7052,7 +7103,7 @@ static PyObject *__pyx_f_5fempy_3fem_9analyzers_22NewmarkDynamicAnalyzer_update_
     #endif
   }
 
-  /* "fempy/fem/analyzers.pyx":302
+  /* "fempy/fem/analyzers.pyx":304
  * 
  * 
  *         udd = self.udd             # <<<<<<<<<<<<<<
@@ -7064,7 +7115,7 @@ static PyObject *__pyx_f_5fempy_3fem_9analyzers_22NewmarkDynamicAnalyzer_update_
   __pyx_v_udd = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "fempy/fem/analyzers.pyx":303
+  /* "fempy/fem/analyzers.pyx":305
  * 
  *         udd = self.udd
  *         ud = self.ud             # <<<<<<<<<<<<<<
@@ -7076,7 +7127,7 @@ static PyObject *__pyx_f_5fempy_3fem_9analyzers_22NewmarkDynamicAnalyzer_update_
   __pyx_v_ud = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "fempy/fem/analyzers.pyx":304
+  /* "fempy/fem/analyzers.pyx":306
  *         udd = self.udd
  *         ud = self.ud
  *         u = self.u             # <<<<<<<<<<<<<<
@@ -7088,92 +7139,92 @@ static PyObject *__pyx_f_5fempy_3fem_9analyzers_22NewmarkDynamicAnalyzer_update_
   __pyx_v_u = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "fempy/fem/analyzers.pyx":306
+  /* "fempy/fem/analyzers.pyx":308
  *         u = self.u
  * 
  *         u_next = self.linear_system.solution             # <<<<<<<<<<<<<<
  * 
  *         udd_next = self.alphas[0] * (u_next - u) - self.alphas[2] * ud - self.alphas[3] * udd
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->linear_system, __pyx_n_s_solution); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 306, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->linear_system, __pyx_n_s_solution); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 308, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_u_next = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "fempy/fem/analyzers.pyx":308
+  /* "fempy/fem/analyzers.pyx":310
  *         u_next = self.linear_system.solution
  * 
  *         udd_next = self.alphas[0] * (u_next - u) - self.alphas[2] * ud - self.alphas[3] * udd             # <<<<<<<<<<<<<<
  *         ud_next = ud + self.alphas[6] * udd +  self.alphas[7] * udd_next
  * 
  */
-  if (unlikely(!__pyx_v_self->alphas.memview)) {PyErr_SetString(PyExc_AttributeError,"Memoryview is not initialized");__PYX_ERR(0, 308, __pyx_L1_error)}
+  if (unlikely(!__pyx_v_self->alphas.memview)) {PyErr_SetString(PyExc_AttributeError,"Memoryview is not initialized");__PYX_ERR(0, 310, __pyx_L1_error)}
   __pyx_t_5 = 0;
-  __pyx_t_1 = PyFloat_FromDouble((*((double *) ( /* dim=0 */ (__pyx_v_self->alphas.data + __pyx_t_5 * __pyx_v_self->alphas.strides[0]) )))); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 308, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble((*((double *) ( /* dim=0 */ (__pyx_v_self->alphas.data + __pyx_t_5 * __pyx_v_self->alphas.strides[0]) )))); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 310, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = PyNumber_Subtract(__pyx_v_u_next, __pyx_v_u); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 308, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_Subtract(__pyx_v_u_next, __pyx_v_u); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 310, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = PyNumber_Multiply(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 308, __pyx_L1_error)
+  __pyx_t_3 = PyNumber_Multiply(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 310, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(!__pyx_v_self->alphas.memview)) {PyErr_SetString(PyExc_AttributeError,"Memoryview is not initialized");__PYX_ERR(0, 308, __pyx_L1_error)}
+  if (unlikely(!__pyx_v_self->alphas.memview)) {PyErr_SetString(PyExc_AttributeError,"Memoryview is not initialized");__PYX_ERR(0, 310, __pyx_L1_error)}
   __pyx_t_6 = 2;
-  __pyx_t_2 = PyFloat_FromDouble((*((double *) ( /* dim=0 */ (__pyx_v_self->alphas.data + __pyx_t_6 * __pyx_v_self->alphas.strides[0]) )))); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 308, __pyx_L1_error)
+  __pyx_t_2 = PyFloat_FromDouble((*((double *) ( /* dim=0 */ (__pyx_v_self->alphas.data + __pyx_t_6 * __pyx_v_self->alphas.strides[0]) )))); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 310, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = PyNumber_Multiply(__pyx_t_2, __pyx_v_ud); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 308, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Multiply(__pyx_t_2, __pyx_v_ud); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 310, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PyNumber_Subtract(__pyx_t_3, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 308, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_Subtract(__pyx_t_3, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 310, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (unlikely(!__pyx_v_self->alphas.memview)) {PyErr_SetString(PyExc_AttributeError,"Memoryview is not initialized");__PYX_ERR(0, 308, __pyx_L1_error)}
+  if (unlikely(!__pyx_v_self->alphas.memview)) {PyErr_SetString(PyExc_AttributeError,"Memoryview is not initialized");__PYX_ERR(0, 310, __pyx_L1_error)}
   __pyx_t_7 = 3;
-  __pyx_t_1 = PyFloat_FromDouble((*((double *) ( /* dim=0 */ (__pyx_v_self->alphas.data + __pyx_t_7 * __pyx_v_self->alphas.strides[0]) )))); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 308, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble((*((double *) ( /* dim=0 */ (__pyx_v_self->alphas.data + __pyx_t_7 * __pyx_v_self->alphas.strides[0]) )))); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 310, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = PyNumber_Multiply(__pyx_t_1, __pyx_v_udd); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 308, __pyx_L1_error)
+  __pyx_t_3 = PyNumber_Multiply(__pyx_t_1, __pyx_v_udd); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 310, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyNumber_Subtract(__pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 308, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Subtract(__pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 310, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_udd_next = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "fempy/fem/analyzers.pyx":309
+  /* "fempy/fem/analyzers.pyx":311
  * 
  *         udd_next = self.alphas[0] * (u_next - u) - self.alphas[2] * ud - self.alphas[3] * udd
  *         ud_next = ud + self.alphas[6] * udd +  self.alphas[7] * udd_next             # <<<<<<<<<<<<<<
  * 
  * 
  */
-  if (unlikely(!__pyx_v_self->alphas.memview)) {PyErr_SetString(PyExc_AttributeError,"Memoryview is not initialized");__PYX_ERR(0, 309, __pyx_L1_error)}
+  if (unlikely(!__pyx_v_self->alphas.memview)) {PyErr_SetString(PyExc_AttributeError,"Memoryview is not initialized");__PYX_ERR(0, 311, __pyx_L1_error)}
   __pyx_t_8 = 6;
-  __pyx_t_1 = PyFloat_FromDouble((*((double *) ( /* dim=0 */ (__pyx_v_self->alphas.data + __pyx_t_8 * __pyx_v_self->alphas.strides[0]) )))); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 309, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble((*((double *) ( /* dim=0 */ (__pyx_v_self->alphas.data + __pyx_t_8 * __pyx_v_self->alphas.strides[0]) )))); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 311, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = PyNumber_Multiply(__pyx_t_1, __pyx_v_udd); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 309, __pyx_L1_error)
+  __pyx_t_3 = PyNumber_Multiply(__pyx_t_1, __pyx_v_udd); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 311, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyNumber_Add(__pyx_v_ud, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 309, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Add(__pyx_v_ud, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 311, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_v_self->alphas.memview)) {PyErr_SetString(PyExc_AttributeError,"Memoryview is not initialized");__PYX_ERR(0, 309, __pyx_L1_error)}
+  if (unlikely(!__pyx_v_self->alphas.memview)) {PyErr_SetString(PyExc_AttributeError,"Memoryview is not initialized");__PYX_ERR(0, 311, __pyx_L1_error)}
   __pyx_t_9 = 7;
-  __pyx_t_3 = PyFloat_FromDouble((*((double *) ( /* dim=0 */ (__pyx_v_self->alphas.data + __pyx_t_9 * __pyx_v_self->alphas.strides[0]) )))); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 309, __pyx_L1_error)
+  __pyx_t_3 = PyFloat_FromDouble((*((double *) ( /* dim=0 */ (__pyx_v_self->alphas.data + __pyx_t_9 * __pyx_v_self->alphas.strides[0]) )))); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 311, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_2 = PyNumber_Multiply(__pyx_t_3, __pyx_v_udd_next); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 309, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_Multiply(__pyx_t_3, __pyx_v_udd_next); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 311, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = PyNumber_Add(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 309, __pyx_L1_error)
+  __pyx_t_3 = PyNumber_Add(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 311, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_ud_next = __pyx_t_3;
   __pyx_t_3 = 0;
 
-  /* "fempy/fem/analyzers.pyx":312
+  /* "fempy/fem/analyzers.pyx":314
  * 
  * 
  *         self.u = u_next             # <<<<<<<<<<<<<<
@@ -7186,7 +7237,7 @@ static PyObject *__pyx_f_5fempy_3fem_9analyzers_22NewmarkDynamicAnalyzer_update_
   __Pyx_DECREF(__pyx_v_self->u);
   __pyx_v_self->u = __pyx_v_u_next;
 
-  /* "fempy/fem/analyzers.pyx":313
+  /* "fempy/fem/analyzers.pyx":315
  * 
  *         self.u = u_next
  *         self.ud = ud_next             # <<<<<<<<<<<<<<
@@ -7199,7 +7250,7 @@ static PyObject *__pyx_f_5fempy_3fem_9analyzers_22NewmarkDynamicAnalyzer_update_
   __Pyx_DECREF(__pyx_v_self->ud);
   __pyx_v_self->ud = __pyx_v_ud_next;
 
-  /* "fempy/fem/analyzers.pyx":314
+  /* "fempy/fem/analyzers.pyx":316
  *         self.u = u_next
  *         self.ud = ud_next
  *         self.udd = udd_next             # <<<<<<<<<<<<<<
@@ -7212,7 +7263,7 @@ static PyObject *__pyx_f_5fempy_3fem_9analyzers_22NewmarkDynamicAnalyzer_update_
   __Pyx_DECREF(__pyx_v_self->udd);
   __pyx_v_self->udd = __pyx_v_udd_next;
 
-  /* "fempy/fem/analyzers.pyx":299
+  /* "fempy/fem/analyzers.pyx":301
  *     @cython.boundscheck(False)
  *     @cython.wraparound(False)
  *     cpdef update_velocity_and_accelaration(self):             # <<<<<<<<<<<<<<
@@ -7261,7 +7312,7 @@ static PyObject *__pyx_pf_5fempy_3fem_9analyzers_22NewmarkDynamicAnalyzer_16upda
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("update_velocity_and_accelaration", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_5fempy_3fem_9analyzers_22NewmarkDynamicAnalyzer_update_velocity_and_accelaration(__pyx_v_self, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 299, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_5fempy_3fem_9analyzers_22NewmarkDynamicAnalyzer_update_velocity_and_accelaration(__pyx_v_self, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 301, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -7278,7 +7329,7 @@ static PyObject *__pyx_pf_5fempy_3fem_9analyzers_22NewmarkDynamicAnalyzer_16upda
   return __pyx_r;
 }
 
-/* "fempy/fem/analyzers.pyx":318
+/* "fempy/fem/analyzers.pyx":320
  *     @cython.boundscheck(False)
  *     @cython.wraparound(False)
  *     cpdef void store_results(self, size_t timestep):             # <<<<<<<<<<<<<<
@@ -7304,10 +7355,10 @@ static void __pyx_f_5fempy_3fem_9analyzers_22NewmarkDynamicAnalyzer_store_result
     if (unlikely(!__Pyx_object_dict_version_matches(((PyObject *)__pyx_v_self), __pyx_tp_dict_version, __pyx_obj_dict_version))) {
       PY_UINT64_T __pyx_type_dict_guard = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
       #endif
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_store_results); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 318, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_store_results); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 320, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       if (!PyCFunction_Check(__pyx_t_1) || (PyCFunction_GET_FUNCTION(__pyx_t_1) != (PyCFunction)(void*)__pyx_pw_5fempy_3fem_9analyzers_22NewmarkDynamicAnalyzer_19store_results)) {
-        __pyx_t_3 = __Pyx_PyInt_FromSize_t(__pyx_v_timestep); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 318, __pyx_L1_error)
+        __pyx_t_3 = __Pyx_PyInt_FromSize_t(__pyx_v_timestep); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 320, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
         __Pyx_INCREF(__pyx_t_1);
         __pyx_t_4 = __pyx_t_1; __pyx_t_5 = NULL;
@@ -7323,7 +7374,7 @@ static void __pyx_f_5fempy_3fem_9analyzers_22NewmarkDynamicAnalyzer_store_result
         __pyx_t_2 = (__pyx_t_5) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_5, __pyx_t_3) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_3);
         __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 318, __pyx_L1_error)
+        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 320, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -7343,90 +7394,14 @@ static void __pyx_f_5fempy_3fem_9analyzers_22NewmarkDynamicAnalyzer_store_result
     #endif
   }
 
-  /* "fempy/fem/analyzers.pyx":320
+  /* "fempy/fem/analyzers.pyx":322
  *     cpdef void store_results(self, size_t timestep):
  * 
  *         self.displacements[timestep, :] = self.u.ravel()             # <<<<<<<<<<<<<<
  *         self.velocities[timestep, :] = self.ud.ravel()
  *         self.accelerations[timestep, :] = self.udd.ravel()
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->u, __pyx_n_s_ravel); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 320, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = NULL;
-  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
-    __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_2);
-    if (likely(__pyx_t_4)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
-      __Pyx_INCREF(__pyx_t_4);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_2, function);
-    }
-  }
-  __pyx_t_1 = (__pyx_t_4) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_4) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 320, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyInt_FromSize_t(__pyx_v_timestep); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 320, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = PyTuple_New(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 320, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_GIVEREF(__pyx_t_2);
-  PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_2);
-  __Pyx_INCREF(__pyx_slice__3);
-  __Pyx_GIVEREF(__pyx_slice__3);
-  PyTuple_SET_ITEM(__pyx_t_4, 1, __pyx_slice__3);
-  __pyx_t_2 = 0;
-  if (unlikely(PyObject_SetItem(__pyx_v_self->displacements, __pyx_t_4, __pyx_t_1) < 0)) __PYX_ERR(0, 320, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-  /* "fempy/fem/analyzers.pyx":321
- * 
- *         self.displacements[timestep, :] = self.u.ravel()
- *         self.velocities[timestep, :] = self.ud.ravel()             # <<<<<<<<<<<<<<
- *         self.accelerations[timestep, :] = self.udd.ravel()
- * 
- */
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->ud, __pyx_n_s_ravel); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 321, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_2 = NULL;
-  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_4))) {
-    __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_4);
-    if (likely(__pyx_t_2)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
-      __Pyx_INCREF(__pyx_t_2);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_4, function);
-    }
-  }
-  __pyx_t_1 = (__pyx_t_2) ? __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_2) : __Pyx_PyObject_CallNoArg(__pyx_t_4);
-  __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 321, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyInt_FromSize_t(__pyx_v_timestep); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 321, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 321, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_GIVEREF(__pyx_t_4);
-  PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_4);
-  __Pyx_INCREF(__pyx_slice__3);
-  __Pyx_GIVEREF(__pyx_slice__3);
-  PyTuple_SET_ITEM(__pyx_t_2, 1, __pyx_slice__3);
-  __pyx_t_4 = 0;
-  if (unlikely(PyObject_SetItem(__pyx_v_self->velocities, __pyx_t_2, __pyx_t_1) < 0)) __PYX_ERR(0, 321, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-  /* "fempy/fem/analyzers.pyx":322
- *         self.displacements[timestep, :] = self.u.ravel()
- *         self.velocities[timestep, :] = self.ud.ravel()
- *         self.accelerations[timestep, :] = self.udd.ravel()             # <<<<<<<<<<<<<<
- * 
- * 
- */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->udd, __pyx_n_s_ravel); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 322, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->u, __pyx_n_s_ravel); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 322, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_4 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -7453,11 +7428,87 @@ static void __pyx_f_5fempy_3fem_9analyzers_22NewmarkDynamicAnalyzer_store_result
   __Pyx_GIVEREF(__pyx_slice__3);
   PyTuple_SET_ITEM(__pyx_t_4, 1, __pyx_slice__3);
   __pyx_t_2 = 0;
-  if (unlikely(PyObject_SetItem(__pyx_v_self->accelerations, __pyx_t_4, __pyx_t_1) < 0)) __PYX_ERR(0, 322, __pyx_L1_error)
+  if (unlikely(PyObject_SetItem(__pyx_v_self->displacements, __pyx_t_4, __pyx_t_1) < 0)) __PYX_ERR(0, 322, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "fempy/fem/analyzers.pyx":318
+  /* "fempy/fem/analyzers.pyx":323
+ * 
+ *         self.displacements[timestep, :] = self.u.ravel()
+ *         self.velocities[timestep, :] = self.ud.ravel()             # <<<<<<<<<<<<<<
+ *         self.accelerations[timestep, :] = self.udd.ravel()
+ * 
+ */
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->ud, __pyx_n_s_ravel); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 323, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __pyx_t_2 = NULL;
+  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_4))) {
+    __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_4);
+    if (likely(__pyx_t_2)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
+      __Pyx_INCREF(__pyx_t_2);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_4, function);
+    }
+  }
+  __pyx_t_1 = (__pyx_t_2) ? __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_2) : __Pyx_PyObject_CallNoArg(__pyx_t_4);
+  __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 323, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __pyx_t_4 = __Pyx_PyInt_FromSize_t(__pyx_v_timestep); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 323, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 323, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_GIVEREF(__pyx_t_4);
+  PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_4);
+  __Pyx_INCREF(__pyx_slice__3);
+  __Pyx_GIVEREF(__pyx_slice__3);
+  PyTuple_SET_ITEM(__pyx_t_2, 1, __pyx_slice__3);
+  __pyx_t_4 = 0;
+  if (unlikely(PyObject_SetItem(__pyx_v_self->velocities, __pyx_t_2, __pyx_t_1) < 0)) __PYX_ERR(0, 323, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+  /* "fempy/fem/analyzers.pyx":324
+ *         self.displacements[timestep, :] = self.u.ravel()
+ *         self.velocities[timestep, :] = self.ud.ravel()
+ *         self.accelerations[timestep, :] = self.udd.ravel()             # <<<<<<<<<<<<<<
+ * 
+ * 
+ */
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->udd, __pyx_n_s_ravel); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 324, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_4 = NULL;
+  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
+    __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_2);
+    if (likely(__pyx_t_4)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
+      __Pyx_INCREF(__pyx_t_4);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_2, function);
+    }
+  }
+  __pyx_t_1 = (__pyx_t_4) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_4) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 324, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_2 = __Pyx_PyInt_FromSize_t(__pyx_v_timestep); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 324, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_4 = PyTuple_New(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 324, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_GIVEREF(__pyx_t_2);
+  PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_2);
+  __Pyx_INCREF(__pyx_slice__3);
+  __Pyx_GIVEREF(__pyx_slice__3);
+  PyTuple_SET_ITEM(__pyx_t_4, 1, __pyx_slice__3);
+  __pyx_t_2 = 0;
+  if (unlikely(PyObject_SetItem(__pyx_v_self->accelerations, __pyx_t_4, __pyx_t_1) < 0)) __PYX_ERR(0, 324, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+  /* "fempy/fem/analyzers.pyx":320
  *     @cython.boundscheck(False)
  *     @cython.wraparound(False)
  *     cpdef void store_results(self, size_t timestep):             # <<<<<<<<<<<<<<
@@ -7486,7 +7537,7 @@ static PyObject *__pyx_pw_5fempy_3fem_9analyzers_22NewmarkDynamicAnalyzer_19stor
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("store_results (wrapper)", 0);
   assert(__pyx_arg_timestep); {
-    __pyx_v_timestep = __Pyx_PyInt_As_size_t(__pyx_arg_timestep); if (unlikely((__pyx_v_timestep == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 318, __pyx_L3_error)
+    __pyx_v_timestep = __Pyx_PyInt_As_size_t(__pyx_arg_timestep); if (unlikely((__pyx_v_timestep == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 320, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -7507,7 +7558,7 @@ static PyObject *__pyx_pf_5fempy_3fem_9analyzers_22NewmarkDynamicAnalyzer_18stor
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("store_results", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_void_to_None(__pyx_f_5fempy_3fem_9analyzers_22NewmarkDynamicAnalyzer_store_results(__pyx_v_self, __pyx_v_timestep, 1)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 318, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_void_to_None(__pyx_f_5fempy_3fem_9analyzers_22NewmarkDynamicAnalyzer_store_results(__pyx_v_self, __pyx_v_timestep, 1)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 320, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -24331,6 +24382,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_c, __pyx_k_c, sizeof(__pyx_k_c), 0, 0, 1, 1},
   {&__pyx_n_u_c, __pyx_k_c, sizeof(__pyx_k_c), 0, 1, 0, 1},
   {&__pyx_n_s_calculate_coefficients, __pyx_k_calculate_coefficients, sizeof(__pyx_k_calculate_coefficients), 0, 0, 1, 1},
+  {&__pyx_n_s_calculate_inertia_vectors, __pyx_k_calculate_inertia_vectors, sizeof(__pyx_k_calculate_inertia_vectors), 0, 0, 1, 1},
   {&__pyx_n_s_calculate_matrix, __pyx_k_calculate_matrix, sizeof(__pyx_k_calculate_matrix), 0, 0, 1, 1},
   {&__pyx_n_s_calculate_rhs_implicit, __pyx_k_calculate_rhs_implicit, sizeof(__pyx_k_calculate_rhs_implicit), 0, 0, 1, 1},
   {&__pyx_n_s_child, __pyx_k_child, sizeof(__pyx_k_child), 0, 0, 1, 1},
@@ -24490,14 +24542,14 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__2);
   __Pyx_GIVEREF(__pyx_tuple__2);
 
-  /* "fempy/fem/analyzers.pyx":320
+  /* "fempy/fem/analyzers.pyx":322
  *     cpdef void store_results(self, size_t timestep):
  * 
  *         self.displacements[timestep, :] = self.u.ravel()             # <<<<<<<<<<<<<<
  *         self.velocities[timestep, :] = self.ud.ravel()
  *         self.accelerations[timestep, :] = self.udd.ravel()
  */
-  __pyx_slice__3 = PySlice_New(Py_None, Py_None, Py_None); if (unlikely(!__pyx_slice__3)) __PYX_ERR(0, 320, __pyx_L1_error)
+  __pyx_slice__3 = PySlice_New(Py_None, Py_None, Py_None); if (unlikely(!__pyx_slice__3)) __PYX_ERR(0, 322, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_slice__3);
   __Pyx_GIVEREF(__pyx_slice__3);
 

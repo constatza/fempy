@@ -30,10 +30,10 @@ class CholeskySolver(Solver):
         
     def initialize(self):
         """ Factorizes linear system's matrix once for many different rhs."""
-        self.L = linalg.cho_factor(self.linear_system.matrix)
+        self.L = linalg.cho_factor(self.linear_system.matrix, check_finite=False)
     
     def solve(self):
-        solution = linalg.cho_solve(self.L, self.linear_system.rhs)
+        solution = linalg.cho_solve(self.L, self.linear_system.rhs, check_finite=False)
         self.linear_system.solution = solution
 
 

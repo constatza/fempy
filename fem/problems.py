@@ -1,8 +1,6 @@
-import numpy as np
-from numba import cuda
-from numba import guvectorize, jit, float64, void
-from fempy.fem.core.providers import ElementMassProvider, ElementStiffnessProvider, RayleighDampingMatrixProvider
-from fempy.fem.core.providers import GlobalMatrixProvider
+
+from fem.core.providers import ElementMassProvider, ElementStiffnessProvider, RayleighDampingMatrixProvider
+from fem.core.providers import GlobalMatrixProvider
 
 
 class ProblemStructural:
@@ -43,7 +41,11 @@ class ProblemStructural:
 
 class ProblemStructuralDynamic:
     """Provider responsible for the assembly of the global matrices."""
-    
+#    cpdef public object model, global_matrix_provider
+#    cpdef public object _stiffness_matrix, _mass_matrix, _damping_matrix
+#    cpdef public object stiffness_provider, mass_provider, damping_provider
+#    cpdef public bint change_stiffness, change_mass, change_damping
+#    
     def __init__(self, model, global_matrix_provider=GlobalMatrixProvider, damping_provider=None):
         self.model = model
         self.global_matrix_provider = global_matrix_provider
@@ -139,13 +141,20 @@ class ProblemStructuralDynamic:
                                                                self.damping_provider)
         
     def get_rhs_from_history_load(self, timestep):
+        model = self.model
         provider = self.global_matrix_provider
-        stforces = self.model.forces
-        dyforces = self.model.dynamic_forces
-        return provider.get_rhs_from_history_load(timestep, stforces, dyforces)
+        stforces = model.forces
+        dyforces = model.dynamic_forces
+        inloads = model.inertia_loads
+        in_dir_vectors = self.inertia_vectors  
+        return provider.get_rhs_from_history_loads(timestep, stforces, dyforces,
+                                                   inloads, in_dir_vectors, self._mass_matrix)
+    def calculate_inertia_vectors(self):
+        in_dir_vectors = self.model.inertia_forces_direction_vectors
+        self.inertia_vectors = self._mass_matrix @ in_dir_vectors
     
     def mass_matrix_vector_product(self, vector):
-        return np.matmul(self._mass_matrix, vector)
+        return self._mass_matrix @ vector
     
     def stiffness_matrix_vector_product(self, vector):
         return self._stiffness_matrix @ vector
@@ -153,13 +162,3 @@ class ProblemStructuralDynamic:
     def damping_matrix_vector_product(self, vector):
         return self._damping_matrix @ vector
     
-#@guvectorize([void(float64[:,:], float64[:,:], float64[:,:])], '(m,l),(l,n)->(m,n)', target='cuda')
-#def matmul_gu3(A, B, out):
-#    """Perform square matrix multiplication of out = A * B
-#    """
-#    i, j = cuda.grid(2)
-#    if i < out.shape[0] and j < out.shape[1]:
-#        tmp = 0.
-#        for k in range(A.shape[1]):
-#            tmp += A[i, k] * B[k, j]
-#        out[i, j] = tmp

@@ -39,13 +39,13 @@ class ProblemStructural:
         linear_system.matrix = self.matrix
 
 
-cdef class ProblemStructuralDynamic:
+class ProblemStructuralDynamic:
     """Provider responsible for the assembly of the global matrices."""
-    cpdef public object model, global_matrix_provider
-    cpdef public object _stiffness_matrix, _mass_matrix, _damping_matrix
-    cpdef public object stiffness_provider, mass_provider, damping_provider
-    cpdef public bint change_stiffness, change_mass, change_damping
-    
+#    cpdef public object model, global_matrix_provider
+#    cpdef public object _stiffness_matrix, _mass_matrix, _damping_matrix
+#    cpdef public object stiffness_provider, mass_provider, damping_provider
+#    cpdef public bint change_stiffness, change_mass, change_damping
+#    
     def __init__(self, model, global_matrix_provider=GlobalMatrixProvider, damping_provider=None):
         self.model = model
         self.global_matrix_provider = global_matrix_provider
@@ -140,7 +140,7 @@ cdef class ProblemStructuralDynamic:
                                                                self._mass_matrix,
                                                                self.damping_provider)
         
-    cpdef get_rhs_from_history_load(self, timestep):
+    def get_rhs_from_history_load(self, timestep):
         model = self.model
         provider = self.global_matrix_provider
         stforces = model.forces
@@ -150,12 +150,12 @@ cdef class ProblemStructuralDynamic:
         return provider.get_rhs_from_history_loads(timestep, stforces, dyforces,
                                                    inloads, in_dir_vectors, self._mass_matrix)
     
-    cpdef mass_matrix_vector_product(self, vector):
+    def mass_matrix_vector_product(self, vector):
         return self._mass_matrix @ vector
     
-    cpdef stiffness_matrix_vector_product(self, vector):
+    def stiffness_matrix_vector_product(self, vector):
         return self._stiffness_matrix @ vector
     
-    cpdef damping_matrix_vector_product(self, vector):
+    def damping_matrix_vector_product(self, vector):
         return self._damping_matrix @ vector
     

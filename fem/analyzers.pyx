@@ -275,11 +275,11 @@ cdef class NewmarkDynamicAnalyzer(Analyzer):
             u0 = np.zeros((total_DOFs, 1))            
         if ud0 is None:
             ud0 = np.zeros((total_DOFs, 1))
-        
-        stiffness = self.provider.stiffness_matrix
-        mass = self.provider.mass_matrix
-        damping = self.provider.damping_matrix #after M and K !
-        
+        provider = self.provider
+        stiffness = provider.stiffness_matrix
+        mass = provider.mass_matrix
+        damping = provider.damping_matrix #after M and K !
+        provider.calculate_inertia_vectors() # before first call of get_rhs...
         rhs0 = self.provider.get_rhs_from_history_load(0)
         self.linear_system.rhs = rhs0 - stiffness @ u0 - damping @ ud0
         self.linear_system.matrix = mass
@@ -288,10 +288,12 @@ cdef class NewmarkDynamicAnalyzer(Analyzer):
         self.udd = self.linear_system.solution
         self.ud = ud0
         self.u = u0
+        self.store_results(0)
         self.linear_system.reset()
-
+        
 
     cpdef initialize_rhs(self):
+        
         self.linear_system.rhs = self.provider.get_rhs_from_history_load(1)
 
     @cython.boundscheck(False)  

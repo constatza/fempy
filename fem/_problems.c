@@ -3,12 +3,12 @@
 /* BEGIN: Cython Metadata
 {
     "distutils": {
-        "name": "fempy.fem.problems",
+        "name": "fempy.fem._problems",
         "sources": [
-            "problems.pyx"
+            "_problems.pyx"
         ]
     },
-    "module_name": "fempy.fem.problems"
+    "module_name": "fempy.fem._problems"
 }
 END: Cython Metadata */
 
@@ -602,8 +602,8 @@ static CYTHON_INLINE float __PYX_NAN() {
   #endif
 #endif
 
-#define __PYX_HAVE__fempy__fem__problems
-#define __PYX_HAVE_API__fempy__fem__problems
+#define __PYX_HAVE__fempy__fem___problems
+#define __PYX_HAVE_API__fempy__fem___problems
 /* Early includes */
 #ifdef _OPENMP
 #include <omp.h>
@@ -813,34 +813,15 @@ static const char *__pyx_filename;
 
 
 static const char *__pyx_f[] = {
-  "problems.pyx",
-  "stringsource",
+  "_problems.pyx",
 };
 
 /*--- Type declarations ---*/
-struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic;
-
-/* "fempy/fem/problems.pyx":42
- * 
- * 
- * cdef class ProblemStructuralDynamic:             # <<<<<<<<<<<<<<
- *     """Provider responsible for the assembly of the global matrices."""
- * 
- */
-struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic {
-  PyObject_HEAD
-  struct __pyx_vtabstruct_5fempy_3fem_8problems_ProblemStructuralDynamic *__pyx_vtab;
+struct __pyx_defaults;
+typedef struct __pyx_defaults __pyx_defaults;
+struct __pyx_defaults {
+  PyObject *__pyx_arg_global_matrix_provider;
 };
-
-
-
-struct __pyx_vtabstruct_5fempy_3fem_8problems_ProblemStructuralDynamic {
-  PyObject *(*get_rhs_from_history_load)(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *, PyObject *, int __pyx_skip_dispatch);
-  PyObject *(*mass_matrix_vector_product)(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *, PyObject *, int __pyx_skip_dispatch);
-  PyObject *(*stiffness_matrix_vector_product)(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *, PyObject *, int __pyx_skip_dispatch);
-  PyObject *(*damping_matrix_vector_product)(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *, PyObject *, int __pyx_skip_dispatch);
-};
-static struct __pyx_vtabstruct_5fempy_3fem_8problems_ProblemStructuralDynamic *__pyx_vtabptr_5fempy_3fem_8problems_ProblemStructuralDynamic;
 
 /* --- Runtime support code (head) --- */
 /* Refnanny.proto */
@@ -1036,9 +1017,6 @@ static CYTHON_INLINE PyObject *__Pyx_PyCFunction_FastCall(PyObject *func, PyObje
 /* PyObjectCallOneArg.proto */
 static CYTHON_INLINE PyObject* __Pyx_PyObject_CallOneArg(PyObject *func, PyObject *arg);
 
-/* PyObjectCall2Args.proto */
-static CYTHON_UNUSED PyObject* __Pyx_PyObject_Call2Args(PyObject* function, PyObject* arg1, PyObject* arg2);
-
 /* MatrixMultiply.proto */
 #if PY_VERSION_HEX >= 0x03050000
   #define __Pyx_PyNumber_MatrixMultiply(x,y)         PyNumber_MatrixMultiply(x,y)
@@ -1049,109 +1027,11 @@ static PyObject* __Pyx__PyNumber_MatrixMultiply(PyObject* x, PyObject* y, const 
 static PyObject* __Pyx_PyNumber_InPlaceMatrixMultiply(PyObject* x, PyObject* y);
 #endif
 
-/* PyErrExceptionMatches.proto */
-#if CYTHON_FAST_THREAD_STATE
-#define __Pyx_PyErr_ExceptionMatches(err) __Pyx_PyErr_ExceptionMatchesInState(__pyx_tstate, err)
-static CYTHON_INLINE int __Pyx_PyErr_ExceptionMatchesInState(PyThreadState* tstate, PyObject* err);
-#else
-#define __Pyx_PyErr_ExceptionMatches(err)  PyErr_ExceptionMatches(err)
-#endif
-
-/* PyThreadStateGet.proto */
-#if CYTHON_FAST_THREAD_STATE
-#define __Pyx_PyThreadState_declare  PyThreadState *__pyx_tstate;
-#define __Pyx_PyThreadState_assign  __pyx_tstate = __Pyx_PyThreadState_Current;
-#define __Pyx_PyErr_Occurred()  __pyx_tstate->curexc_type
-#else
-#define __Pyx_PyThreadState_declare
-#define __Pyx_PyThreadState_assign
-#define __Pyx_PyErr_Occurred()  PyErr_Occurred()
-#endif
-
-/* PyErrFetchRestore.proto */
-#if CYTHON_FAST_THREAD_STATE
-#define __Pyx_PyErr_Clear() __Pyx_ErrRestore(NULL, NULL, NULL)
-#define __Pyx_ErrRestoreWithState(type, value, tb)  __Pyx_ErrRestoreInState(PyThreadState_GET(), type, value, tb)
-#define __Pyx_ErrFetchWithState(type, value, tb)    __Pyx_ErrFetchInState(PyThreadState_GET(), type, value, tb)
-#define __Pyx_ErrRestore(type, value, tb)  __Pyx_ErrRestoreInState(__pyx_tstate, type, value, tb)
-#define __Pyx_ErrFetch(type, value, tb)    __Pyx_ErrFetchInState(__pyx_tstate, type, value, tb)
-static CYTHON_INLINE void __Pyx_ErrRestoreInState(PyThreadState *tstate, PyObject *type, PyObject *value, PyObject *tb);
-static CYTHON_INLINE void __Pyx_ErrFetchInState(PyThreadState *tstate, PyObject **type, PyObject **value, PyObject **tb);
-#if CYTHON_COMPILING_IN_CPYTHON
-#define __Pyx_PyErr_SetNone(exc) (Py_INCREF(exc), __Pyx_ErrRestore((exc), NULL, NULL))
-#else
-#define __Pyx_PyErr_SetNone(exc) PyErr_SetNone(exc)
-#endif
-#else
-#define __Pyx_PyErr_Clear() PyErr_Clear()
-#define __Pyx_PyErr_SetNone(exc) PyErr_SetNone(exc)
-#define __Pyx_ErrRestoreWithState(type, value, tb)  PyErr_Restore(type, value, tb)
-#define __Pyx_ErrFetchWithState(type, value, tb)  PyErr_Fetch(type, value, tb)
-#define __Pyx_ErrRestoreInState(tstate, type, value, tb)  PyErr_Restore(type, value, tb)
-#define __Pyx_ErrFetchInState(tstate, type, value, tb)  PyErr_Fetch(type, value, tb)
-#define __Pyx_ErrRestore(type, value, tb)  PyErr_Restore(type, value, tb)
-#define __Pyx_ErrFetch(type, value, tb)  PyErr_Fetch(type, value, tb)
-#endif
-
-/* GetAttr.proto */
-static CYTHON_INLINE PyObject *__Pyx_GetAttr(PyObject *, PyObject *);
-
-/* GetAttr3.proto */
-static CYTHON_INLINE PyObject *__Pyx_GetAttr3(PyObject *, PyObject *, PyObject *);
-
 /* Import.proto */
 static PyObject *__Pyx_Import(PyObject *name, PyObject *from_list, int level);
 
 /* ImportFrom.proto */
 static PyObject* __Pyx_ImportFrom(PyObject* module, PyObject* name);
-
-/* RaiseException.proto */
-static void __Pyx_Raise(PyObject *type, PyObject *value, PyObject *tb, PyObject *cause);
-
-/* HasAttr.proto */
-static CYTHON_INLINE int __Pyx_HasAttr(PyObject *, PyObject *);
-
-/* GetItemInt.proto */
-#define __Pyx_GetItemInt(o, i, type, is_signed, to_py_func, is_list, wraparound, boundscheck)\
-    (__Pyx_fits_Py_ssize_t(i, type, is_signed) ?\
-    __Pyx_GetItemInt_Fast(o, (Py_ssize_t)i, is_list, wraparound, boundscheck) :\
-    (is_list ? (PyErr_SetString(PyExc_IndexError, "list index out of range"), (PyObject*)NULL) :\
-               __Pyx_GetItemInt_Generic(o, to_py_func(i))))
-#define __Pyx_GetItemInt_List(o, i, type, is_signed, to_py_func, is_list, wraparound, boundscheck)\
-    (__Pyx_fits_Py_ssize_t(i, type, is_signed) ?\
-    __Pyx_GetItemInt_List_Fast(o, (Py_ssize_t)i, wraparound, boundscheck) :\
-    (PyErr_SetString(PyExc_IndexError, "list index out of range"), (PyObject*)NULL))
-static CYTHON_INLINE PyObject *__Pyx_GetItemInt_List_Fast(PyObject *o, Py_ssize_t i,
-                                                              int wraparound, int boundscheck);
-#define __Pyx_GetItemInt_Tuple(o, i, type, is_signed, to_py_func, is_list, wraparound, boundscheck)\
-    (__Pyx_fits_Py_ssize_t(i, type, is_signed) ?\
-    __Pyx_GetItemInt_Tuple_Fast(o, (Py_ssize_t)i, wraparound, boundscheck) :\
-    (PyErr_SetString(PyExc_IndexError, "tuple index out of range"), (PyObject*)NULL))
-static CYTHON_INLINE PyObject *__Pyx_GetItemInt_Tuple_Fast(PyObject *o, Py_ssize_t i,
-                                                              int wraparound, int boundscheck);
-static PyObject *__Pyx_GetItemInt_Generic(PyObject *o, PyObject* j);
-static CYTHON_INLINE PyObject *__Pyx_GetItemInt_Fast(PyObject *o, Py_ssize_t i,
-                                                     int is_list, int wraparound, int boundscheck);
-
-/* PyObject_GenericGetAttrNoDict.proto */
-#if CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP && PY_VERSION_HEX < 0x03070000
-static CYTHON_INLINE PyObject* __Pyx_PyObject_GenericGetAttrNoDict(PyObject* obj, PyObject* attr_name);
-#else
-#define __Pyx_PyObject_GenericGetAttrNoDict PyObject_GenericGetAttr
-#endif
-
-/* PyObject_GenericGetAttr.proto */
-#if CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP && PY_VERSION_HEX < 0x03070000
-static PyObject* __Pyx_PyObject_GenericGetAttr(PyObject* obj, PyObject* attr_name);
-#else
-#define __Pyx_PyObject_GenericGetAttr PyObject_GenericGetAttr
-#endif
-
-/* SetVTable.proto */
-static int __Pyx_SetVtable(PyObject *dict, void *vtable);
-
-/* SetupReduce.proto */
-static int __Pyx_setup_reduce(PyObject* type_obj);
 
 /* FetchCommonType.proto */
 static PyTypeObject* __Pyx_FetchCommonType(PyTypeObject* type);
@@ -1230,6 +1110,45 @@ static PyObject *__Pyx_Py3MetaclassPrepare(PyObject *metaclass, PyObject *bases,
 static PyObject *__Pyx_Py3ClassCreate(PyObject *metaclass, PyObject *name, PyObject *bases, PyObject *dict,
                                       PyObject *mkw, int calculate_metaclass, int allow_py2_metaclass);
 
+/* PyObjectCall2Args.proto */
+static CYTHON_UNUSED PyObject* __Pyx_PyObject_Call2Args(PyObject* function, PyObject* arg1, PyObject* arg2);
+
+/* PyThreadStateGet.proto */
+#if CYTHON_FAST_THREAD_STATE
+#define __Pyx_PyThreadState_declare  PyThreadState *__pyx_tstate;
+#define __Pyx_PyThreadState_assign  __pyx_tstate = __Pyx_PyThreadState_Current;
+#define __Pyx_PyErr_Occurred()  __pyx_tstate->curexc_type
+#else
+#define __Pyx_PyThreadState_declare
+#define __Pyx_PyThreadState_assign
+#define __Pyx_PyErr_Occurred()  PyErr_Occurred()
+#endif
+
+/* PyErrFetchRestore.proto */
+#if CYTHON_FAST_THREAD_STATE
+#define __Pyx_PyErr_Clear() __Pyx_ErrRestore(NULL, NULL, NULL)
+#define __Pyx_ErrRestoreWithState(type, value, tb)  __Pyx_ErrRestoreInState(PyThreadState_GET(), type, value, tb)
+#define __Pyx_ErrFetchWithState(type, value, tb)    __Pyx_ErrFetchInState(PyThreadState_GET(), type, value, tb)
+#define __Pyx_ErrRestore(type, value, tb)  __Pyx_ErrRestoreInState(__pyx_tstate, type, value, tb)
+#define __Pyx_ErrFetch(type, value, tb)    __Pyx_ErrFetchInState(__pyx_tstate, type, value, tb)
+static CYTHON_INLINE void __Pyx_ErrRestoreInState(PyThreadState *tstate, PyObject *type, PyObject *value, PyObject *tb);
+static CYTHON_INLINE void __Pyx_ErrFetchInState(PyThreadState *tstate, PyObject **type, PyObject **value, PyObject **tb);
+#if CYTHON_COMPILING_IN_CPYTHON
+#define __Pyx_PyErr_SetNone(exc) (Py_INCREF(exc), __Pyx_ErrRestore((exc), NULL, NULL))
+#else
+#define __Pyx_PyErr_SetNone(exc) PyErr_SetNone(exc)
+#endif
+#else
+#define __Pyx_PyErr_Clear() PyErr_Clear()
+#define __Pyx_PyErr_SetNone(exc) PyErr_SetNone(exc)
+#define __Pyx_ErrRestoreWithState(type, value, tb)  PyErr_Restore(type, value, tb)
+#define __Pyx_ErrFetchWithState(type, value, tb)  PyErr_Fetch(type, value, tb)
+#define __Pyx_ErrRestoreInState(tstate, type, value, tb)  PyErr_Restore(type, value, tb)
+#define __Pyx_ErrFetchInState(tstate, type, value, tb)  PyErr_Fetch(type, value, tb)
+#define __Pyx_ErrRestore(type, value, tb)  PyErr_Restore(type, value, tb)
+#define __Pyx_ErrFetch(type, value, tb)  PyErr_Fetch(type, value, tb)
+#endif
+
 /* CLineInTraceback.proto */
 #ifdef CYTHON_CLINE_IN_TRACEBACK
 #define __Pyx_CLineForTraceback(tstate, c_line)  (((CYTHON_CLINE_IN_TRACEBACK)) ? c_line : 0)
@@ -1284,73 +1203,57 @@ static int __Pyx_check_binary_version(void);
 /* InitStrings.proto */
 static int __Pyx_InitStrings(__Pyx_StringTabEntry *t);
 
-static PyObject *__pyx_f_5fempy_3fem_8problems_24ProblemStructuralDynamic_get_rhs_from_history_load(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *__pyx_v_self, PyObject *__pyx_v_timestep, int __pyx_skip_dispatch); /* proto*/
-static PyObject *__pyx_f_5fempy_3fem_8problems_24ProblemStructuralDynamic_mass_matrix_vector_product(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *__pyx_v_self, PyObject *__pyx_v_vector, int __pyx_skip_dispatch); /* proto*/
-static PyObject *__pyx_f_5fempy_3fem_8problems_24ProblemStructuralDynamic_stiffness_matrix_vector_product(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *__pyx_v_self, PyObject *__pyx_v_vector, int __pyx_skip_dispatch); /* proto*/
-static PyObject *__pyx_f_5fempy_3fem_8problems_24ProblemStructuralDynamic_damping_matrix_vector_product(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *__pyx_v_self, PyObject *__pyx_v_vector, int __pyx_skip_dispatch); /* proto*/
 
-/* Module declarations from 'fempy.fem.problems' */
-static PyTypeObject *__pyx_ptype_5fempy_3fem_8problems_ProblemStructuralDynamic = 0;
-static PyObject *__pyx_f_5fempy_3fem_8problems___pyx_unpickle_ProblemStructuralDynamic__set_state(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *, PyObject *); /*proto*/
-#define __Pyx_MODULE_NAME "fempy.fem.problems"
-extern int __pyx_module_is_main_fempy__fem__problems;
-int __pyx_module_is_main_fempy__fem__problems = 0;
+/* Module declarations from 'fempy.fem._problems' */
+#define __Pyx_MODULE_NAME "fempy.fem._problems"
+extern int __pyx_module_is_main_fempy__fem___problems;
+int __pyx_module_is_main_fempy__fem___problems = 0;
 
-/* Implementation of 'fempy.fem.problems' */
+/* Implementation of 'fempy.fem._problems' */
 static PyObject *__pyx_builtin_property;
 static const char __pyx_k_doc[] = "__doc__";
-static const char __pyx_k_new[] = "__new__";
-static const char __pyx_k_dict[] = "__dict__";
 static const char __pyx_k_init[] = "__init__";
 static const char __pyx_k_main[] = "__main__";
 static const char __pyx_k_name[] = "__name__";
 static const char __pyx_k_self[] = "self";
 static const char __pyx_k_test[] = "__test__";
 static const char __pyx_k_model[] = "model";
+static const char __pyx_k_value[] = "value";
 static const char __pyx_k_forces[] = "forces";
 static const char __pyx_k_import[] = "__import__";
 static const char __pyx_k_matmul[] = "__matmul__";
 static const char __pyx_k_matrix[] = "_matrix";
 static const char __pyx_k_module[] = "__module__";
-static const char __pyx_k_pickle[] = "pickle";
-static const char __pyx_k_reduce[] = "__reduce__";
-static const char __pyx_k_update[] = "update";
+static const char __pyx_k_setter[] = "setter";
+static const char __pyx_k_vector[] = "vector";
 static const char __pyx_k_imatmul[] = "__imatmul__";
+static const char __pyx_k_inloads[] = "inloads";
 static const char __pyx_k_prepare[] = "__prepare__";
 static const char __pyx_k_rmatmul[] = "__rmatmul__";
-static const char __pyx_k_getstate[] = "__getstate__";
+static const char __pyx_k_dyforces[] = "dyforces";
 static const char __pyx_k_matrix_2[] = "matrix";
 static const char __pyx_k_property[] = "property";
 static const char __pyx_k_provider[] = "provider";
-static const char __pyx_k_pyx_type[] = "__pyx_type";
 static const char __pyx_k_qualname[] = "__qualname__";
-static const char __pyx_k_setstate[] = "__setstate__";
+static const char __pyx_k_stforces[] = "stforces";
+static const char __pyx_k_timestep[] = "timestep";
 static const char __pyx_k_metaclass[] = "__metaclass__";
-static const char __pyx_k_pyx_state[] = "__pyx_state";
-static const char __pyx_k_reduce_ex[] = "__reduce_ex__";
 static const char __pyx_k_stiffness[] = "stiffness";
-static const char __pyx_k_pyx_result[] = "__pyx_result";
-static const char __pyx_k_pyx_vtable[] = "__pyx_vtable__";
-static const char __pyx_k_PickleError[] = "PickleError";
 static const char __pyx_k_change_mass[] = "change_mass";
 static const char __pyx_k_mass_matrix[] = "_mass_matrix";
 static const char __pyx_k_build_matrix[] = "build_matrix";
-static const char __pyx_k_problems_pyx[] = "problems.pyx";
-static const char __pyx_k_pyx_checksum[] = "__pyx_checksum";
-static const char __pyx_k_stringsource[] = "stringsource";
+static const char __pyx_k_problems_pyx[] = "_problems.pyx";
 static const char __pyx_k_inertia_loads[] = "inertia_loads";
 static const char __pyx_k_linear_system[] = "linear_system";
 static const char __pyx_k_mass_matrix_2[] = "mass_matrix";
 static const char __pyx_k_mass_provider[] = "mass_provider";
-static const char __pyx_k_reduce_cython[] = "__reduce_cython__";
 static const char __pyx_k_change_damping[] = "change_damping";
 static const char __pyx_k_damping_matrix[] = "_damping_matrix";
 static const char __pyx_k_dynamic_forces[] = "dynamic_forces";
+static const char __pyx_k_in_dir_vectors[] = "in_dir_vectors";
 static const char __pyx_k_rebuild_matrix[] = "rebuild_matrix";
 static const char __pyx_k_get_mass_matrix[] = "get_mass_matrix";
 static const char __pyx_k_global_provider[] = "global_provider";
-static const char __pyx_k_pyx_PickleError[] = "__pyx_PickleError";
-static const char __pyx_k_setstate_cython[] = "__setstate_cython__";
 static const char __pyx_k_calculate_matrix[] = "calculate_matrix";
 static const char __pyx_k_change_stiffness[] = "change_stiffness";
 static const char __pyx_k_damping_matrix_2[] = "damping_matrix";
@@ -1360,11 +1263,11 @@ static const char __pyx_k_ProblemStructural[] = "ProblemStructural";
 static const char __pyx_k_build_mass_matrix[] = "build_mass_matrix";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
 static const char __pyx_k_fem_core_providers[] = "fem.core.providers";
-static const char __pyx_k_fempy_fem_problems[] = "fempy.fem.problems";
 static const char __pyx_k_get_damping_matrix[] = "get_damping_matrix";
 static const char __pyx_k_stiffness_matrix_2[] = "stiffness_matrix";
 static const char __pyx_k_stiffness_provider[] = "stiffness_provider";
 static const char __pyx_k_ElementMassProvider[] = "ElementMassProvider";
+static const char __pyx_k_fempy_fem__problems[] = "fempy.fem._problems";
 static const char __pyx_k_rebuild_mass_matrix[] = "rebuild_mass_matrix";
 static const char __pyx_k_GlobalMatrixProvider[] = "GlobalMatrixProvider";
 static const char __pyx_k_build_damping_matrix[] = "build_damping_matrix";
@@ -1383,25 +1286,51 @@ static const char __pyx_k_mass_matrix_vector_product[] = "mass_matrix_vector_pro
 static const char __pyx_k_RayleighDampingMatrixProvider[] = "RayleighDampingMatrixProvider";
 static const char __pyx_k_damping_matrix_vector_product[] = "damping_matrix_vector_product";
 static const char __pyx_k_ProblemStructural_build_matrix[] = "ProblemStructural.build_matrix";
-static const char __pyx_k_pyx_unpickle_ProblemStructural[] = "__pyx_unpickle_ProblemStructuralDynamic";
+static const char __pyx_k_ProblemStructuralDynamic___init[] = "ProblemStructuralDynamic.__init__";
 static const char __pyx_k_Responsible_for_the_assembly_of[] = "Responsible for the assembly of the global stiffness matrix.";
 static const char __pyx_k_stiffness_matrix_vector_product[] = "stiffness_matrix_vector_product";
-static const char __pyx_k_Incompatible_checksums_s_vs_0xd4[] = "Incompatible checksums (%s vs 0xd41d8cd = ())";
+static const char __pyx_k_ProblemStructuralDynamic_build_d[] = "ProblemStructuralDynamic.build_damping_matrix";
+static const char __pyx_k_ProblemStructuralDynamic_build_m[] = "ProblemStructuralDynamic.build_mass_matrix";
+static const char __pyx_k_ProblemStructuralDynamic_build_s[] = "ProblemStructuralDynamic.build_stiffness_matrix";
+static const char __pyx_k_ProblemStructuralDynamic_damping[] = "ProblemStructuralDynamic.damping_matrix";
+static const char __pyx_k_ProblemStructuralDynamic_get_rhs[] = "ProblemStructuralDynamic.get_rhs_from_history_load";
+static const char __pyx_k_ProblemStructuralDynamic_mass_ma[] = "ProblemStructuralDynamic.mass_matrix";
+static const char __pyx_k_ProblemStructuralDynamic_rebuild[] = "ProblemStructuralDynamic.rebuild_stiffness_matrix";
+static const char __pyx_k_ProblemStructuralDynamic_stiffne[] = "ProblemStructuralDynamic.stiffness_matrix";
 static const char __pyx_k_ProblemStructural_calculate_matr[] = "ProblemStructural.calculate_matrix";
 static const char __pyx_k_ProblemStructural_rebuild_matrix[] = "ProblemStructural.rebuild_matrix";
+static const char __pyx_k_Provider_responsible_for_the_ass[] = "Provider responsible for the assembly of the global matrices.";
 static const char __pyx_k_inertia_forces_direction_vectors[] = "inertia_forces_direction_vectors";
+static const char __pyx_k_ProblemStructuralDynamic_damping_2[] = "ProblemStructuralDynamic.damping_matrix_vector_product";
+static const char __pyx_k_ProblemStructuralDynamic_mass_ma_2[] = "ProblemStructuralDynamic.mass_matrix_vector_product";
+static const char __pyx_k_ProblemStructuralDynamic_rebuild_2[] = "ProblemStructuralDynamic.rebuild_mass_matrix";
+static const char __pyx_k_ProblemStructuralDynamic_rebuild_3[] = "ProblemStructuralDynamic.rebuild_damping_matrix";
+static const char __pyx_k_ProblemStructuralDynamic_stiffne_2[] = "ProblemStructuralDynamic.stiffness_matrix_vector_product";
 static PyObject *__pyx_n_s_ElementMassProvider;
 static PyObject *__pyx_n_s_ElementStiffnessProvider;
 static PyObject *__pyx_n_s_GlobalMatrixProvider;
-static PyObject *__pyx_kp_s_Incompatible_checksums_s_vs_0xd4;
-static PyObject *__pyx_n_s_PickleError;
 static PyObject *__pyx_n_s_ProblemStructural;
 static PyObject *__pyx_n_s_ProblemStructuralDynamic;
+static PyObject *__pyx_n_s_ProblemStructuralDynamic___init;
+static PyObject *__pyx_n_s_ProblemStructuralDynamic_build_d;
+static PyObject *__pyx_n_s_ProblemStructuralDynamic_build_m;
+static PyObject *__pyx_n_s_ProblemStructuralDynamic_build_s;
+static PyObject *__pyx_n_s_ProblemStructuralDynamic_damping;
+static PyObject *__pyx_n_s_ProblemStructuralDynamic_damping_2;
+static PyObject *__pyx_n_s_ProblemStructuralDynamic_get_rhs;
+static PyObject *__pyx_n_s_ProblemStructuralDynamic_mass_ma;
+static PyObject *__pyx_n_s_ProblemStructuralDynamic_mass_ma_2;
+static PyObject *__pyx_n_s_ProblemStructuralDynamic_rebuild;
+static PyObject *__pyx_n_s_ProblemStructuralDynamic_rebuild_2;
+static PyObject *__pyx_n_s_ProblemStructuralDynamic_rebuild_3;
+static PyObject *__pyx_n_s_ProblemStructuralDynamic_stiffne;
+static PyObject *__pyx_n_s_ProblemStructuralDynamic_stiffne_2;
 static PyObject *__pyx_n_s_ProblemStructural___init;
 static PyObject *__pyx_n_s_ProblemStructural_build_matrix;
 static PyObject *__pyx_n_s_ProblemStructural_calculate_matr;
 static PyObject *__pyx_n_s_ProblemStructural_matrix;
 static PyObject *__pyx_n_s_ProblemStructural_rebuild_matrix;
+static PyObject *__pyx_kp_s_Provider_responsible_for_the_ass;
 static PyObject *__pyx_n_s_RayleighDampingMatrixProvider;
 static PyObject *__pyx_kp_s_Responsible_for_the_assembly_of;
 static PyObject *__pyx_n_s_build_damping_matrix;
@@ -1417,25 +1346,26 @@ static PyObject *__pyx_n_s_damping_matrix;
 static PyObject *__pyx_n_s_damping_matrix_2;
 static PyObject *__pyx_n_s_damping_matrix_vector_product;
 static PyObject *__pyx_n_s_damping_provider;
-static PyObject *__pyx_n_s_dict;
 static PyObject *__pyx_n_s_doc;
+static PyObject *__pyx_n_s_dyforces;
 static PyObject *__pyx_n_s_dynamic_forces;
 static PyObject *__pyx_n_s_fem_core_providers;
-static PyObject *__pyx_n_s_fempy_fem_problems;
+static PyObject *__pyx_n_s_fempy_fem__problems;
 static PyObject *__pyx_n_s_forces;
 static PyObject *__pyx_n_s_get_damping_matrix;
 static PyObject *__pyx_n_s_get_mass_matrix;
 static PyObject *__pyx_n_s_get_rhs_from_history_load;
 static PyObject *__pyx_n_s_get_rhs_from_history_loads;
 static PyObject *__pyx_n_s_get_stiffness_matrix;
-static PyObject *__pyx_n_s_getstate;
 static PyObject *__pyx_n_s_global_matrix_provider;
 static PyObject *__pyx_n_s_global_provider;
 static PyObject *__pyx_n_s_imatmul;
 static PyObject *__pyx_n_s_import;
+static PyObject *__pyx_n_s_in_dir_vectors;
 static PyObject *__pyx_n_s_inertia_forces_direction_vectors;
 static PyObject *__pyx_n_s_inertia_loads;
 static PyObject *__pyx_n_s_init;
+static PyObject *__pyx_n_s_inloads;
 static PyObject *__pyx_n_s_linear_system;
 static PyObject *__pyx_n_s_main;
 static PyObject *__pyx_n_s_mass_matrix;
@@ -1449,83 +1379,99 @@ static PyObject *__pyx_n_s_metaclass;
 static PyObject *__pyx_n_s_model;
 static PyObject *__pyx_n_s_module;
 static PyObject *__pyx_n_s_name;
-static PyObject *__pyx_n_s_new;
-static PyObject *__pyx_n_s_pickle;
 static PyObject *__pyx_n_s_prepare;
 static PyObject *__pyx_kp_s_problems_pyx;
 static PyObject *__pyx_n_s_property;
 static PyObject *__pyx_n_s_provider;
-static PyObject *__pyx_n_s_pyx_PickleError;
-static PyObject *__pyx_n_s_pyx_checksum;
-static PyObject *__pyx_n_s_pyx_result;
-static PyObject *__pyx_n_s_pyx_state;
-static PyObject *__pyx_n_s_pyx_type;
-static PyObject *__pyx_n_s_pyx_unpickle_ProblemStructural;
-static PyObject *__pyx_n_s_pyx_vtable;
 static PyObject *__pyx_n_s_qualname;
 static PyObject *__pyx_n_s_rebuild_damping_matrix;
 static PyObject *__pyx_n_s_rebuild_mass_matrix;
 static PyObject *__pyx_n_s_rebuild_matrix;
 static PyObject *__pyx_n_s_rebuild_stiffness_matrix;
-static PyObject *__pyx_n_s_reduce;
-static PyObject *__pyx_n_s_reduce_cython;
-static PyObject *__pyx_n_s_reduce_ex;
 static PyObject *__pyx_n_s_rmatmul;
 static PyObject *__pyx_n_s_self;
-static PyObject *__pyx_n_s_setstate;
-static PyObject *__pyx_n_s_setstate_cython;
+static PyObject *__pyx_n_s_setter;
+static PyObject *__pyx_n_s_stforces;
 static PyObject *__pyx_n_s_stiffness;
 static PyObject *__pyx_n_s_stiffness_matrix;
 static PyObject *__pyx_n_s_stiffness_matrix_2;
 static PyObject *__pyx_n_s_stiffness_matrix_vector_product;
 static PyObject *__pyx_n_s_stiffness_provider;
-static PyObject *__pyx_kp_s_stringsource;
 static PyObject *__pyx_n_s_test;
-static PyObject *__pyx_n_s_update;
-static PyObject *__pyx_pf_5fempy_3fem_8problems_17ProblemStructural___init__(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_model, PyObject *__pyx_v_global_matrix_provider); /* proto */
-static PyObject *__pyx_pf_5fempy_3fem_8problems_17ProblemStructural_2matrix(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_5fempy_3fem_8problems_17ProblemStructural_4build_matrix(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_5fempy_3fem_8problems_17ProblemStructural_6rebuild_matrix(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_5fempy_3fem_8problems_17ProblemStructural_8calculate_matrix(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_linear_system); /* proto */
-static int __pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic___init__(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *__pyx_v_self, PyObject *__pyx_v_model, PyObject *__pyx_v_global_matrix_provider, PyObject *__pyx_v_damping_provider); /* proto */
-static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_16stiffness_matrix___get__(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *__pyx_v_self); /* proto */
-static int __pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_16stiffness_matrix_2__set__(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
-static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_11mass_matrix___get__(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *__pyx_v_self); /* proto */
-static int __pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_11mass_matrix_2__set__(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
-static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_14damping_matrix___get__(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *__pyx_v_self); /* proto */
-static int __pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_14damping_matrix_2__set__(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
-static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_2build_stiffness_matrix(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_4build_mass_matrix(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_6build_damping_matrix(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_8rebuild_stiffness_matrix(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_10rebuild_mass_matrix(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_12rebuild_damping_matrix(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_14get_rhs_from_history_load(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *__pyx_v_self, PyObject *__pyx_v_timestep); /* proto */
-static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_16mass_matrix_vector_product(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *__pyx_v_self, PyObject *__pyx_v_vector); /* proto */
-static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_18stiffness_matrix_vector_product(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *__pyx_v_self, PyObject *__pyx_v_vector); /* proto */
-static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_20damping_matrix_vector_product(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *__pyx_v_self, PyObject *__pyx_v_vector); /* proto */
-static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_22__reduce_cython__(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_24__setstate_cython__(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *__pyx_v_self, PyObject *__pyx_v___pyx_state); /* proto */
-static PyObject *__pyx_pf_5fempy_3fem_8problems___pyx_unpickle_ProblemStructuralDynamic(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v___pyx_type, long __pyx_v___pyx_checksum, PyObject *__pyx_v___pyx_state); /* proto */
-static PyObject *__pyx_tp_new_5fempy_3fem_8problems_ProblemStructuralDynamic(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
-static PyObject *__pyx_int_222419149;
-static PyObject *__pyx_k_;
-static PyObject *__pyx_tuple__2;
+static PyObject *__pyx_n_s_timestep;
+static PyObject *__pyx_n_s_value;
+static PyObject *__pyx_n_s_vector;
+static PyObject *__pyx_pf_5fempy_3fem_9_problems_17ProblemStructural___init__(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_model, PyObject *__pyx_v_global_matrix_provider); /* proto */
+static PyObject *__pyx_pf_5fempy_3fem_9_problems_17ProblemStructural_2matrix(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_5fempy_3fem_9_problems_17ProblemStructural_4build_matrix(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_5fempy_3fem_9_problems_17ProblemStructural_6rebuild_matrix(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_5fempy_3fem_9_problems_17ProblemStructural_8calculate_matrix(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_linear_system); /* proto */
+static PyObject *__pyx_pf_5fempy_3fem_9_problems___defaults__(CYTHON_UNUSED PyObject *__pyx_self); /* proto */
+static PyObject *__pyx_pf_5fempy_3fem_9_problems_24ProblemStructuralDynamic___init__(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_model, PyObject *__pyx_v_global_matrix_provider, PyObject *__pyx_v_damping_provider); /* proto */
+static PyObject *__pyx_pf_5fempy_3fem_9_problems_24ProblemStructuralDynamic_2stiffness_matrix(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_5fempy_3fem_9_problems_24ProblemStructuralDynamic_4mass_matrix(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_5fempy_3fem_9_problems_24ProblemStructuralDynamic_6damping_matrix(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_5fempy_3fem_9_problems_24ProblemStructuralDynamic_8stiffness_matrix(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
+static PyObject *__pyx_pf_5fempy_3fem_9_problems_24ProblemStructuralDynamic_10mass_matrix(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
+static PyObject *__pyx_pf_5fempy_3fem_9_problems_24ProblemStructuralDynamic_12damping_matrix(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
+static PyObject *__pyx_pf_5fempy_3fem_9_problems_24ProblemStructuralDynamic_14build_stiffness_matrix(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_5fempy_3fem_9_problems_24ProblemStructuralDynamic_16build_mass_matrix(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_5fempy_3fem_9_problems_24ProblemStructuralDynamic_18build_damping_matrix(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_5fempy_3fem_9_problems_24ProblemStructuralDynamic_20rebuild_stiffness_matrix(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_5fempy_3fem_9_problems_24ProblemStructuralDynamic_22rebuild_mass_matrix(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_5fempy_3fem_9_problems_24ProblemStructuralDynamic_24rebuild_damping_matrix(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_5fempy_3fem_9_problems_24ProblemStructuralDynamic_26get_rhs_from_history_load(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_timestep); /* proto */
+static PyObject *__pyx_pf_5fempy_3fem_9_problems_24ProblemStructuralDynamic_28mass_matrix_vector_product(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_vector); /* proto */
+static PyObject *__pyx_pf_5fempy_3fem_9_problems_24ProblemStructuralDynamic_30stiffness_matrix_vector_product(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_vector); /* proto */
+static PyObject *__pyx_pf_5fempy_3fem_9_problems_24ProblemStructuralDynamic_32damping_matrix_vector_product(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_vector); /* proto */
+static PyObject *__pyx_tuple_;
+static PyObject *__pyx_tuple__3;
 static PyObject *__pyx_tuple__4;
-static PyObject *__pyx_tuple__5;
-static PyObject *__pyx_tuple__7;
-static PyObject *__pyx_tuple__9;
-static PyObject *__pyx_tuple__11;
-static PyObject *__pyx_tuple__13;
-static PyObject *__pyx_codeobj__3;
-static PyObject *__pyx_codeobj__6;
-static PyObject *__pyx_codeobj__8;
-static PyObject *__pyx_codeobj__10;
-static PyObject *__pyx_codeobj__12;
-static PyObject *__pyx_codeobj__14;
+static PyObject *__pyx_tuple__6;
+static PyObject *__pyx_tuple__8;
+static PyObject *__pyx_tuple__10;
+static PyObject *__pyx_tuple__12;
+static PyObject *__pyx_tuple__14;
+static PyObject *__pyx_tuple__16;
+static PyObject *__pyx_tuple__18;
+static PyObject *__pyx_tuple__20;
+static PyObject *__pyx_tuple__22;
+static PyObject *__pyx_tuple__24;
+static PyObject *__pyx_tuple__26;
+static PyObject *__pyx_tuple__28;
+static PyObject *__pyx_tuple__30;
+static PyObject *__pyx_tuple__32;
+static PyObject *__pyx_tuple__34;
+static PyObject *__pyx_tuple__36;
+static PyObject *__pyx_tuple__38;
+static PyObject *__pyx_tuple__40;
+static PyObject *__pyx_tuple__42;
+static PyObject *__pyx_tuple__44;
+static PyObject *__pyx_codeobj__2;
+static PyObject *__pyx_codeobj__5;
+static PyObject *__pyx_codeobj__7;
+static PyObject *__pyx_codeobj__9;
+static PyObject *__pyx_codeobj__11;
+static PyObject *__pyx_codeobj__13;
+static PyObject *__pyx_codeobj__15;
+static PyObject *__pyx_codeobj__17;
+static PyObject *__pyx_codeobj__19;
+static PyObject *__pyx_codeobj__21;
+static PyObject *__pyx_codeobj__23;
+static PyObject *__pyx_codeobj__25;
+static PyObject *__pyx_codeobj__27;
+static PyObject *__pyx_codeobj__29;
+static PyObject *__pyx_codeobj__31;
+static PyObject *__pyx_codeobj__33;
+static PyObject *__pyx_codeobj__35;
+static PyObject *__pyx_codeobj__37;
+static PyObject *__pyx_codeobj__39;
+static PyObject *__pyx_codeobj__41;
+static PyObject *__pyx_codeobj__43;
+static PyObject *__pyx_codeobj__45;
 /* Late includes */
 
-/* "fempy/fem/problems.pyx":9
+/* "fempy/fem/_problems.pyx":9
  *     """Responsible for the assembly of the global stiffness matrix."""
  * 
  *     def __init__(self, model, global_matrix_provider=None):             # <<<<<<<<<<<<<<
@@ -1534,9 +1480,9 @@ static PyObject *__pyx_codeobj__14;
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_5fempy_3fem_8problems_17ProblemStructural_1__init__(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_5fempy_3fem_8problems_17ProblemStructural_1__init__ = {"__init__", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_5fempy_3fem_8problems_17ProblemStructural_1__init__, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_5fempy_3fem_8problems_17ProblemStructural_1__init__(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_5fempy_3fem_9_problems_17ProblemStructural_1__init__(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_5fempy_3fem_9_problems_17ProblemStructural_1__init__ = {"__init__", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_5fempy_3fem_9_problems_17ProblemStructural_1__init__, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_5fempy_3fem_9_problems_17ProblemStructural_1__init__(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_self = 0;
   PyObject *__pyx_v_model = 0;
   PyObject *__pyx_v_global_matrix_provider = 0;
@@ -1599,18 +1545,18 @@ static PyObject *__pyx_pw_5fempy_3fem_8problems_17ProblemStructural_1__init__(Py
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("__init__", 0, 2, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 9, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("fempy.fem.problems.ProblemStructural.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("fempy.fem._problems.ProblemStructural.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_5fempy_3fem_8problems_17ProblemStructural___init__(__pyx_self, __pyx_v_self, __pyx_v_model, __pyx_v_global_matrix_provider);
+  __pyx_r = __pyx_pf_5fempy_3fem_9_problems_17ProblemStructural___init__(__pyx_self, __pyx_v_self, __pyx_v_model, __pyx_v_global_matrix_provider);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_5fempy_3fem_8problems_17ProblemStructural___init__(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_model, PyObject *__pyx_v_global_matrix_provider) {
+static PyObject *__pyx_pf_5fempy_3fem_9_problems_17ProblemStructural___init__(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_model, PyObject *__pyx_v_global_matrix_provider) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -1624,7 +1570,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_17ProblemStructural___init__(CYT
   PyObject *__pyx_t_9 = NULL;
   __Pyx_RefNannySetupContext("__init__", 0);
 
-  /* "fempy/fem/problems.pyx":10
+  /* "fempy/fem/_problems.pyx":10
  * 
  *     def __init__(self, model, global_matrix_provider=None):
  *         self.model = model             # <<<<<<<<<<<<<<
@@ -1633,7 +1579,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_17ProblemStructural___init__(CYT
  */
   if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_model, __pyx_v_model) < 0) __PYX_ERR(0, 10, __pyx_L1_error)
 
-  /* "fempy/fem/problems.pyx":11
+  /* "fempy/fem/_problems.pyx":11
  *     def __init__(self, model, global_matrix_provider=None):
  *         self.model = model
  *         self._matrix = None             # <<<<<<<<<<<<<<
@@ -1642,7 +1588,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_17ProblemStructural___init__(CYT
  */
   if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_matrix, Py_None) < 0) __PYX_ERR(0, 11, __pyx_L1_error)
 
-  /* "fempy/fem/problems.pyx":12
+  /* "fempy/fem/_problems.pyx":12
  *         self.model = model
  *         self._matrix = None
  *         self.stiffness_provider = ElementStiffnessProvider()             # <<<<<<<<<<<<<<
@@ -1669,7 +1615,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_17ProblemStructural___init__(CYT
   if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_stiffness_provider, __pyx_t_1) < 0) __PYX_ERR(0, 12, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "fempy/fem/problems.pyx":13
+  /* "fempy/fem/_problems.pyx":13
  *         self._matrix = None
  *         self.stiffness_provider = ElementStiffnessProvider()
  *         self.mass_provider = ElementMassProvider()             # <<<<<<<<<<<<<<
@@ -1696,7 +1642,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_17ProblemStructural___init__(CYT
   if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_mass_provider, __pyx_t_1) < 0) __PYX_ERR(0, 13, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "fempy/fem/problems.pyx":14
+  /* "fempy/fem/_problems.pyx":14
  *         self.stiffness_provider = ElementStiffnessProvider()
  *         self.mass_provider = ElementMassProvider()
  *         if global_matrix_provider is None:             # <<<<<<<<<<<<<<
@@ -1707,7 +1653,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_17ProblemStructural___init__(CYT
   __pyx_t_5 = (__pyx_t_4 != 0);
   if (__pyx_t_5) {
 
-    /* "fempy/fem/problems.pyx":15
+    /* "fempy/fem/_problems.pyx":15
  *         self.mass_provider = ElementMassProvider()
  *         if global_matrix_provider is None:
  *             self.global_matrix_provider = GlobalMatrixProvider(self.model, self.stiffness)             # <<<<<<<<<<<<<<
@@ -1772,7 +1718,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_17ProblemStructural___init__(CYT
     if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_global_matrix_provider, __pyx_t_1) < 0) __PYX_ERR(0, 15, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "fempy/fem/problems.pyx":14
+    /* "fempy/fem/_problems.pyx":14
  *         self.stiffness_provider = ElementStiffnessProvider()
  *         self.mass_provider = ElementMassProvider()
  *         if global_matrix_provider is None:             # <<<<<<<<<<<<<<
@@ -1782,7 +1728,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_17ProblemStructural___init__(CYT
     goto __pyx_L3;
   }
 
-  /* "fempy/fem/problems.pyx":17
+  /* "fempy/fem/_problems.pyx":17
  *             self.global_matrix_provider = GlobalMatrixProvider(self.model, self.stiffness)
  *         else:
  *             self.global_matrix_provider = global_matrix_provider             # <<<<<<<<<<<<<<
@@ -1794,7 +1740,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_17ProblemStructural___init__(CYT
   }
   __pyx_L3:;
 
-  /* "fempy/fem/problems.pyx":9
+  /* "fempy/fem/_problems.pyx":9
  *     """Responsible for the assembly of the global stiffness matrix."""
  * 
  *     def __init__(self, model, global_matrix_provider=None):             # <<<<<<<<<<<<<<
@@ -1812,7 +1758,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_17ProblemStructural___init__(CYT
   __Pyx_XDECREF(__pyx_t_6);
   __Pyx_XDECREF(__pyx_t_7);
   __Pyx_XDECREF(__pyx_t_9);
-  __Pyx_AddTraceback("fempy.fem.problems.ProblemStructural.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("fempy.fem._problems.ProblemStructural.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -1820,7 +1766,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_17ProblemStructural___init__(CYT
   return __pyx_r;
 }
 
-/* "fempy/fem/problems.pyx":20
+/* "fempy/fem/_problems.pyx":20
  * 
  *     @property
  *     def matrix(self):             # <<<<<<<<<<<<<<
@@ -1829,20 +1775,20 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_17ProblemStructural___init__(CYT
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_5fempy_3fem_8problems_17ProblemStructural_3matrix(PyObject *__pyx_self, PyObject *__pyx_v_self); /*proto*/
-static PyMethodDef __pyx_mdef_5fempy_3fem_8problems_17ProblemStructural_3matrix = {"matrix", (PyCFunction)__pyx_pw_5fempy_3fem_8problems_17ProblemStructural_3matrix, METH_O, 0};
-static PyObject *__pyx_pw_5fempy_3fem_8problems_17ProblemStructural_3matrix(PyObject *__pyx_self, PyObject *__pyx_v_self) {
+static PyObject *__pyx_pw_5fempy_3fem_9_problems_17ProblemStructural_3matrix(PyObject *__pyx_self, PyObject *__pyx_v_self); /*proto*/
+static PyMethodDef __pyx_mdef_5fempy_3fem_9_problems_17ProblemStructural_3matrix = {"matrix", (PyCFunction)__pyx_pw_5fempy_3fem_9_problems_17ProblemStructural_3matrix, METH_O, 0};
+static PyObject *__pyx_pw_5fempy_3fem_9_problems_17ProblemStructural_3matrix(PyObject *__pyx_self, PyObject *__pyx_v_self) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("matrix (wrapper)", 0);
-  __pyx_r = __pyx_pf_5fempy_3fem_8problems_17ProblemStructural_2matrix(__pyx_self, ((PyObject *)__pyx_v_self));
+  __pyx_r = __pyx_pf_5fempy_3fem_9_problems_17ProblemStructural_2matrix(__pyx_self, ((PyObject *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_5fempy_3fem_8problems_17ProblemStructural_2matrix(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self) {
+static PyObject *__pyx_pf_5fempy_3fem_9_problems_17ProblemStructural_2matrix(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -1852,7 +1798,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_17ProblemStructural_2matrix(CYTH
   PyObject *__pyx_t_5 = NULL;
   __Pyx_RefNannySetupContext("matrix", 0);
 
-  /* "fempy/fem/problems.pyx":21
+  /* "fempy/fem/_problems.pyx":21
  *     @property
  *     def matrix(self):
  *         if self._matrix is None:             # <<<<<<<<<<<<<<
@@ -1866,7 +1812,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_17ProblemStructural_2matrix(CYTH
   __pyx_t_3 = (__pyx_t_2 != 0);
   if (__pyx_t_3) {
 
-    /* "fempy/fem/problems.pyx":22
+    /* "fempy/fem/_problems.pyx":22
  *     def matrix(self):
  *         if self._matrix is None:
  *             self.build_matrix()             # <<<<<<<<<<<<<<
@@ -1892,7 +1838,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_17ProblemStructural_2matrix(CYTH
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "fempy/fem/problems.pyx":21
+    /* "fempy/fem/_problems.pyx":21
  *     @property
  *     def matrix(self):
  *         if self._matrix is None:             # <<<<<<<<<<<<<<
@@ -1902,7 +1848,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_17ProblemStructural_2matrix(CYTH
     goto __pyx_L3;
   }
 
-  /* "fempy/fem/problems.pyx":24
+  /* "fempy/fem/_problems.pyx":24
  *             self.build_matrix()
  *         else:
  *             self.rebuild_matrix()             # <<<<<<<<<<<<<<
@@ -1931,7 +1877,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_17ProblemStructural_2matrix(CYTH
   }
   __pyx_L3:;
 
-  /* "fempy/fem/problems.pyx":25
+  /* "fempy/fem/_problems.pyx":25
  *         else:
  *             self.rebuild_matrix()
  *         return self._matrix             # <<<<<<<<<<<<<<
@@ -1945,7 +1891,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_17ProblemStructural_2matrix(CYTH
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "fempy/fem/problems.pyx":20
+  /* "fempy/fem/_problems.pyx":20
  * 
  *     @property
  *     def matrix(self):             # <<<<<<<<<<<<<<
@@ -1958,7 +1904,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_17ProblemStructural_2matrix(CYTH
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_4);
   __Pyx_XDECREF(__pyx_t_5);
-  __Pyx_AddTraceback("fempy.fem.problems.ProblemStructural.matrix", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("fempy.fem._problems.ProblemStructural.matrix", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -1966,7 +1912,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_17ProblemStructural_2matrix(CYTH
   return __pyx_r;
 }
 
-/* "fempy/fem/problems.pyx":27
+/* "fempy/fem/_problems.pyx":27
  *         return self._matrix
  * 
  *     def build_matrix(self):             # <<<<<<<<<<<<<<
@@ -1975,21 +1921,21 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_17ProblemStructural_2matrix(CYTH
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_5fempy_3fem_8problems_17ProblemStructural_5build_matrix(PyObject *__pyx_self, PyObject *__pyx_v_self); /*proto*/
-static char __pyx_doc_5fempy_3fem_8problems_17ProblemStructural_4build_matrix[] = " Builds the global Stiffness Matrix";
-static PyMethodDef __pyx_mdef_5fempy_3fem_8problems_17ProblemStructural_5build_matrix = {"build_matrix", (PyCFunction)__pyx_pw_5fempy_3fem_8problems_17ProblemStructural_5build_matrix, METH_O, __pyx_doc_5fempy_3fem_8problems_17ProblemStructural_4build_matrix};
-static PyObject *__pyx_pw_5fempy_3fem_8problems_17ProblemStructural_5build_matrix(PyObject *__pyx_self, PyObject *__pyx_v_self) {
+static PyObject *__pyx_pw_5fempy_3fem_9_problems_17ProblemStructural_5build_matrix(PyObject *__pyx_self, PyObject *__pyx_v_self); /*proto*/
+static char __pyx_doc_5fempy_3fem_9_problems_17ProblemStructural_4build_matrix[] = " Builds the global Stiffness Matrix";
+static PyMethodDef __pyx_mdef_5fempy_3fem_9_problems_17ProblemStructural_5build_matrix = {"build_matrix", (PyCFunction)__pyx_pw_5fempy_3fem_9_problems_17ProblemStructural_5build_matrix, METH_O, __pyx_doc_5fempy_3fem_9_problems_17ProblemStructural_4build_matrix};
+static PyObject *__pyx_pw_5fempy_3fem_9_problems_17ProblemStructural_5build_matrix(PyObject *__pyx_self, PyObject *__pyx_v_self) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("build_matrix (wrapper)", 0);
-  __pyx_r = __pyx_pf_5fempy_3fem_8problems_17ProblemStructural_4build_matrix(__pyx_self, ((PyObject *)__pyx_v_self));
+  __pyx_r = __pyx_pf_5fempy_3fem_9_problems_17ProblemStructural_4build_matrix(__pyx_self, ((PyObject *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_5fempy_3fem_8problems_17ProblemStructural_4build_matrix(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self) {
+static PyObject *__pyx_pf_5fempy_3fem_9_problems_17ProblemStructural_4build_matrix(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self) {
   PyObject *__pyx_v_provider = NULL;
   PyObject *__pyx_v_global_provider = NULL;
   PyObject *__pyx_r = NULL;
@@ -2002,7 +1948,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_17ProblemStructural_4build_matri
   PyObject *__pyx_t_6 = NULL;
   __Pyx_RefNannySetupContext("build_matrix", 0);
 
-  /* "fempy/fem/problems.pyx":29
+  /* "fempy/fem/_problems.pyx":29
  *     def build_matrix(self):
  *         """ Builds the global Stiffness Matrix"""
  *         provider = ElementStiffnessProvider()             # <<<<<<<<<<<<<<
@@ -2029,7 +1975,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_17ProblemStructural_4build_matri
   __pyx_v_provider = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "fempy/fem/problems.pyx":30
+  /* "fempy/fem/_problems.pyx":30
  *         """ Builds the global Stiffness Matrix"""
  *         provider = ElementStiffnessProvider()
  *         global_provider = self.global_matrix_provider             # <<<<<<<<<<<<<<
@@ -2041,7 +1987,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_17ProblemStructural_4build_matri
   __pyx_v_global_provider = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "fempy/fem/problems.pyx":31
+  /* "fempy/fem/_problems.pyx":31
  *         provider = ElementStiffnessProvider()
  *         global_provider = self.global_matrix_provider
  *         self._matrix = global_provider.get_stiffness_matrix(self.model, provider)             # <<<<<<<<<<<<<<
@@ -2102,7 +2048,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_17ProblemStructural_4build_matri
   if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_matrix, __pyx_t_1) < 0) __PYX_ERR(0, 31, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "fempy/fem/problems.pyx":27
+  /* "fempy/fem/_problems.pyx":27
  *         return self._matrix
  * 
  *     def build_matrix(self):             # <<<<<<<<<<<<<<
@@ -2119,7 +2065,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_17ProblemStructural_4build_matri
   __Pyx_XDECREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_4);
   __Pyx_XDECREF(__pyx_t_6);
-  __Pyx_AddTraceback("fempy.fem.problems.ProblemStructural.build_matrix", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("fempy.fem._problems.ProblemStructural.build_matrix", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_provider);
@@ -2129,7 +2075,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_17ProblemStructural_4build_matri
   return __pyx_r;
 }
 
-/* "fempy/fem/problems.pyx":33
+/* "fempy/fem/_problems.pyx":33
  *         self._matrix = global_provider.get_stiffness_matrix(self.model, provider)
  * 
  *     def rebuild_matrix(self):             # <<<<<<<<<<<<<<
@@ -2138,21 +2084,21 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_17ProblemStructural_4build_matri
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_5fempy_3fem_8problems_17ProblemStructural_7rebuild_matrix(PyObject *__pyx_self, PyObject *__pyx_v_self); /*proto*/
-static char __pyx_doc_5fempy_3fem_8problems_17ProblemStructural_6rebuild_matrix[] = " Rebuilds the global Stiffness Matrix";
-static PyMethodDef __pyx_mdef_5fempy_3fem_8problems_17ProblemStructural_7rebuild_matrix = {"rebuild_matrix", (PyCFunction)__pyx_pw_5fempy_3fem_8problems_17ProblemStructural_7rebuild_matrix, METH_O, __pyx_doc_5fempy_3fem_8problems_17ProblemStructural_6rebuild_matrix};
-static PyObject *__pyx_pw_5fempy_3fem_8problems_17ProblemStructural_7rebuild_matrix(PyObject *__pyx_self, PyObject *__pyx_v_self) {
+static PyObject *__pyx_pw_5fempy_3fem_9_problems_17ProblemStructural_7rebuild_matrix(PyObject *__pyx_self, PyObject *__pyx_v_self); /*proto*/
+static char __pyx_doc_5fempy_3fem_9_problems_17ProblemStructural_6rebuild_matrix[] = " Rebuilds the global Stiffness Matrix";
+static PyMethodDef __pyx_mdef_5fempy_3fem_9_problems_17ProblemStructural_7rebuild_matrix = {"rebuild_matrix", (PyCFunction)__pyx_pw_5fempy_3fem_9_problems_17ProblemStructural_7rebuild_matrix, METH_O, __pyx_doc_5fempy_3fem_9_problems_17ProblemStructural_6rebuild_matrix};
+static PyObject *__pyx_pw_5fempy_3fem_9_problems_17ProblemStructural_7rebuild_matrix(PyObject *__pyx_self, PyObject *__pyx_v_self) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("rebuild_matrix (wrapper)", 0);
-  __pyx_r = __pyx_pf_5fempy_3fem_8problems_17ProblemStructural_6rebuild_matrix(__pyx_self, ((PyObject *)__pyx_v_self));
+  __pyx_r = __pyx_pf_5fempy_3fem_9_problems_17ProblemStructural_6rebuild_matrix(__pyx_self, ((PyObject *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_5fempy_3fem_8problems_17ProblemStructural_6rebuild_matrix(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self) {
+static PyObject *__pyx_pf_5fempy_3fem_9_problems_17ProblemStructural_6rebuild_matrix(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self) {
   PyObject *__pyx_v_global_provider = NULL;
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
@@ -2165,7 +2111,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_17ProblemStructural_6rebuild_mat
   PyObject *__pyx_t_7 = NULL;
   __Pyx_RefNannySetupContext("rebuild_matrix", 0);
 
-  /* "fempy/fem/problems.pyx":35
+  /* "fempy/fem/_problems.pyx":35
  *     def rebuild_matrix(self):
  *         """ Rebuilds the global Stiffness Matrix"""
  *         global_provider = self.global_matrix_provider             # <<<<<<<<<<<<<<
@@ -2177,7 +2123,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_17ProblemStructural_6rebuild_mat
   __pyx_v_global_provider = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "fempy/fem/problems.pyx":36
+  /* "fempy/fem/_problems.pyx":36
  *         """ Rebuilds the global Stiffness Matrix"""
  *         global_provider = self.global_matrix_provider
  *         self._matrix = global_provider.get_stiffness_matrix(self.model, self.provider)             # <<<<<<<<<<<<<<
@@ -2242,7 +2188,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_17ProblemStructural_6rebuild_mat
   if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_matrix, __pyx_t_1) < 0) __PYX_ERR(0, 36, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "fempy/fem/problems.pyx":33
+  /* "fempy/fem/_problems.pyx":33
  *         self._matrix = global_provider.get_stiffness_matrix(self.model, provider)
  * 
  *     def rebuild_matrix(self):             # <<<<<<<<<<<<<<
@@ -2260,7 +2206,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_17ProblemStructural_6rebuild_mat
   __Pyx_XDECREF(__pyx_t_4);
   __Pyx_XDECREF(__pyx_t_5);
   __Pyx_XDECREF(__pyx_t_7);
-  __Pyx_AddTraceback("fempy.fem.problems.ProblemStructural.rebuild_matrix", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("fempy.fem._problems.ProblemStructural.rebuild_matrix", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_global_provider);
@@ -2269,7 +2215,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_17ProblemStructural_6rebuild_mat
   return __pyx_r;
 }
 
-/* "fempy/fem/problems.pyx":38
+/* "fempy/fem/_problems.pyx":38
  *         self._matrix = global_provider.get_stiffness_matrix(self.model, self.provider)
  * 
  *     def calculate_matrix(self, linear_system):             # <<<<<<<<<<<<<<
@@ -2278,9 +2224,9 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_17ProblemStructural_6rebuild_mat
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_5fempy_3fem_8problems_17ProblemStructural_9calculate_matrix(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_5fempy_3fem_8problems_17ProblemStructural_9calculate_matrix = {"calculate_matrix", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_5fempy_3fem_8problems_17ProblemStructural_9calculate_matrix, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_5fempy_3fem_8problems_17ProblemStructural_9calculate_matrix(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_5fempy_3fem_9_problems_17ProblemStructural_9calculate_matrix(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_5fempy_3fem_9_problems_17ProblemStructural_9calculate_matrix = {"calculate_matrix", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_5fempy_3fem_9_problems_17ProblemStructural_9calculate_matrix, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_5fempy_3fem_9_problems_17ProblemStructural_9calculate_matrix(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_self = 0;
   PyObject *__pyx_v_linear_system = 0;
   PyObject *__pyx_r = 0;
@@ -2328,24 +2274,24 @@ static PyObject *__pyx_pw_5fempy_3fem_8problems_17ProblemStructural_9calculate_m
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("calculate_matrix", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 38, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("fempy.fem.problems.ProblemStructural.calculate_matrix", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("fempy.fem._problems.ProblemStructural.calculate_matrix", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_5fempy_3fem_8problems_17ProblemStructural_8calculate_matrix(__pyx_self, __pyx_v_self, __pyx_v_linear_system);
+  __pyx_r = __pyx_pf_5fempy_3fem_9_problems_17ProblemStructural_8calculate_matrix(__pyx_self, __pyx_v_self, __pyx_v_linear_system);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_5fempy_3fem_8problems_17ProblemStructural_8calculate_matrix(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_linear_system) {
+static PyObject *__pyx_pf_5fempy_3fem_9_problems_17ProblemStructural_8calculate_matrix(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_linear_system) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("calculate_matrix", 0);
 
-  /* "fempy/fem/problems.pyx":39
+  /* "fempy/fem/_problems.pyx":39
  * 
  *     def calculate_matrix(self, linear_system):
  *         linear_system.matrix = self.matrix             # <<<<<<<<<<<<<<
@@ -2357,7 +2303,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_17ProblemStructural_8calculate_m
   if (__Pyx_PyObject_SetAttrStr(__pyx_v_linear_system, __pyx_n_s_matrix_2, __pyx_t_1) < 0) __PYX_ERR(0, 39, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "fempy/fem/problems.pyx":38
+  /* "fempy/fem/_problems.pyx":38
  *         self._matrix = global_provider.get_stiffness_matrix(self.model, self.provider)
  * 
  *     def calculate_matrix(self, linear_system):             # <<<<<<<<<<<<<<
@@ -2370,7 +2316,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_17ProblemStructural_8calculate_m
   goto __pyx_L0;
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("fempy.fem.problems.ProblemStructural.calculate_matrix", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("fempy.fem._problems.ProblemStructural.calculate_matrix", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -2378,32 +2324,76 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_17ProblemStructural_8calculate_m
   return __pyx_r;
 }
 
-/* "fempy/fem/problems.pyx":45
- *     """Provider responsible for the assembly of the global matrices."""
- * 
+/* "fempy/fem/_problems.pyx":49
+ * #    cpdef public bint change_stiffness, change_mass, change_damping
+ * #
  *     def __init__(self, model, global_matrix_provider=GlobalMatrixProvider, damping_provider=None):             # <<<<<<<<<<<<<<
  *         self.model = model
  *         self.global_matrix_provider = global_matrix_provider
  */
 
+static PyObject *__pyx_pf_5fempy_3fem_9_problems___defaults__(CYTHON_UNUSED PyObject *__pyx_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  __Pyx_RefNannySetupContext("__defaults__", 0);
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = PyTuple_New(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 49, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_INCREF(__Pyx_CyFunction_Defaults(__pyx_defaults, __pyx_self)->__pyx_arg_global_matrix_provider);
+  __Pyx_GIVEREF(__Pyx_CyFunction_Defaults(__pyx_defaults, __pyx_self)->__pyx_arg_global_matrix_provider);
+  PyTuple_SET_ITEM(__pyx_t_1, 0, __Pyx_CyFunction_Defaults(__pyx_defaults, __pyx_self)->__pyx_arg_global_matrix_provider);
+  __Pyx_INCREF(((PyObject *)Py_None));
+  __Pyx_GIVEREF(((PyObject *)Py_None));
+  PyTuple_SET_ITEM(__pyx_t_1, 1, ((PyObject *)Py_None));
+  __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 49, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_GIVEREF(__pyx_t_1);
+  PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_1);
+  __Pyx_INCREF(Py_None);
+  __Pyx_GIVEREF(Py_None);
+  PyTuple_SET_ITEM(__pyx_t_2, 1, Py_None);
+  __pyx_t_1 = 0;
+  __pyx_r = __pyx_t_2;
+  __pyx_t_2 = 0;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_AddTraceback("fempy.fem._problems.__defaults__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
 /* Python wrapper */
-static int __pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_1__init__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static int __pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_1__init__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_5fempy_3fem_9_problems_24ProblemStructuralDynamic_1__init__(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_5fempy_3fem_9_problems_24ProblemStructuralDynamic_1__init__ = {"__init__", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_5fempy_3fem_9_problems_24ProblemStructuralDynamic_1__init__, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_5fempy_3fem_9_problems_24ProblemStructuralDynamic_1__init__(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  PyObject *__pyx_v_self = 0;
   PyObject *__pyx_v_model = 0;
   PyObject *__pyx_v_global_matrix_provider = 0;
   PyObject *__pyx_v_damping_provider = 0;
-  int __pyx_r;
+  PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__init__ (wrapper)", 0);
   {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_model,&__pyx_n_s_global_matrix_provider,&__pyx_n_s_damping_provider,0};
-    PyObject* values[3] = {0,0,0};
-    values[1] = __pyx_k_;
-    values[2] = ((PyObject *)Py_None);
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_self,&__pyx_n_s_model,&__pyx_n_s_global_matrix_provider,&__pyx_n_s_damping_provider,0};
+    PyObject* values[4] = {0,0,0,0};
+    __pyx_defaults *__pyx_dynamic_args = __Pyx_CyFunction_Defaults(__pyx_defaults, __pyx_self);
+    values[2] = __pyx_dynamic_args->__pyx_arg_global_matrix_provider;
+    values[3] = ((PyObject *)((PyObject *)Py_None));
     if (unlikely(__pyx_kwds)) {
       Py_ssize_t kw_args;
       const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
       switch (pos_args) {
+        case  4: values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
+        CYTHON_FALLTHROUGH;
         case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
         CYTHON_FALLTHROUGH;
         case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
@@ -2416,115 +2406,123 @@ static int __pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_1__init__(P
       kw_args = PyDict_Size(__pyx_kwds);
       switch (pos_args) {
         case  0:
-        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_model)) != 0)) kw_args--;
+        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_self)) != 0)) kw_args--;
         else goto __pyx_L5_argtuple_error;
         CYTHON_FALLTHROUGH;
         case  1:
-        if (kw_args > 0) {
-          PyObject* value = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_global_matrix_provider);
-          if (value) { values[1] = value; kw_args--; }
+        if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_model)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("__init__", 0, 2, 4, 1); __PYX_ERR(0, 49, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (kw_args > 0) {
-          PyObject* value = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_damping_provider);
+          PyObject* value = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_global_matrix_provider);
           if (value) { values[2] = value; kw_args--; }
+        }
+        CYTHON_FALLTHROUGH;
+        case  3:
+        if (kw_args > 0) {
+          PyObject* value = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_damping_provider);
+          if (value) { values[3] = value; kw_args--; }
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__init__") < 0)) __PYX_ERR(0, 45, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__init__") < 0)) __PYX_ERR(0, 49, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
+        case  4: values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
+        CYTHON_FALLTHROUGH;
         case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
         CYTHON_FALLTHROUGH;
         case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
-        CYTHON_FALLTHROUGH;
-        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
         break;
         default: goto __pyx_L5_argtuple_error;
       }
     }
-    __pyx_v_model = values[0];
-    __pyx_v_global_matrix_provider = values[1];
-    __pyx_v_damping_provider = values[2];
+    __pyx_v_self = values[0];
+    __pyx_v_model = values[1];
+    __pyx_v_global_matrix_provider = values[2];
+    __pyx_v_damping_provider = values[3];
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__init__", 0, 1, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 45, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__init__", 0, 2, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 49, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("fempy.fem.problems.ProblemStructuralDynamic.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("fempy.fem._problems.ProblemStructuralDynamic.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
-  return -1;
+  return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic___init__(((struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *)__pyx_v_self), __pyx_v_model, __pyx_v_global_matrix_provider, __pyx_v_damping_provider);
+  __pyx_r = __pyx_pf_5fempy_3fem_9_problems_24ProblemStructuralDynamic___init__(__pyx_self, __pyx_v_self, __pyx_v_model, __pyx_v_global_matrix_provider, __pyx_v_damping_provider);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static int __pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic___init__(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *__pyx_v_self, PyObject *__pyx_v_model, PyObject *__pyx_v_global_matrix_provider, PyObject *__pyx_v_damping_provider) {
-  int __pyx_r;
+static PyObject *__pyx_pf_5fempy_3fem_9_problems_24ProblemStructuralDynamic___init__(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_model, PyObject *__pyx_v_global_matrix_provider, PyObject *__pyx_v_damping_provider) {
+  PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
   PyObject *__pyx_t_2 = NULL;
   PyObject *__pyx_t_3 = NULL;
   __Pyx_RefNannySetupContext("__init__", 0);
 
-  /* "fempy/fem/problems.pyx":46
- * 
+  /* "fempy/fem/_problems.pyx":50
+ * #
  *     def __init__(self, model, global_matrix_provider=GlobalMatrixProvider, damping_provider=None):
  *         self.model = model             # <<<<<<<<<<<<<<
  *         self.global_matrix_provider = global_matrix_provider
  *         self._stiffness_matrix = None
  */
-  if (__Pyx_PyObject_SetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_model, __pyx_v_model) < 0) __PYX_ERR(0, 46, __pyx_L1_error)
+  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_model, __pyx_v_model) < 0) __PYX_ERR(0, 50, __pyx_L1_error)
 
-  /* "fempy/fem/problems.pyx":47
+  /* "fempy/fem/_problems.pyx":51
  *     def __init__(self, model, global_matrix_provider=GlobalMatrixProvider, damping_provider=None):
  *         self.model = model
  *         self.global_matrix_provider = global_matrix_provider             # <<<<<<<<<<<<<<
  *         self._stiffness_matrix = None
  *         self._mass_matrix = None
  */
-  if (__Pyx_PyObject_SetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_global_matrix_provider, __pyx_v_global_matrix_provider) < 0) __PYX_ERR(0, 47, __pyx_L1_error)
+  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_global_matrix_provider, __pyx_v_global_matrix_provider) < 0) __PYX_ERR(0, 51, __pyx_L1_error)
 
-  /* "fempy/fem/problems.pyx":48
+  /* "fempy/fem/_problems.pyx":52
  *         self.model = model
  *         self.global_matrix_provider = global_matrix_provider
  *         self._stiffness_matrix = None             # <<<<<<<<<<<<<<
  *         self._mass_matrix = None
  *         self._damping_matrix = None
  */
-  if (__Pyx_PyObject_SetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_stiffness_matrix, Py_None) < 0) __PYX_ERR(0, 48, __pyx_L1_error)
+  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_stiffness_matrix, Py_None) < 0) __PYX_ERR(0, 52, __pyx_L1_error)
 
-  /* "fempy/fem/problems.pyx":49
+  /* "fempy/fem/_problems.pyx":53
  *         self.global_matrix_provider = global_matrix_provider
  *         self._stiffness_matrix = None
  *         self._mass_matrix = None             # <<<<<<<<<<<<<<
  *         self._damping_matrix = None
  *         self.stiffness_provider = ElementStiffnessProvider()
  */
-  if (__Pyx_PyObject_SetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_mass_matrix, Py_None) < 0) __PYX_ERR(0, 49, __pyx_L1_error)
+  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_mass_matrix, Py_None) < 0) __PYX_ERR(0, 53, __pyx_L1_error)
 
-  /* "fempy/fem/problems.pyx":50
+  /* "fempy/fem/_problems.pyx":54
  *         self._stiffness_matrix = None
  *         self._mass_matrix = None
  *         self._damping_matrix = None             # <<<<<<<<<<<<<<
  *         self.stiffness_provider = ElementStiffnessProvider()
  *         self.mass_provider = ElementMassProvider()
  */
-  if (__Pyx_PyObject_SetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_damping_matrix, Py_None) < 0) __PYX_ERR(0, 50, __pyx_L1_error)
+  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_damping_matrix, Py_None) < 0) __PYX_ERR(0, 54, __pyx_L1_error)
 
-  /* "fempy/fem/problems.pyx":51
+  /* "fempy/fem/_problems.pyx":55
  *         self._mass_matrix = None
  *         self._damping_matrix = None
  *         self.stiffness_provider = ElementStiffnessProvider()             # <<<<<<<<<<<<<<
  *         self.mass_provider = ElementMassProvider()
  *         self.damping_provider = damping_provider
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_ElementStiffnessProvider); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 51, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_ElementStiffnessProvider); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 55, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
@@ -2538,20 +2536,20 @@ static int __pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic___init__(st
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 51, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 55, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (__Pyx_PyObject_SetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_stiffness_provider, __pyx_t_1) < 0) __PYX_ERR(0, 51, __pyx_L1_error)
+  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_stiffness_provider, __pyx_t_1) < 0) __PYX_ERR(0, 55, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "fempy/fem/problems.pyx":52
+  /* "fempy/fem/_problems.pyx":56
  *         self._damping_matrix = None
  *         self.stiffness_provider = ElementStiffnessProvider()
  *         self.mass_provider = ElementMassProvider()             # <<<<<<<<<<<<<<
  *         self.damping_provider = damping_provider
  *         self.change_stiffness = True
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_ElementMassProvider); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 52, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_ElementMassProvider); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 56, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
@@ -2565,71 +2563,72 @@ static int __pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic___init__(st
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 52, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 56, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (__Pyx_PyObject_SetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_mass_provider, __pyx_t_1) < 0) __PYX_ERR(0, 52, __pyx_L1_error)
+  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_mass_provider, __pyx_t_1) < 0) __PYX_ERR(0, 56, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "fempy/fem/problems.pyx":53
+  /* "fempy/fem/_problems.pyx":57
  *         self.stiffness_provider = ElementStiffnessProvider()
  *         self.mass_provider = ElementMassProvider()
  *         self.damping_provider = damping_provider             # <<<<<<<<<<<<<<
  *         self.change_stiffness = True
  *         self.change_mass = True
  */
-  if (__Pyx_PyObject_SetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_damping_provider, __pyx_v_damping_provider) < 0) __PYX_ERR(0, 53, __pyx_L1_error)
+  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_damping_provider, __pyx_v_damping_provider) < 0) __PYX_ERR(0, 57, __pyx_L1_error)
 
-  /* "fempy/fem/problems.pyx":54
+  /* "fempy/fem/_problems.pyx":58
  *         self.mass_provider = ElementMassProvider()
  *         self.damping_provider = damping_provider
  *         self.change_stiffness = True             # <<<<<<<<<<<<<<
  *         self.change_mass = True
  *         self.change_damping = True
  */
-  if (__Pyx_PyObject_SetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_change_stiffness, Py_True) < 0) __PYX_ERR(0, 54, __pyx_L1_error)
+  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_change_stiffness, Py_True) < 0) __PYX_ERR(0, 58, __pyx_L1_error)
 
-  /* "fempy/fem/problems.pyx":55
+  /* "fempy/fem/_problems.pyx":59
  *         self.damping_provider = damping_provider
  *         self.change_stiffness = True
  *         self.change_mass = True             # <<<<<<<<<<<<<<
  *         self.change_damping = True
  * 
  */
-  if (__Pyx_PyObject_SetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_change_mass, Py_True) < 0) __PYX_ERR(0, 55, __pyx_L1_error)
+  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_change_mass, Py_True) < 0) __PYX_ERR(0, 59, __pyx_L1_error)
 
-  /* "fempy/fem/problems.pyx":56
+  /* "fempy/fem/_problems.pyx":60
  *         self.change_stiffness = True
  *         self.change_mass = True
  *         self.change_damping = True             # <<<<<<<<<<<<<<
  * 
  *     @property
  */
-  if (__Pyx_PyObject_SetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_change_damping, Py_True) < 0) __PYX_ERR(0, 56, __pyx_L1_error)
+  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_change_damping, Py_True) < 0) __PYX_ERR(0, 60, __pyx_L1_error)
 
-  /* "fempy/fem/problems.pyx":45
- *     """Provider responsible for the assembly of the global matrices."""
- * 
+  /* "fempy/fem/_problems.pyx":49
+ * #    cpdef public bint change_stiffness, change_mass, change_damping
+ * #
  *     def __init__(self, model, global_matrix_provider=GlobalMatrixProvider, damping_provider=None):             # <<<<<<<<<<<<<<
  *         self.model = model
  *         self.global_matrix_provider = global_matrix_provider
  */
 
   /* function exit code */
-  __pyx_r = 0;
+  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
   goto __pyx_L0;
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_AddTraceback("fempy.fem.problems.ProblemStructuralDynamic.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = -1;
+  __Pyx_AddTraceback("fempy.fem._problems.ProblemStructuralDynamic.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
   __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* "fempy/fem/problems.pyx":59
+/* "fempy/fem/_problems.pyx":63
  * 
  *     @property
  *     def stiffness_matrix(self):             # <<<<<<<<<<<<<<
@@ -2638,19 +2637,20 @@ static int __pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic___init__(st
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_16stiffness_matrix_1__get__(PyObject *__pyx_v_self); /*proto*/
-static PyObject *__pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_16stiffness_matrix_1__get__(PyObject *__pyx_v_self) {
+static PyObject *__pyx_pw_5fempy_3fem_9_problems_24ProblemStructuralDynamic_3stiffness_matrix(PyObject *__pyx_self, PyObject *__pyx_v_self); /*proto*/
+static PyMethodDef __pyx_mdef_5fempy_3fem_9_problems_24ProblemStructuralDynamic_3stiffness_matrix = {"stiffness_matrix", (PyCFunction)__pyx_pw_5fempy_3fem_9_problems_24ProblemStructuralDynamic_3stiffness_matrix, METH_O, 0};
+static PyObject *__pyx_pw_5fempy_3fem_9_problems_24ProblemStructuralDynamic_3stiffness_matrix(PyObject *__pyx_self, PyObject *__pyx_v_self) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_16stiffness_matrix___get__(((struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *)__pyx_v_self));
+  __Pyx_RefNannySetupContext("stiffness_matrix (wrapper)", 0);
+  __pyx_r = __pyx_pf_5fempy_3fem_9_problems_24ProblemStructuralDynamic_2stiffness_matrix(__pyx_self, ((PyObject *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_16stiffness_matrix___get__(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *__pyx_v_self) {
+static PyObject *__pyx_pf_5fempy_3fem_9_problems_24ProblemStructuralDynamic_2stiffness_matrix(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   int __pyx_t_1;
@@ -2659,16 +2659,16 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_16sti
   int __pyx_t_4;
   PyObject *__pyx_t_5 = NULL;
   PyObject *__pyx_t_6 = NULL;
-  __Pyx_RefNannySetupContext("__get__", 0);
+  __Pyx_RefNannySetupContext("stiffness_matrix", 0);
 
-  /* "fempy/fem/problems.pyx":61
+  /* "fempy/fem/_problems.pyx":65
  *     def stiffness_matrix(self):
  * 
  *         if (self._stiffness_matrix is not None) and not self.change_stiffness:             # <<<<<<<<<<<<<<
  *             pass
  *         elif (self._stiffness_matrix is not None) and self.change_stiffness:
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_stiffness_matrix); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 61, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_stiffness_matrix); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 65, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = (__pyx_t_2 != Py_None);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -2678,9 +2678,9 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_16sti
     __pyx_t_1 = __pyx_t_4;
     goto __pyx_L4_bool_binop_done;
   }
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_change_stiffness); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 61, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_change_stiffness); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 65, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 61, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 65, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_3 = ((!__pyx_t_4) != 0);
   __pyx_t_1 = __pyx_t_3;
@@ -2689,14 +2689,14 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_16sti
     goto __pyx_L3;
   }
 
-  /* "fempy/fem/problems.pyx":63
+  /* "fempy/fem/_problems.pyx":67
  *         if (self._stiffness_matrix is not None) and not self.change_stiffness:
  *             pass
  *         elif (self._stiffness_matrix is not None) and self.change_stiffness:             # <<<<<<<<<<<<<<
  *             self.rebuild_stiffness_matrix()
  *         else:
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_stiffness_matrix); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 63, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_stiffness_matrix); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 67, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = (__pyx_t_2 != Py_None);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -2706,22 +2706,22 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_16sti
     __pyx_t_1 = __pyx_t_4;
     goto __pyx_L6_bool_binop_done;
   }
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_change_stiffness); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 63, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_change_stiffness); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 67, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 63, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 67, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_1 = __pyx_t_4;
   __pyx_L6_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "fempy/fem/problems.pyx":64
+    /* "fempy/fem/_problems.pyx":68
  *             pass
  *         elif (self._stiffness_matrix is not None) and self.change_stiffness:
  *             self.rebuild_stiffness_matrix()             # <<<<<<<<<<<<<<
  *         else:
  *             self.build_stiffness_matrix()
  */
-    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_rebuild_stiffness_matrix); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 64, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_rebuild_stiffness_matrix); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 68, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __pyx_t_6 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_5))) {
@@ -2735,12 +2735,12 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_16sti
     }
     __pyx_t_2 = (__pyx_t_6) ? __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_t_6) : __Pyx_PyObject_CallNoArg(__pyx_t_5);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 64, __pyx_L1_error)
+    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 68, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "fempy/fem/problems.pyx":63
+    /* "fempy/fem/_problems.pyx":67
  *         if (self._stiffness_matrix is not None) and not self.change_stiffness:
  *             pass
  *         elif (self._stiffness_matrix is not None) and self.change_stiffness:             # <<<<<<<<<<<<<<
@@ -2750,7 +2750,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_16sti
     goto __pyx_L3;
   }
 
-  /* "fempy/fem/problems.pyx":66
+  /* "fempy/fem/_problems.pyx":70
  *             self.rebuild_stiffness_matrix()
  *         else:
  *             self.build_stiffness_matrix()             # <<<<<<<<<<<<<<
@@ -2758,7 +2758,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_16sti
  * 
  */
   /*else*/ {
-    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_build_stiffness_matrix); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 66, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_build_stiffness_matrix); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 70, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __pyx_t_6 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_5))) {
@@ -2772,14 +2772,14 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_16sti
     }
     __pyx_t_2 = (__pyx_t_6) ? __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_t_6) : __Pyx_PyObject_CallNoArg(__pyx_t_5);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 66, __pyx_L1_error)
+    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 70, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   }
   __pyx_L3:;
 
-  /* "fempy/fem/problems.pyx":67
+  /* "fempy/fem/_problems.pyx":71
  *         else:
  *             self.build_stiffness_matrix()
  *         return self._stiffness_matrix             # <<<<<<<<<<<<<<
@@ -2787,13 +2787,13 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_16sti
  *     @property
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_stiffness_matrix); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 67, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_stiffness_matrix); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 71, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "fempy/fem/problems.pyx":59
+  /* "fempy/fem/_problems.pyx":63
  * 
  *     @property
  *     def stiffness_matrix(self):             # <<<<<<<<<<<<<<
@@ -2806,7 +2806,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_16sti
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_5);
   __Pyx_XDECREF(__pyx_t_6);
-  __Pyx_AddTraceback("fempy.fem.problems.ProblemStructuralDynamic.stiffness_matrix.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("fempy.fem._problems.ProblemStructuralDynamic.stiffness_matrix", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -2814,61 +2814,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_16sti
   return __pyx_r;
 }
 
-/* "fempy/fem/problems.pyx":90
- * 
- *     @stiffness_matrix.setter
- *     def stiffness_matrix(self, value):             # <<<<<<<<<<<<<<
- *         self._stiffness_matrix = value
- * 
- */
-
-/* Python wrapper */
-static int __pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_16stiffness_matrix_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
-static int __pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_16stiffness_matrix_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
-  int __pyx_r;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_16stiffness_matrix_2__set__(((struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *)__pyx_v_self), ((PyObject *)__pyx_v_value));
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static int __pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_16stiffness_matrix_2__set__(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *__pyx_v_self, PyObject *__pyx_v_value) {
-  int __pyx_r;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("__set__", 0);
-
-  /* "fempy/fem/problems.pyx":91
- *     @stiffness_matrix.setter
- *     def stiffness_matrix(self, value):
- *         self._stiffness_matrix = value             # <<<<<<<<<<<<<<
- * 
- *     @mass_matrix.setter
- */
-  if (__Pyx_PyObject_SetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_stiffness_matrix, __pyx_v_value) < 0) __PYX_ERR(0, 91, __pyx_L1_error)
-
-  /* "fempy/fem/problems.pyx":90
- * 
- *     @stiffness_matrix.setter
- *     def stiffness_matrix(self, value):             # <<<<<<<<<<<<<<
- *         self._stiffness_matrix = value
- * 
- */
-
-  /* function exit code */
-  __pyx_r = 0;
-  goto __pyx_L0;
-  __pyx_L1_error:;
-  __Pyx_AddTraceback("fempy.fem.problems.ProblemStructuralDynamic.stiffness_matrix.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = -1;
-  __pyx_L0:;
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "fempy/fem/problems.pyx":70
+/* "fempy/fem/_problems.pyx":74
  * 
  *     @property
  *     def mass_matrix(self):             # <<<<<<<<<<<<<<
@@ -2877,19 +2823,20 @@ static int __pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_16stiffness
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_11mass_matrix_1__get__(PyObject *__pyx_v_self); /*proto*/
-static PyObject *__pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_11mass_matrix_1__get__(PyObject *__pyx_v_self) {
+static PyObject *__pyx_pw_5fempy_3fem_9_problems_24ProblemStructuralDynamic_5mass_matrix(PyObject *__pyx_self, PyObject *__pyx_v_self); /*proto*/
+static PyMethodDef __pyx_mdef_5fempy_3fem_9_problems_24ProblemStructuralDynamic_5mass_matrix = {"mass_matrix", (PyCFunction)__pyx_pw_5fempy_3fem_9_problems_24ProblemStructuralDynamic_5mass_matrix, METH_O, 0};
+static PyObject *__pyx_pw_5fempy_3fem_9_problems_24ProblemStructuralDynamic_5mass_matrix(PyObject *__pyx_self, PyObject *__pyx_v_self) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_11mass_matrix___get__(((struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *)__pyx_v_self));
+  __Pyx_RefNannySetupContext("mass_matrix (wrapper)", 0);
+  __pyx_r = __pyx_pf_5fempy_3fem_9_problems_24ProblemStructuralDynamic_4mass_matrix(__pyx_self, ((PyObject *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_11mass_matrix___get__(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *__pyx_v_self) {
+static PyObject *__pyx_pf_5fempy_3fem_9_problems_24ProblemStructuralDynamic_4mass_matrix(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   int __pyx_t_1;
@@ -2898,16 +2845,16 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_11mas
   int __pyx_t_4;
   PyObject *__pyx_t_5 = NULL;
   PyObject *__pyx_t_6 = NULL;
-  __Pyx_RefNannySetupContext("__get__", 0);
+  __Pyx_RefNannySetupContext("mass_matrix", 0);
 
-  /* "fempy/fem/problems.pyx":71
+  /* "fempy/fem/_problems.pyx":75
  *     @property
  *     def mass_matrix(self):
  *         if (self._mass_matrix is not None) and not self.change_mass:             # <<<<<<<<<<<<<<
  *             pass
  *         elif (self._mass_matrix is not None) and self.change_mass:
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_mass_matrix); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 71, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_mass_matrix); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 75, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = (__pyx_t_2 != Py_None);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -2917,9 +2864,9 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_11mas
     __pyx_t_1 = __pyx_t_4;
     goto __pyx_L4_bool_binop_done;
   }
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_change_mass); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 71, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_change_mass); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 75, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 71, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 75, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_3 = ((!__pyx_t_4) != 0);
   __pyx_t_1 = __pyx_t_3;
@@ -2928,14 +2875,14 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_11mas
     goto __pyx_L3;
   }
 
-  /* "fempy/fem/problems.pyx":73
+  /* "fempy/fem/_problems.pyx":77
  *         if (self._mass_matrix is not None) and not self.change_mass:
  *             pass
  *         elif (self._mass_matrix is not None) and self.change_mass:             # <<<<<<<<<<<<<<
  *             self.rebuild_mass_matrix()
  *         else:
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_mass_matrix); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 73, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_mass_matrix); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 77, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = (__pyx_t_2 != Py_None);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -2945,22 +2892,22 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_11mas
     __pyx_t_1 = __pyx_t_4;
     goto __pyx_L6_bool_binop_done;
   }
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_change_mass); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 73, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_change_mass); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 77, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 73, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 77, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_1 = __pyx_t_4;
   __pyx_L6_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "fempy/fem/problems.pyx":74
+    /* "fempy/fem/_problems.pyx":78
  *             pass
  *         elif (self._mass_matrix is not None) and self.change_mass:
  *             self.rebuild_mass_matrix()             # <<<<<<<<<<<<<<
  *         else:
  *             self.build_mass_matrix()
  */
-    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_rebuild_mass_matrix); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 74, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_rebuild_mass_matrix); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 78, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __pyx_t_6 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_5))) {
@@ -2974,12 +2921,12 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_11mas
     }
     __pyx_t_2 = (__pyx_t_6) ? __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_t_6) : __Pyx_PyObject_CallNoArg(__pyx_t_5);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 74, __pyx_L1_error)
+    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 78, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "fempy/fem/problems.pyx":73
+    /* "fempy/fem/_problems.pyx":77
  *         if (self._mass_matrix is not None) and not self.change_mass:
  *             pass
  *         elif (self._mass_matrix is not None) and self.change_mass:             # <<<<<<<<<<<<<<
@@ -2989,7 +2936,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_11mas
     goto __pyx_L3;
   }
 
-  /* "fempy/fem/problems.pyx":76
+  /* "fempy/fem/_problems.pyx":80
  *             self.rebuild_mass_matrix()
  *         else:
  *             self.build_mass_matrix()             # <<<<<<<<<<<<<<
@@ -2997,7 +2944,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_11mas
  * 
  */
   /*else*/ {
-    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_build_mass_matrix); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 76, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_build_mass_matrix); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 80, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __pyx_t_6 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_5))) {
@@ -3011,14 +2958,14 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_11mas
     }
     __pyx_t_2 = (__pyx_t_6) ? __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_t_6) : __Pyx_PyObject_CallNoArg(__pyx_t_5);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 76, __pyx_L1_error)
+    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 80, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   }
   __pyx_L3:;
 
-  /* "fempy/fem/problems.pyx":77
+  /* "fempy/fem/_problems.pyx":81
  *         else:
  *             self.build_mass_matrix()
  *         return self._mass_matrix             # <<<<<<<<<<<<<<
@@ -3026,13 +2973,13 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_11mas
  *     @property
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_mass_matrix); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 77, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_mass_matrix); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 81, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "fempy/fem/problems.pyx":70
+  /* "fempy/fem/_problems.pyx":74
  * 
  *     @property
  *     def mass_matrix(self):             # <<<<<<<<<<<<<<
@@ -3045,7 +2992,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_11mas
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_5);
   __Pyx_XDECREF(__pyx_t_6);
-  __Pyx_AddTraceback("fempy.fem.problems.ProblemStructuralDynamic.mass_matrix.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("fempy.fem._problems.ProblemStructuralDynamic.mass_matrix", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -3053,61 +3000,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_11mas
   return __pyx_r;
 }
 
-/* "fempy/fem/problems.pyx":94
- * 
- *     @mass_matrix.setter
- *     def mass_matrix(self, value):             # <<<<<<<<<<<<<<
- *         self._mass_matrix = value
- * 
- */
-
-/* Python wrapper */
-static int __pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_11mass_matrix_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
-static int __pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_11mass_matrix_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
-  int __pyx_r;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_11mass_matrix_2__set__(((struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *)__pyx_v_self), ((PyObject *)__pyx_v_value));
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static int __pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_11mass_matrix_2__set__(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *__pyx_v_self, PyObject *__pyx_v_value) {
-  int __pyx_r;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("__set__", 0);
-
-  /* "fempy/fem/problems.pyx":95
- *     @mass_matrix.setter
- *     def mass_matrix(self, value):
- *         self._mass_matrix = value             # <<<<<<<<<<<<<<
- * 
- *     @damping_matrix.setter
- */
-  if (__Pyx_PyObject_SetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_mass_matrix, __pyx_v_value) < 0) __PYX_ERR(0, 95, __pyx_L1_error)
-
-  /* "fempy/fem/problems.pyx":94
- * 
- *     @mass_matrix.setter
- *     def mass_matrix(self, value):             # <<<<<<<<<<<<<<
- *         self._mass_matrix = value
- * 
- */
-
-  /* function exit code */
-  __pyx_r = 0;
-  goto __pyx_L0;
-  __pyx_L1_error:;
-  __Pyx_AddTraceback("fempy.fem.problems.ProblemStructuralDynamic.mass_matrix.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = -1;
-  __pyx_L0:;
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "fempy/fem/problems.pyx":80
+/* "fempy/fem/_problems.pyx":84
  * 
  *     @property
  *     def damping_matrix(self):             # <<<<<<<<<<<<<<
@@ -3116,19 +3009,20 @@ static int __pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_11mass_matr
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_14damping_matrix_1__get__(PyObject *__pyx_v_self); /*proto*/
-static PyObject *__pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_14damping_matrix_1__get__(PyObject *__pyx_v_self) {
+static PyObject *__pyx_pw_5fempy_3fem_9_problems_24ProblemStructuralDynamic_7damping_matrix(PyObject *__pyx_self, PyObject *__pyx_v_self); /*proto*/
+static PyMethodDef __pyx_mdef_5fempy_3fem_9_problems_24ProblemStructuralDynamic_7damping_matrix = {"damping_matrix", (PyCFunction)__pyx_pw_5fempy_3fem_9_problems_24ProblemStructuralDynamic_7damping_matrix, METH_O, 0};
+static PyObject *__pyx_pw_5fempy_3fem_9_problems_24ProblemStructuralDynamic_7damping_matrix(PyObject *__pyx_self, PyObject *__pyx_v_self) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_14damping_matrix___get__(((struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *)__pyx_v_self));
+  __Pyx_RefNannySetupContext("damping_matrix (wrapper)", 0);
+  __pyx_r = __pyx_pf_5fempy_3fem_9_problems_24ProblemStructuralDynamic_6damping_matrix(__pyx_self, ((PyObject *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_14damping_matrix___get__(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *__pyx_v_self) {
+static PyObject *__pyx_pf_5fempy_3fem_9_problems_24ProblemStructuralDynamic_6damping_matrix(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   int __pyx_t_1;
@@ -3137,16 +3031,16 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_14dam
   int __pyx_t_4;
   PyObject *__pyx_t_5 = NULL;
   PyObject *__pyx_t_6 = NULL;
-  __Pyx_RefNannySetupContext("__get__", 0);
+  __Pyx_RefNannySetupContext("damping_matrix", 0);
 
-  /* "fempy/fem/problems.pyx":81
+  /* "fempy/fem/_problems.pyx":85
  *     @property
  *     def damping_matrix(self):
  *         if (self._damping_matrix is not None) and not self.change_damping:             # <<<<<<<<<<<<<<
  *             pass
  *         elif (self._damping_matrix is not None) and self.change_damping:
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_damping_matrix); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 81, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_damping_matrix); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 85, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = (__pyx_t_2 != Py_None);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -3156,9 +3050,9 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_14dam
     __pyx_t_1 = __pyx_t_4;
     goto __pyx_L4_bool_binop_done;
   }
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_change_damping); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 81, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_change_damping); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 85, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 81, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 85, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_3 = ((!__pyx_t_4) != 0);
   __pyx_t_1 = __pyx_t_3;
@@ -3167,14 +3061,14 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_14dam
     goto __pyx_L3;
   }
 
-  /* "fempy/fem/problems.pyx":83
+  /* "fempy/fem/_problems.pyx":87
  *         if (self._damping_matrix is not None) and not self.change_damping:
  *             pass
  *         elif (self._damping_matrix is not None) and self.change_damping:             # <<<<<<<<<<<<<<
  *             self.rebuild_damping_matrix()
  *         else:
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_damping_matrix); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 83, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_damping_matrix); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 87, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = (__pyx_t_2 != Py_None);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -3184,22 +3078,22 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_14dam
     __pyx_t_1 = __pyx_t_4;
     goto __pyx_L6_bool_binop_done;
   }
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_change_damping); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 83, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_change_damping); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 87, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 83, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 87, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_1 = __pyx_t_4;
   __pyx_L6_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "fempy/fem/problems.pyx":84
+    /* "fempy/fem/_problems.pyx":88
  *             pass
  *         elif (self._damping_matrix is not None) and self.change_damping:
  *             self.rebuild_damping_matrix()             # <<<<<<<<<<<<<<
  *         else:
  *             self.build_damping_matrix()
  */
-    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_rebuild_damping_matrix); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 84, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_rebuild_damping_matrix); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 88, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __pyx_t_6 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_5))) {
@@ -3213,12 +3107,12 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_14dam
     }
     __pyx_t_2 = (__pyx_t_6) ? __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_t_6) : __Pyx_PyObject_CallNoArg(__pyx_t_5);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 84, __pyx_L1_error)
+    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 88, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "fempy/fem/problems.pyx":83
+    /* "fempy/fem/_problems.pyx":87
  *         if (self._damping_matrix is not None) and not self.change_damping:
  *             pass
  *         elif (self._damping_matrix is not None) and self.change_damping:             # <<<<<<<<<<<<<<
@@ -3228,7 +3122,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_14dam
     goto __pyx_L3;
   }
 
-  /* "fempy/fem/problems.pyx":86
+  /* "fempy/fem/_problems.pyx":90
  *             self.rebuild_damping_matrix()
  *         else:
  *             self.build_damping_matrix()             # <<<<<<<<<<<<<<
@@ -3236,7 +3130,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_14dam
  * 
  */
   /*else*/ {
-    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_build_damping_matrix); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 86, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_build_damping_matrix); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 90, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __pyx_t_6 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_5))) {
@@ -3250,14 +3144,14 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_14dam
     }
     __pyx_t_2 = (__pyx_t_6) ? __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_t_6) : __Pyx_PyObject_CallNoArg(__pyx_t_5);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 86, __pyx_L1_error)
+    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 90, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   }
   __pyx_L3:;
 
-  /* "fempy/fem/problems.pyx":87
+  /* "fempy/fem/_problems.pyx":91
  *         else:
  *             self.build_damping_matrix()
  *         return self._damping_matrix             # <<<<<<<<<<<<<<
@@ -3265,13 +3159,13 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_14dam
  *     @stiffness_matrix.setter
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_damping_matrix); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 87, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_damping_matrix); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 91, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "fempy/fem/problems.pyx":80
+  /* "fempy/fem/_problems.pyx":84
  * 
  *     @property
  *     def damping_matrix(self):             # <<<<<<<<<<<<<<
@@ -3284,7 +3178,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_14dam
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_5);
   __Pyx_XDECREF(__pyx_t_6);
-  __Pyx_AddTraceback("fempy.fem.problems.ProblemStructuralDynamic.damping_matrix.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("fempy.fem._problems.ProblemStructuralDynamic.damping_matrix", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -3292,7 +3186,215 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_14dam
   return __pyx_r;
 }
 
-/* "fempy/fem/problems.pyx":98
+/* "fempy/fem/_problems.pyx":94
+ * 
+ *     @stiffness_matrix.setter
+ *     def stiffness_matrix(self, value):             # <<<<<<<<<<<<<<
+ *         self._stiffness_matrix = value
+ * 
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_5fempy_3fem_9_problems_24ProblemStructuralDynamic_9stiffness_matrix(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_5fempy_3fem_9_problems_24ProblemStructuralDynamic_9stiffness_matrix = {"stiffness_matrix", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_5fempy_3fem_9_problems_24ProblemStructuralDynamic_9stiffness_matrix, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_5fempy_3fem_9_problems_24ProblemStructuralDynamic_9stiffness_matrix(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  PyObject *__pyx_v_self = 0;
+  PyObject *__pyx_v_value = 0;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("stiffness_matrix (wrapper)", 0);
+  {
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_self,&__pyx_n_s_value,0};
+    PyObject* values[2] = {0,0};
+    if (unlikely(__pyx_kwds)) {
+      Py_ssize_t kw_args;
+      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
+      switch (pos_args) {
+        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        CYTHON_FALLTHROUGH;
+        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      kw_args = PyDict_Size(__pyx_kwds);
+      switch (pos_args) {
+        case  0:
+        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_self)) != 0)) kw_args--;
+        else goto __pyx_L5_argtuple_error;
+        CYTHON_FALLTHROUGH;
+        case  1:
+        if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_value)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("stiffness_matrix", 1, 2, 2, 1); __PYX_ERR(0, 94, __pyx_L3_error)
+        }
+      }
+      if (unlikely(kw_args > 0)) {
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "stiffness_matrix") < 0)) __PYX_ERR(0, 94, __pyx_L3_error)
+      }
+    } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+      values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+    }
+    __pyx_v_self = values[0];
+    __pyx_v_value = values[1];
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("stiffness_matrix", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 94, __pyx_L3_error)
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("fempy.fem._problems.ProblemStructuralDynamic.stiffness_matrix", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_5fempy_3fem_9_problems_24ProblemStructuralDynamic_8stiffness_matrix(__pyx_self, __pyx_v_self, __pyx_v_value);
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_5fempy_3fem_9_problems_24ProblemStructuralDynamic_8stiffness_matrix(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("stiffness_matrix", 0);
+
+  /* "fempy/fem/_problems.pyx":95
+ *     @stiffness_matrix.setter
+ *     def stiffness_matrix(self, value):
+ *         self._stiffness_matrix = value             # <<<<<<<<<<<<<<
+ * 
+ *     @mass_matrix.setter
+ */
+  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_stiffness_matrix, __pyx_v_value) < 0) __PYX_ERR(0, 95, __pyx_L1_error)
+
+  /* "fempy/fem/_problems.pyx":94
+ * 
+ *     @stiffness_matrix.setter
+ *     def stiffness_matrix(self, value):             # <<<<<<<<<<<<<<
+ *         self._stiffness_matrix = value
+ * 
+ */
+
+  /* function exit code */
+  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("fempy.fem._problems.ProblemStructuralDynamic.stiffness_matrix", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "fempy/fem/_problems.pyx":98
+ * 
+ *     @mass_matrix.setter
+ *     def mass_matrix(self, value):             # <<<<<<<<<<<<<<
+ *         self._mass_matrix = value
+ * 
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_5fempy_3fem_9_problems_24ProblemStructuralDynamic_11mass_matrix(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_5fempy_3fem_9_problems_24ProblemStructuralDynamic_11mass_matrix = {"mass_matrix", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_5fempy_3fem_9_problems_24ProblemStructuralDynamic_11mass_matrix, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_5fempy_3fem_9_problems_24ProblemStructuralDynamic_11mass_matrix(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  PyObject *__pyx_v_self = 0;
+  PyObject *__pyx_v_value = 0;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("mass_matrix (wrapper)", 0);
+  {
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_self,&__pyx_n_s_value,0};
+    PyObject* values[2] = {0,0};
+    if (unlikely(__pyx_kwds)) {
+      Py_ssize_t kw_args;
+      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
+      switch (pos_args) {
+        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        CYTHON_FALLTHROUGH;
+        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      kw_args = PyDict_Size(__pyx_kwds);
+      switch (pos_args) {
+        case  0:
+        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_self)) != 0)) kw_args--;
+        else goto __pyx_L5_argtuple_error;
+        CYTHON_FALLTHROUGH;
+        case  1:
+        if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_value)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("mass_matrix", 1, 2, 2, 1); __PYX_ERR(0, 98, __pyx_L3_error)
+        }
+      }
+      if (unlikely(kw_args > 0)) {
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "mass_matrix") < 0)) __PYX_ERR(0, 98, __pyx_L3_error)
+      }
+    } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+      values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+    }
+    __pyx_v_self = values[0];
+    __pyx_v_value = values[1];
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("mass_matrix", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 98, __pyx_L3_error)
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("fempy.fem._problems.ProblemStructuralDynamic.mass_matrix", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_5fempy_3fem_9_problems_24ProblemStructuralDynamic_10mass_matrix(__pyx_self, __pyx_v_self, __pyx_v_value);
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_5fempy_3fem_9_problems_24ProblemStructuralDynamic_10mass_matrix(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("mass_matrix", 0);
+
+  /* "fempy/fem/_problems.pyx":99
+ *     @mass_matrix.setter
+ *     def mass_matrix(self, value):
+ *         self._mass_matrix = value             # <<<<<<<<<<<<<<
+ * 
+ *     @damping_matrix.setter
+ */
+  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_mass_matrix, __pyx_v_value) < 0) __PYX_ERR(0, 99, __pyx_L1_error)
+
+  /* "fempy/fem/_problems.pyx":98
+ * 
+ *     @mass_matrix.setter
+ *     def mass_matrix(self, value):             # <<<<<<<<<<<<<<
+ *         self._mass_matrix = value
+ * 
+ */
+
+  /* function exit code */
+  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("fempy.fem._problems.ProblemStructuralDynamic.mass_matrix", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "fempy/fem/_problems.pyx":102
  * 
  *     @damping_matrix.setter
  *     def damping_matrix(self, value):             # <<<<<<<<<<<<<<
@@ -3301,33 +3403,82 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_14dam
  */
 
 /* Python wrapper */
-static int __pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_14damping_matrix_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
-static int __pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_14damping_matrix_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
-  int __pyx_r;
+static PyObject *__pyx_pw_5fempy_3fem_9_problems_24ProblemStructuralDynamic_13damping_matrix(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_5fempy_3fem_9_problems_24ProblemStructuralDynamic_13damping_matrix = {"damping_matrix", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_5fempy_3fem_9_problems_24ProblemStructuralDynamic_13damping_matrix, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_5fempy_3fem_9_problems_24ProblemStructuralDynamic_13damping_matrix(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  PyObject *__pyx_v_self = 0;
+  PyObject *__pyx_v_value = 0;
+  PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_14damping_matrix_2__set__(((struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *)__pyx_v_self), ((PyObject *)__pyx_v_value));
+  __Pyx_RefNannySetupContext("damping_matrix (wrapper)", 0);
+  {
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_self,&__pyx_n_s_value,0};
+    PyObject* values[2] = {0,0};
+    if (unlikely(__pyx_kwds)) {
+      Py_ssize_t kw_args;
+      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
+      switch (pos_args) {
+        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        CYTHON_FALLTHROUGH;
+        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      kw_args = PyDict_Size(__pyx_kwds);
+      switch (pos_args) {
+        case  0:
+        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_self)) != 0)) kw_args--;
+        else goto __pyx_L5_argtuple_error;
+        CYTHON_FALLTHROUGH;
+        case  1:
+        if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_value)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("damping_matrix", 1, 2, 2, 1); __PYX_ERR(0, 102, __pyx_L3_error)
+        }
+      }
+      if (unlikely(kw_args > 0)) {
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "damping_matrix") < 0)) __PYX_ERR(0, 102, __pyx_L3_error)
+      }
+    } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+      values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+    }
+    __pyx_v_self = values[0];
+    __pyx_v_value = values[1];
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("damping_matrix", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 102, __pyx_L3_error)
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("fempy.fem._problems.ProblemStructuralDynamic.damping_matrix", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_5fempy_3fem_9_problems_24ProblemStructuralDynamic_12damping_matrix(__pyx_self, __pyx_v_self, __pyx_v_value);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static int __pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_14damping_matrix_2__set__(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *__pyx_v_self, PyObject *__pyx_v_value) {
-  int __pyx_r;
+static PyObject *__pyx_pf_5fempy_3fem_9_problems_24ProblemStructuralDynamic_12damping_matrix(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+  PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("__set__", 0);
+  __Pyx_RefNannySetupContext("damping_matrix", 0);
 
-  /* "fempy/fem/problems.pyx":99
+  /* "fempy/fem/_problems.pyx":103
  *     @damping_matrix.setter
  *     def damping_matrix(self, value):
  *         self._damping_matrix = value             # <<<<<<<<<<<<<<
  * 
  *     def build_stiffness_matrix(self):
  */
-  if (__Pyx_PyObject_SetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_damping_matrix, __pyx_v_value) < 0) __PYX_ERR(0, 99, __pyx_L1_error)
+  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_damping_matrix, __pyx_v_value) < 0) __PYX_ERR(0, 103, __pyx_L1_error)
 
-  /* "fempy/fem/problems.pyx":98
+  /* "fempy/fem/_problems.pyx":102
  * 
  *     @damping_matrix.setter
  *     def damping_matrix(self, value):             # <<<<<<<<<<<<<<
@@ -3336,17 +3487,18 @@ static int __pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_14damping_m
  */
 
   /* function exit code */
-  __pyx_r = 0;
+  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
   goto __pyx_L0;
   __pyx_L1_error:;
-  __Pyx_AddTraceback("fempy.fem.problems.ProblemStructuralDynamic.damping_matrix.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = -1;
+  __Pyx_AddTraceback("fempy.fem._problems.ProblemStructuralDynamic.damping_matrix", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
   __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* "fempy/fem/problems.pyx":101
+/* "fempy/fem/_problems.pyx":105
  *         self._damping_matrix = value
  * 
  *     def build_stiffness_matrix(self):             # <<<<<<<<<<<<<<
@@ -3355,20 +3507,21 @@ static int __pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_14damping_m
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_3build_stiffness_matrix(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static char __pyx_doc_5fempy_3fem_8problems_24ProblemStructuralDynamic_2build_stiffness_matrix[] = " Builds the global Stiffness Matrix";
-static PyObject *__pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_3build_stiffness_matrix(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
+static PyObject *__pyx_pw_5fempy_3fem_9_problems_24ProblemStructuralDynamic_15build_stiffness_matrix(PyObject *__pyx_self, PyObject *__pyx_v_self); /*proto*/
+static char __pyx_doc_5fempy_3fem_9_problems_24ProblemStructuralDynamic_14build_stiffness_matrix[] = " Builds the global Stiffness Matrix";
+static PyMethodDef __pyx_mdef_5fempy_3fem_9_problems_24ProblemStructuralDynamic_15build_stiffness_matrix = {"build_stiffness_matrix", (PyCFunction)__pyx_pw_5fempy_3fem_9_problems_24ProblemStructuralDynamic_15build_stiffness_matrix, METH_O, __pyx_doc_5fempy_3fem_9_problems_24ProblemStructuralDynamic_14build_stiffness_matrix};
+static PyObject *__pyx_pw_5fempy_3fem_9_problems_24ProblemStructuralDynamic_15build_stiffness_matrix(PyObject *__pyx_self, PyObject *__pyx_v_self) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("build_stiffness_matrix (wrapper)", 0);
-  __pyx_r = __pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_2build_stiffness_matrix(((struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *)__pyx_v_self));
+  __pyx_r = __pyx_pf_5fempy_3fem_9_problems_24ProblemStructuralDynamic_14build_stiffness_matrix(__pyx_self, ((PyObject *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_2build_stiffness_matrix(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *__pyx_v_self) {
+static PyObject *__pyx_pf_5fempy_3fem_9_problems_24ProblemStructuralDynamic_14build_stiffness_matrix(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self) {
   PyObject *__pyx_v_provider = NULL;
   PyObject *__pyx_v_global_provider = NULL;
   PyObject *__pyx_r = NULL;
@@ -3381,14 +3534,14 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_2buil
   PyObject *__pyx_t_6 = NULL;
   __Pyx_RefNannySetupContext("build_stiffness_matrix", 0);
 
-  /* "fempy/fem/problems.pyx":103
+  /* "fempy/fem/_problems.pyx":107
  *     def build_stiffness_matrix(self):
  *         """ Builds the global Stiffness Matrix"""
  *         provider = ElementStiffnessProvider()             # <<<<<<<<<<<<<<
  *         global_provider = self.global_matrix_provider
  *         self.stiffness_matrix = global_provider.get_stiffness_matrix(self.model, provider)
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_ElementStiffnessProvider); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 103, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_ElementStiffnessProvider); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 107, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
@@ -3402,34 +3555,34 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_2buil
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 103, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 107, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_provider = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "fempy/fem/problems.pyx":104
+  /* "fempy/fem/_problems.pyx":108
  *         """ Builds the global Stiffness Matrix"""
  *         provider = ElementStiffnessProvider()
  *         global_provider = self.global_matrix_provider             # <<<<<<<<<<<<<<
  *         self.stiffness_matrix = global_provider.get_stiffness_matrix(self.model, provider)
  * 
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_global_matrix_provider); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 104, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_global_matrix_provider); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 108, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_global_provider = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "fempy/fem/problems.pyx":105
+  /* "fempy/fem/_problems.pyx":109
  *         provider = ElementStiffnessProvider()
  *         global_provider = self.global_matrix_provider
  *         self.stiffness_matrix = global_provider.get_stiffness_matrix(self.model, provider)             # <<<<<<<<<<<<<<
  * 
  *     def build_mass_matrix(self):
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_global_provider, __pyx_n_s_get_stiffness_matrix); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 105, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_global_provider, __pyx_n_s_get_stiffness_matrix); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 109, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_model); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 105, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_model); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 109, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_t_4 = NULL;
   __pyx_t_5 = 0;
@@ -3446,7 +3599,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_2buil
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_2)) {
     PyObject *__pyx_temp[3] = {__pyx_t_4, __pyx_t_3, __pyx_v_provider};
-    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 105, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 109, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -3455,14 +3608,14 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_2buil
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
     PyObject *__pyx_temp[3] = {__pyx_t_4, __pyx_t_3, __pyx_v_provider};
-    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 105, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 109, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   } else
   #endif
   {
-    __pyx_t_6 = PyTuple_New(2+__pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 105, __pyx_L1_error)
+    __pyx_t_6 = PyTuple_New(2+__pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 109, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     if (__pyx_t_4) {
       __Pyx_GIVEREF(__pyx_t_4); PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_4); __pyx_t_4 = NULL;
@@ -3473,15 +3626,15 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_2buil
     __Pyx_GIVEREF(__pyx_v_provider);
     PyTuple_SET_ITEM(__pyx_t_6, 1+__pyx_t_5, __pyx_v_provider);
     __pyx_t_3 = 0;
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 105, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 109, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   }
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (__Pyx_PyObject_SetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_stiffness_matrix_2, __pyx_t_1) < 0) __PYX_ERR(0, 105, __pyx_L1_error)
+  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_stiffness_matrix_2, __pyx_t_1) < 0) __PYX_ERR(0, 109, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "fempy/fem/problems.pyx":101
+  /* "fempy/fem/_problems.pyx":105
  *         self._damping_matrix = value
  * 
  *     def build_stiffness_matrix(self):             # <<<<<<<<<<<<<<
@@ -3498,7 +3651,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_2buil
   __Pyx_XDECREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_4);
   __Pyx_XDECREF(__pyx_t_6);
-  __Pyx_AddTraceback("fempy.fem.problems.ProblemStructuralDynamic.build_stiffness_matrix", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("fempy.fem._problems.ProblemStructuralDynamic.build_stiffness_matrix", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_provider);
@@ -3508,7 +3661,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_2buil
   return __pyx_r;
 }
 
-/* "fempy/fem/problems.pyx":107
+/* "fempy/fem/_problems.pyx":111
  *         self.stiffness_matrix = global_provider.get_stiffness_matrix(self.model, provider)
  * 
  *     def build_mass_matrix(self):             # <<<<<<<<<<<<<<
@@ -3517,20 +3670,21 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_2buil
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_5build_mass_matrix(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static char __pyx_doc_5fempy_3fem_8problems_24ProblemStructuralDynamic_4build_mass_matrix[] = " Builds the global Mass Matrix";
-static PyObject *__pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_5build_mass_matrix(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
+static PyObject *__pyx_pw_5fempy_3fem_9_problems_24ProblemStructuralDynamic_17build_mass_matrix(PyObject *__pyx_self, PyObject *__pyx_v_self); /*proto*/
+static char __pyx_doc_5fempy_3fem_9_problems_24ProblemStructuralDynamic_16build_mass_matrix[] = " Builds the global Mass Matrix";
+static PyMethodDef __pyx_mdef_5fempy_3fem_9_problems_24ProblemStructuralDynamic_17build_mass_matrix = {"build_mass_matrix", (PyCFunction)__pyx_pw_5fempy_3fem_9_problems_24ProblemStructuralDynamic_17build_mass_matrix, METH_O, __pyx_doc_5fempy_3fem_9_problems_24ProblemStructuralDynamic_16build_mass_matrix};
+static PyObject *__pyx_pw_5fempy_3fem_9_problems_24ProblemStructuralDynamic_17build_mass_matrix(PyObject *__pyx_self, PyObject *__pyx_v_self) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("build_mass_matrix (wrapper)", 0);
-  __pyx_r = __pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_4build_mass_matrix(((struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *)__pyx_v_self));
+  __pyx_r = __pyx_pf_5fempy_3fem_9_problems_24ProblemStructuralDynamic_16build_mass_matrix(__pyx_self, ((PyObject *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_4build_mass_matrix(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *__pyx_v_self) {
+static PyObject *__pyx_pf_5fempy_3fem_9_problems_24ProblemStructuralDynamic_16build_mass_matrix(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self) {
   PyObject *__pyx_v_provider = NULL;
   PyObject *__pyx_v_global_provider = NULL;
   PyObject *__pyx_r = NULL;
@@ -3543,14 +3697,14 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_4buil
   PyObject *__pyx_t_6 = NULL;
   __Pyx_RefNannySetupContext("build_mass_matrix", 0);
 
-  /* "fempy/fem/problems.pyx":109
+  /* "fempy/fem/_problems.pyx":113
  *     def build_mass_matrix(self):
  *         """ Builds the global Mass Matrix"""
  *         provider = ElementMassProvider()             # <<<<<<<<<<<<<<
  *         global_provider = self.global_matrix_provider
  *         self.mass_matrix = global_provider.get_mass_matrix(self.model, provider)
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_ElementMassProvider); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 109, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_ElementMassProvider); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 113, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
@@ -3564,34 +3718,34 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_4buil
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 109, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 113, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_provider = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "fempy/fem/problems.pyx":110
+  /* "fempy/fem/_problems.pyx":114
  *         """ Builds the global Mass Matrix"""
  *         provider = ElementMassProvider()
  *         global_provider = self.global_matrix_provider             # <<<<<<<<<<<<<<
  *         self.mass_matrix = global_provider.get_mass_matrix(self.model, provider)
  * 
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_global_matrix_provider); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 110, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_global_matrix_provider); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 114, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_global_provider = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "fempy/fem/problems.pyx":111
+  /* "fempy/fem/_problems.pyx":115
  *         provider = ElementMassProvider()
  *         global_provider = self.global_matrix_provider
  *         self.mass_matrix = global_provider.get_mass_matrix(self.model, provider)             # <<<<<<<<<<<<<<
  * 
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_global_provider, __pyx_n_s_get_mass_matrix); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 111, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_global_provider, __pyx_n_s_get_mass_matrix); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 115, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_model); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 111, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_model); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 115, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_t_4 = NULL;
   __pyx_t_5 = 0;
@@ -3608,7 +3762,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_4buil
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_2)) {
     PyObject *__pyx_temp[3] = {__pyx_t_4, __pyx_t_3, __pyx_v_provider};
-    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 111, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 115, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -3617,14 +3771,14 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_4buil
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
     PyObject *__pyx_temp[3] = {__pyx_t_4, __pyx_t_3, __pyx_v_provider};
-    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 111, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 115, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   } else
   #endif
   {
-    __pyx_t_6 = PyTuple_New(2+__pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 111, __pyx_L1_error)
+    __pyx_t_6 = PyTuple_New(2+__pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 115, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     if (__pyx_t_4) {
       __Pyx_GIVEREF(__pyx_t_4); PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_4); __pyx_t_4 = NULL;
@@ -3635,15 +3789,15 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_4buil
     __Pyx_GIVEREF(__pyx_v_provider);
     PyTuple_SET_ITEM(__pyx_t_6, 1+__pyx_t_5, __pyx_v_provider);
     __pyx_t_3 = 0;
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 111, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 115, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   }
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (__Pyx_PyObject_SetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_mass_matrix_2, __pyx_t_1) < 0) __PYX_ERR(0, 111, __pyx_L1_error)
+  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_mass_matrix_2, __pyx_t_1) < 0) __PYX_ERR(0, 115, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "fempy/fem/problems.pyx":107
+  /* "fempy/fem/_problems.pyx":111
  *         self.stiffness_matrix = global_provider.get_stiffness_matrix(self.model, provider)
  * 
  *     def build_mass_matrix(self):             # <<<<<<<<<<<<<<
@@ -3660,7 +3814,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_4buil
   __Pyx_XDECREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_4);
   __Pyx_XDECREF(__pyx_t_6);
-  __Pyx_AddTraceback("fempy.fem.problems.ProblemStructuralDynamic.build_mass_matrix", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("fempy.fem._problems.ProblemStructuralDynamic.build_mass_matrix", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_provider);
@@ -3670,7 +3824,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_4buil
   return __pyx_r;
 }
 
-/* "fempy/fem/problems.pyx":114
+/* "fempy/fem/_problems.pyx":118
  * 
  * 
  *     def build_damping_matrix(self):             # <<<<<<<<<<<<<<
@@ -3679,20 +3833,21 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_4buil
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_7build_damping_matrix(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static char __pyx_doc_5fempy_3fem_8problems_24ProblemStructuralDynamic_6build_damping_matrix[] = " Builds the global Mass Matrix";
-static PyObject *__pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_7build_damping_matrix(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
+static PyObject *__pyx_pw_5fempy_3fem_9_problems_24ProblemStructuralDynamic_19build_damping_matrix(PyObject *__pyx_self, PyObject *__pyx_v_self); /*proto*/
+static char __pyx_doc_5fempy_3fem_9_problems_24ProblemStructuralDynamic_18build_damping_matrix[] = " Builds the global Mass Matrix";
+static PyMethodDef __pyx_mdef_5fempy_3fem_9_problems_24ProblemStructuralDynamic_19build_damping_matrix = {"build_damping_matrix", (PyCFunction)__pyx_pw_5fempy_3fem_9_problems_24ProblemStructuralDynamic_19build_damping_matrix, METH_O, __pyx_doc_5fempy_3fem_9_problems_24ProblemStructuralDynamic_18build_damping_matrix};
+static PyObject *__pyx_pw_5fempy_3fem_9_problems_24ProblemStructuralDynamic_19build_damping_matrix(PyObject *__pyx_self, PyObject *__pyx_v_self) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("build_damping_matrix (wrapper)", 0);
-  __pyx_r = __pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_6build_damping_matrix(((struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *)__pyx_v_self));
+  __pyx_r = __pyx_pf_5fempy_3fem_9_problems_24ProblemStructuralDynamic_18build_damping_matrix(__pyx_self, ((PyObject *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_6build_damping_matrix(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *__pyx_v_self) {
+static PyObject *__pyx_pf_5fempy_3fem_9_problems_24ProblemStructuralDynamic_18build_damping_matrix(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self) {
   PyObject *__pyx_v_global_provider = NULL;
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
@@ -3706,48 +3861,48 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_6buil
   PyObject *__pyx_t_8 = NULL;
   __Pyx_RefNannySetupContext("build_damping_matrix", 0);
 
-  /* "fempy/fem/problems.pyx":116
+  /* "fempy/fem/_problems.pyx":120
  *     def build_damping_matrix(self):
  *         """ Builds the global Mass Matrix"""
  *         global_provider = self.global_matrix_provider             # <<<<<<<<<<<<<<
  *         self.damping_matrix = global_provider.get_damping_matrix(self._stiffness_matrix,
  *                                                                self._mass_matrix,
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_global_matrix_provider); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 116, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_global_matrix_provider); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 120, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_global_provider = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "fempy/fem/problems.pyx":117
+  /* "fempy/fem/_problems.pyx":121
  *         """ Builds the global Mass Matrix"""
  *         global_provider = self.global_matrix_provider
  *         self.damping_matrix = global_provider.get_damping_matrix(self._stiffness_matrix,             # <<<<<<<<<<<<<<
  *                                                                self._mass_matrix,
  *                                                                self.damping_provider)
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_global_provider, __pyx_n_s_get_damping_matrix); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 117, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_global_provider, __pyx_n_s_get_damping_matrix); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 121, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_stiffness_matrix); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 117, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_stiffness_matrix); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 121, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
 
-  /* "fempy/fem/problems.pyx":118
+  /* "fempy/fem/_problems.pyx":122
  *         global_provider = self.global_matrix_provider
  *         self.damping_matrix = global_provider.get_damping_matrix(self._stiffness_matrix,
  *                                                                self._mass_matrix,             # <<<<<<<<<<<<<<
  *                                                                self.damping_provider)
  * 
  */
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_mass_matrix); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 118, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_mass_matrix); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 122, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
 
-  /* "fempy/fem/problems.pyx":119
+  /* "fempy/fem/_problems.pyx":123
  *         self.damping_matrix = global_provider.get_damping_matrix(self._stiffness_matrix,
  *                                                                self._mass_matrix,
  *                                                                self.damping_provider)             # <<<<<<<<<<<<<<
  * 
  * 
  */
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_damping_provider); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 119, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_damping_provider); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 123, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __pyx_t_6 = NULL;
   __pyx_t_7 = 0;
@@ -3764,7 +3919,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_6buil
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_2)) {
     PyObject *__pyx_temp[4] = {__pyx_t_6, __pyx_t_3, __pyx_t_4, __pyx_t_5};
-    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_7, 3+__pyx_t_7); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 117, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_7, 3+__pyx_t_7); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 121, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -3775,7 +3930,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_6buil
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
     PyObject *__pyx_temp[4] = {__pyx_t_6, __pyx_t_3, __pyx_t_4, __pyx_t_5};
-    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_7, 3+__pyx_t_7); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 117, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_7, 3+__pyx_t_7); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 121, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -3784,7 +3939,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_6buil
   } else
   #endif
   {
-    __pyx_t_8 = PyTuple_New(3+__pyx_t_7); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 117, __pyx_L1_error)
+    __pyx_t_8 = PyTuple_New(3+__pyx_t_7); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 121, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
     if (__pyx_t_6) {
       __Pyx_GIVEREF(__pyx_t_6); PyTuple_SET_ITEM(__pyx_t_8, 0, __pyx_t_6); __pyx_t_6 = NULL;
@@ -3798,23 +3953,23 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_6buil
     __pyx_t_3 = 0;
     __pyx_t_4 = 0;
     __pyx_t_5 = 0;
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_8, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 117, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_8, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 121, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
   }
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "fempy/fem/problems.pyx":117
+  /* "fempy/fem/_problems.pyx":121
  *         """ Builds the global Mass Matrix"""
  *         global_provider = self.global_matrix_provider
  *         self.damping_matrix = global_provider.get_damping_matrix(self._stiffness_matrix,             # <<<<<<<<<<<<<<
  *                                                                self._mass_matrix,
  *                                                                self.damping_provider)
  */
-  if (__Pyx_PyObject_SetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_damping_matrix_2, __pyx_t_1) < 0) __PYX_ERR(0, 117, __pyx_L1_error)
+  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_damping_matrix_2, __pyx_t_1) < 0) __PYX_ERR(0, 121, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "fempy/fem/problems.pyx":114
+  /* "fempy/fem/_problems.pyx":118
  * 
  * 
  *     def build_damping_matrix(self):             # <<<<<<<<<<<<<<
@@ -3833,7 +3988,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_6buil
   __Pyx_XDECREF(__pyx_t_5);
   __Pyx_XDECREF(__pyx_t_6);
   __Pyx_XDECREF(__pyx_t_8);
-  __Pyx_AddTraceback("fempy.fem.problems.ProblemStructuralDynamic.build_damping_matrix", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("fempy.fem._problems.ProblemStructuralDynamic.build_damping_matrix", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_global_provider);
@@ -3842,7 +3997,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_6buil
   return __pyx_r;
 }
 
-/* "fempy/fem/problems.pyx":122
+/* "fempy/fem/_problems.pyx":126
  * 
  * 
  *     def rebuild_stiffness_matrix(self):             # <<<<<<<<<<<<<<
@@ -3851,20 +4006,21 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_6buil
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_9rebuild_stiffness_matrix(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static char __pyx_doc_5fempy_3fem_8problems_24ProblemStructuralDynamic_8rebuild_stiffness_matrix[] = " Rebuilds the global Stiffness Matrix";
-static PyObject *__pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_9rebuild_stiffness_matrix(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
+static PyObject *__pyx_pw_5fempy_3fem_9_problems_24ProblemStructuralDynamic_21rebuild_stiffness_matrix(PyObject *__pyx_self, PyObject *__pyx_v_self); /*proto*/
+static char __pyx_doc_5fempy_3fem_9_problems_24ProblemStructuralDynamic_20rebuild_stiffness_matrix[] = " Rebuilds the global Stiffness Matrix";
+static PyMethodDef __pyx_mdef_5fempy_3fem_9_problems_24ProblemStructuralDynamic_21rebuild_stiffness_matrix = {"rebuild_stiffness_matrix", (PyCFunction)__pyx_pw_5fempy_3fem_9_problems_24ProblemStructuralDynamic_21rebuild_stiffness_matrix, METH_O, __pyx_doc_5fempy_3fem_9_problems_24ProblemStructuralDynamic_20rebuild_stiffness_matrix};
+static PyObject *__pyx_pw_5fempy_3fem_9_problems_24ProblemStructuralDynamic_21rebuild_stiffness_matrix(PyObject *__pyx_self, PyObject *__pyx_v_self) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("rebuild_stiffness_matrix (wrapper)", 0);
-  __pyx_r = __pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_8rebuild_stiffness_matrix(((struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *)__pyx_v_self));
+  __pyx_r = __pyx_pf_5fempy_3fem_9_problems_24ProblemStructuralDynamic_20rebuild_stiffness_matrix(__pyx_self, ((PyObject *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_8rebuild_stiffness_matrix(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *__pyx_v_self) {
+static PyObject *__pyx_pf_5fempy_3fem_9_problems_24ProblemStructuralDynamic_20rebuild_stiffness_matrix(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self) {
   PyObject *__pyx_v_global_provider = NULL;
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
@@ -3877,30 +4033,30 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_8rebu
   PyObject *__pyx_t_7 = NULL;
   __Pyx_RefNannySetupContext("rebuild_stiffness_matrix", 0);
 
-  /* "fempy/fem/problems.pyx":124
+  /* "fempy/fem/_problems.pyx":128
  *     def rebuild_stiffness_matrix(self):
  *         """ Rebuilds the global Stiffness Matrix"""
  *         global_provider = self.global_matrix_provider             # <<<<<<<<<<<<<<
  *         self.stiffness_matrix = global_provider.get_stiffness_matrix(self.model, self.stiffness_provider)
  * 
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_global_matrix_provider); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 124, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_global_matrix_provider); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 128, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_global_provider = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "fempy/fem/problems.pyx":125
+  /* "fempy/fem/_problems.pyx":129
  *         """ Rebuilds the global Stiffness Matrix"""
  *         global_provider = self.global_matrix_provider
  *         self.stiffness_matrix = global_provider.get_stiffness_matrix(self.model, self.stiffness_provider)             # <<<<<<<<<<<<<<
  * 
  *     def rebuild_mass_matrix(self):
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_global_provider, __pyx_n_s_get_stiffness_matrix); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 125, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_global_provider, __pyx_n_s_get_stiffness_matrix); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 129, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_model); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 125, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_model); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 129, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_stiffness_provider); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 125, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_stiffness_provider); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 129, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __pyx_t_5 = NULL;
   __pyx_t_6 = 0;
@@ -3917,7 +4073,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_8rebu
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_2)) {
     PyObject *__pyx_temp[3] = {__pyx_t_5, __pyx_t_3, __pyx_t_4};
-    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_6, 2+__pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 125, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_6, 2+__pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 129, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -3927,7 +4083,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_8rebu
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
     PyObject *__pyx_temp[3] = {__pyx_t_5, __pyx_t_3, __pyx_t_4};
-    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_6, 2+__pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 125, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_6, 2+__pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 129, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -3935,7 +4091,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_8rebu
   } else
   #endif
   {
-    __pyx_t_7 = PyTuple_New(2+__pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 125, __pyx_L1_error)
+    __pyx_t_7 = PyTuple_New(2+__pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 129, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
     if (__pyx_t_5) {
       __Pyx_GIVEREF(__pyx_t_5); PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_t_5); __pyx_t_5 = NULL;
@@ -3946,15 +4102,15 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_8rebu
     PyTuple_SET_ITEM(__pyx_t_7, 1+__pyx_t_6, __pyx_t_4);
     __pyx_t_3 = 0;
     __pyx_t_4 = 0;
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_7, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 125, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_7, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 129, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
   }
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (__Pyx_PyObject_SetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_stiffness_matrix_2, __pyx_t_1) < 0) __PYX_ERR(0, 125, __pyx_L1_error)
+  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_stiffness_matrix_2, __pyx_t_1) < 0) __PYX_ERR(0, 129, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "fempy/fem/problems.pyx":122
+  /* "fempy/fem/_problems.pyx":126
  * 
  * 
  *     def rebuild_stiffness_matrix(self):             # <<<<<<<<<<<<<<
@@ -3972,7 +4128,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_8rebu
   __Pyx_XDECREF(__pyx_t_4);
   __Pyx_XDECREF(__pyx_t_5);
   __Pyx_XDECREF(__pyx_t_7);
-  __Pyx_AddTraceback("fempy.fem.problems.ProblemStructuralDynamic.rebuild_stiffness_matrix", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("fempy.fem._problems.ProblemStructuralDynamic.rebuild_stiffness_matrix", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_global_provider);
@@ -3981,7 +4137,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_8rebu
   return __pyx_r;
 }
 
-/* "fempy/fem/problems.pyx":127
+/* "fempy/fem/_problems.pyx":131
  *         self.stiffness_matrix = global_provider.get_stiffness_matrix(self.model, self.stiffness_provider)
  * 
  *     def rebuild_mass_matrix(self):             # <<<<<<<<<<<<<<
@@ -3990,20 +4146,21 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_8rebu
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_11rebuild_mass_matrix(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static char __pyx_doc_5fempy_3fem_8problems_24ProblemStructuralDynamic_10rebuild_mass_matrix[] = " Rebuilds the global Mass Matrix";
-static PyObject *__pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_11rebuild_mass_matrix(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
+static PyObject *__pyx_pw_5fempy_3fem_9_problems_24ProblemStructuralDynamic_23rebuild_mass_matrix(PyObject *__pyx_self, PyObject *__pyx_v_self); /*proto*/
+static char __pyx_doc_5fempy_3fem_9_problems_24ProblemStructuralDynamic_22rebuild_mass_matrix[] = " Rebuilds the global Mass Matrix";
+static PyMethodDef __pyx_mdef_5fempy_3fem_9_problems_24ProblemStructuralDynamic_23rebuild_mass_matrix = {"rebuild_mass_matrix", (PyCFunction)__pyx_pw_5fempy_3fem_9_problems_24ProblemStructuralDynamic_23rebuild_mass_matrix, METH_O, __pyx_doc_5fempy_3fem_9_problems_24ProblemStructuralDynamic_22rebuild_mass_matrix};
+static PyObject *__pyx_pw_5fempy_3fem_9_problems_24ProblemStructuralDynamic_23rebuild_mass_matrix(PyObject *__pyx_self, PyObject *__pyx_v_self) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("rebuild_mass_matrix (wrapper)", 0);
-  __pyx_r = __pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_10rebuild_mass_matrix(((struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *)__pyx_v_self));
+  __pyx_r = __pyx_pf_5fempy_3fem_9_problems_24ProblemStructuralDynamic_22rebuild_mass_matrix(__pyx_self, ((PyObject *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_10rebuild_mass_matrix(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *__pyx_v_self) {
+static PyObject *__pyx_pf_5fempy_3fem_9_problems_24ProblemStructuralDynamic_22rebuild_mass_matrix(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self) {
   PyObject *__pyx_v_global_provider = NULL;
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
@@ -4016,30 +4173,30 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_10reb
   PyObject *__pyx_t_7 = NULL;
   __Pyx_RefNannySetupContext("rebuild_mass_matrix", 0);
 
-  /* "fempy/fem/problems.pyx":129
+  /* "fempy/fem/_problems.pyx":133
  *     def rebuild_mass_matrix(self):
  *         """ Rebuilds the global Mass Matrix"""
  *         global_provider = self.global_matrix_provider             # <<<<<<<<<<<<<<
  *         self.mass_matrix = global_provider.get_mass_matrix(self.model, self.mass_provider)
  * 
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_global_matrix_provider); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 129, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_global_matrix_provider); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 133, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_global_provider = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "fempy/fem/problems.pyx":130
+  /* "fempy/fem/_problems.pyx":134
  *         """ Rebuilds the global Mass Matrix"""
  *         global_provider = self.global_matrix_provider
  *         self.mass_matrix = global_provider.get_mass_matrix(self.model, self.mass_provider)             # <<<<<<<<<<<<<<
  * 
  *     def rebuild_damping_matrix(self):
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_global_provider, __pyx_n_s_get_mass_matrix); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 130, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_global_provider, __pyx_n_s_get_mass_matrix); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 134, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_model); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 130, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_model); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 134, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_mass_provider); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 130, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_mass_provider); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 134, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __pyx_t_5 = NULL;
   __pyx_t_6 = 0;
@@ -4056,7 +4213,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_10reb
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_2)) {
     PyObject *__pyx_temp[3] = {__pyx_t_5, __pyx_t_3, __pyx_t_4};
-    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_6, 2+__pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 130, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_6, 2+__pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 134, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -4066,7 +4223,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_10reb
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
     PyObject *__pyx_temp[3] = {__pyx_t_5, __pyx_t_3, __pyx_t_4};
-    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_6, 2+__pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 130, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_6, 2+__pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 134, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -4074,7 +4231,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_10reb
   } else
   #endif
   {
-    __pyx_t_7 = PyTuple_New(2+__pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 130, __pyx_L1_error)
+    __pyx_t_7 = PyTuple_New(2+__pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 134, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
     if (__pyx_t_5) {
       __Pyx_GIVEREF(__pyx_t_5); PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_t_5); __pyx_t_5 = NULL;
@@ -4085,15 +4242,15 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_10reb
     PyTuple_SET_ITEM(__pyx_t_7, 1+__pyx_t_6, __pyx_t_4);
     __pyx_t_3 = 0;
     __pyx_t_4 = 0;
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_7, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 130, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_7, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 134, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
   }
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (__Pyx_PyObject_SetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_mass_matrix_2, __pyx_t_1) < 0) __PYX_ERR(0, 130, __pyx_L1_error)
+  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_mass_matrix_2, __pyx_t_1) < 0) __PYX_ERR(0, 134, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "fempy/fem/problems.pyx":127
+  /* "fempy/fem/_problems.pyx":131
  *         self.stiffness_matrix = global_provider.get_stiffness_matrix(self.model, self.stiffness_provider)
  * 
  *     def rebuild_mass_matrix(self):             # <<<<<<<<<<<<<<
@@ -4111,7 +4268,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_10reb
   __Pyx_XDECREF(__pyx_t_4);
   __Pyx_XDECREF(__pyx_t_5);
   __Pyx_XDECREF(__pyx_t_7);
-  __Pyx_AddTraceback("fempy.fem.problems.ProblemStructuralDynamic.rebuild_mass_matrix", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("fempy.fem._problems.ProblemStructuralDynamic.rebuild_mass_matrix", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_global_provider);
@@ -4120,7 +4277,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_10reb
   return __pyx_r;
 }
 
-/* "fempy/fem/problems.pyx":132
+/* "fempy/fem/_problems.pyx":136
  *         self.mass_matrix = global_provider.get_mass_matrix(self.model, self.mass_provider)
  * 
  *     def rebuild_damping_matrix(self):             # <<<<<<<<<<<<<<
@@ -4129,20 +4286,21 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_10reb
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_13rebuild_damping_matrix(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static char __pyx_doc_5fempy_3fem_8problems_24ProblemStructuralDynamic_12rebuild_damping_matrix[] = " Rebuilds the global Mass Matrix";
-static PyObject *__pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_13rebuild_damping_matrix(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
+static PyObject *__pyx_pw_5fempy_3fem_9_problems_24ProblemStructuralDynamic_25rebuild_damping_matrix(PyObject *__pyx_self, PyObject *__pyx_v_self); /*proto*/
+static char __pyx_doc_5fempy_3fem_9_problems_24ProblemStructuralDynamic_24rebuild_damping_matrix[] = " Rebuilds the global Mass Matrix";
+static PyMethodDef __pyx_mdef_5fempy_3fem_9_problems_24ProblemStructuralDynamic_25rebuild_damping_matrix = {"rebuild_damping_matrix", (PyCFunction)__pyx_pw_5fempy_3fem_9_problems_24ProblemStructuralDynamic_25rebuild_damping_matrix, METH_O, __pyx_doc_5fempy_3fem_9_problems_24ProblemStructuralDynamic_24rebuild_damping_matrix};
+static PyObject *__pyx_pw_5fempy_3fem_9_problems_24ProblemStructuralDynamic_25rebuild_damping_matrix(PyObject *__pyx_self, PyObject *__pyx_v_self) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("rebuild_damping_matrix (wrapper)", 0);
-  __pyx_r = __pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_12rebuild_damping_matrix(((struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *)__pyx_v_self));
+  __pyx_r = __pyx_pf_5fempy_3fem_9_problems_24ProblemStructuralDynamic_24rebuild_damping_matrix(__pyx_self, ((PyObject *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_12rebuild_damping_matrix(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *__pyx_v_self) {
+static PyObject *__pyx_pf_5fempy_3fem_9_problems_24ProblemStructuralDynamic_24rebuild_damping_matrix(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self) {
   PyObject *__pyx_v_global_provider = NULL;
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
@@ -4156,48 +4314,48 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_12reb
   PyObject *__pyx_t_8 = NULL;
   __Pyx_RefNannySetupContext("rebuild_damping_matrix", 0);
 
-  /* "fempy/fem/problems.pyx":134
+  /* "fempy/fem/_problems.pyx":138
  *     def rebuild_damping_matrix(self):
  *         """ Rebuilds the global Mass Matrix"""
  *         global_provider = self.global_matrix_provider             # <<<<<<<<<<<<<<
  *         self.damping_matrix = global_provider.get_damping_matrix(self._stiffness_matrix,
  *                                                                self._mass_matrix,
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_global_matrix_provider); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 134, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_global_matrix_provider); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 138, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_global_provider = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "fempy/fem/problems.pyx":135
+  /* "fempy/fem/_problems.pyx":139
  *         """ Rebuilds the global Mass Matrix"""
  *         global_provider = self.global_matrix_provider
  *         self.damping_matrix = global_provider.get_damping_matrix(self._stiffness_matrix,             # <<<<<<<<<<<<<<
  *                                                                self._mass_matrix,
  *                                                                self.damping_provider)
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_global_provider, __pyx_n_s_get_damping_matrix); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 135, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_global_provider, __pyx_n_s_get_damping_matrix); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 139, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_stiffness_matrix); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 135, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_stiffness_matrix); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 139, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
 
-  /* "fempy/fem/problems.pyx":136
+  /* "fempy/fem/_problems.pyx":140
  *         global_provider = self.global_matrix_provider
  *         self.damping_matrix = global_provider.get_damping_matrix(self._stiffness_matrix,
  *                                                                self._mass_matrix,             # <<<<<<<<<<<<<<
  *                                                                self.damping_provider)
  * 
  */
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_mass_matrix); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 136, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_mass_matrix); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 140, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
 
-  /* "fempy/fem/problems.pyx":137
+  /* "fempy/fem/_problems.pyx":141
  *         self.damping_matrix = global_provider.get_damping_matrix(self._stiffness_matrix,
  *                                                                self._mass_matrix,
  *                                                                self.damping_provider)             # <<<<<<<<<<<<<<
  * 
- *     cpdef get_rhs_from_history_load(self, timestep):
+ *     def get_rhs_from_history_load(self, timestep):
  */
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_damping_provider); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 137, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_damping_provider); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 141, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __pyx_t_6 = NULL;
   __pyx_t_7 = 0;
@@ -4214,7 +4372,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_12reb
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_2)) {
     PyObject *__pyx_temp[4] = {__pyx_t_6, __pyx_t_3, __pyx_t_4, __pyx_t_5};
-    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_7, 3+__pyx_t_7); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 135, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_7, 3+__pyx_t_7); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 139, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -4225,7 +4383,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_12reb
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
     PyObject *__pyx_temp[4] = {__pyx_t_6, __pyx_t_3, __pyx_t_4, __pyx_t_5};
-    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_7, 3+__pyx_t_7); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 135, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_7, 3+__pyx_t_7); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 139, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -4234,7 +4392,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_12reb
   } else
   #endif
   {
-    __pyx_t_8 = PyTuple_New(3+__pyx_t_7); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 135, __pyx_L1_error)
+    __pyx_t_8 = PyTuple_New(3+__pyx_t_7); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 139, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
     if (__pyx_t_6) {
       __Pyx_GIVEREF(__pyx_t_6); PyTuple_SET_ITEM(__pyx_t_8, 0, __pyx_t_6); __pyx_t_6 = NULL;
@@ -4248,23 +4406,23 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_12reb
     __pyx_t_3 = 0;
     __pyx_t_4 = 0;
     __pyx_t_5 = 0;
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_8, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 135, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_8, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 139, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
   }
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "fempy/fem/problems.pyx":135
+  /* "fempy/fem/_problems.pyx":139
  *         """ Rebuilds the global Mass Matrix"""
  *         global_provider = self.global_matrix_provider
  *         self.damping_matrix = global_provider.get_damping_matrix(self._stiffness_matrix,             # <<<<<<<<<<<<<<
  *                                                                self._mass_matrix,
  *                                                                self.damping_provider)
  */
-  if (__Pyx_PyObject_SetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_damping_matrix_2, __pyx_t_1) < 0) __PYX_ERR(0, 135, __pyx_L1_error)
+  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_damping_matrix_2, __pyx_t_1) < 0) __PYX_ERR(0, 139, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "fempy/fem/problems.pyx":132
+  /* "fempy/fem/_problems.pyx":136
  *         self.mass_matrix = global_provider.get_mass_matrix(self.model, self.mass_provider)
  * 
  *     def rebuild_damping_matrix(self):             # <<<<<<<<<<<<<<
@@ -4283,7 +4441,7 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_12reb
   __Pyx_XDECREF(__pyx_t_5);
   __Pyx_XDECREF(__pyx_t_6);
   __Pyx_XDECREF(__pyx_t_8);
-  __Pyx_AddTraceback("fempy.fem.problems.ProblemStructuralDynamic.rebuild_damping_matrix", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("fempy.fem._problems.ProblemStructuralDynamic.rebuild_damping_matrix", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_global_provider);
@@ -4292,16 +4450,77 @@ static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_12reb
   return __pyx_r;
 }
 
-/* "fempy/fem/problems.pyx":139
+/* "fempy/fem/_problems.pyx":143
  *                                                                self.damping_provider)
  * 
- *     cpdef get_rhs_from_history_load(self, timestep):             # <<<<<<<<<<<<<<
+ *     def get_rhs_from_history_load(self, timestep):             # <<<<<<<<<<<<<<
  *         model = self.model
  *         provider = self.global_matrix_provider
  */
 
-static PyObject *__pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_15get_rhs_from_history_load(PyObject *__pyx_v_self, PyObject *__pyx_v_timestep); /*proto*/
-static PyObject *__pyx_f_5fempy_3fem_8problems_24ProblemStructuralDynamic_get_rhs_from_history_load(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *__pyx_v_self, PyObject *__pyx_v_timestep, int __pyx_skip_dispatch) {
+/* Python wrapper */
+static PyObject *__pyx_pw_5fempy_3fem_9_problems_24ProblemStructuralDynamic_27get_rhs_from_history_load(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_5fempy_3fem_9_problems_24ProblemStructuralDynamic_27get_rhs_from_history_load = {"get_rhs_from_history_load", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_5fempy_3fem_9_problems_24ProblemStructuralDynamic_27get_rhs_from_history_load, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_5fempy_3fem_9_problems_24ProblemStructuralDynamic_27get_rhs_from_history_load(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  PyObject *__pyx_v_self = 0;
+  PyObject *__pyx_v_timestep = 0;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("get_rhs_from_history_load (wrapper)", 0);
+  {
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_self,&__pyx_n_s_timestep,0};
+    PyObject* values[2] = {0,0};
+    if (unlikely(__pyx_kwds)) {
+      Py_ssize_t kw_args;
+      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
+      switch (pos_args) {
+        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        CYTHON_FALLTHROUGH;
+        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      kw_args = PyDict_Size(__pyx_kwds);
+      switch (pos_args) {
+        case  0:
+        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_self)) != 0)) kw_args--;
+        else goto __pyx_L5_argtuple_error;
+        CYTHON_FALLTHROUGH;
+        case  1:
+        if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_timestep)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("get_rhs_from_history_load", 1, 2, 2, 1); __PYX_ERR(0, 143, __pyx_L3_error)
+        }
+      }
+      if (unlikely(kw_args > 0)) {
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "get_rhs_from_history_load") < 0)) __PYX_ERR(0, 143, __pyx_L3_error)
+      }
+    } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+      values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+    }
+    __pyx_v_self = values[0];
+    __pyx_v_timestep = values[1];
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("get_rhs_from_history_load", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 143, __pyx_L3_error)
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("fempy.fem._problems.ProblemStructuralDynamic.get_rhs_from_history_load", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_5fempy_3fem_9_problems_24ProblemStructuralDynamic_26get_rhs_from_history_load(__pyx_self, __pyx_v_self, __pyx_v_timestep);
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_5fempy_3fem_9_problems_24ProblemStructuralDynamic_26get_rhs_from_history_load(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_timestep) {
   PyObject *__pyx_v_model = NULL;
   PyObject *__pyx_v_provider = NULL;
   PyObject *__pyx_v_stforces = NULL;
@@ -4317,126 +4536,80 @@ static PyObject *__pyx_f_5fempy_3fem_8problems_24ProblemStructuralDynamic_get_rh
   int __pyx_t_5;
   PyObject *__pyx_t_6 = NULL;
   __Pyx_RefNannySetupContext("get_rhs_from_history_load", 0);
-  /* Check if called by wrapper */
-  if (unlikely(__pyx_skip_dispatch)) ;
-  /* Check if overridden in Python */
-  else if (unlikely((Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0) || (Py_TYPE(((PyObject *)__pyx_v_self))->tp_flags & (Py_TPFLAGS_IS_ABSTRACT | Py_TPFLAGS_HEAPTYPE)))) {
-    #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-    static PY_UINT64_T __pyx_tp_dict_version = __PYX_DICT_VERSION_INIT, __pyx_obj_dict_version = __PYX_DICT_VERSION_INIT;
-    if (unlikely(!__Pyx_object_dict_version_matches(((PyObject *)__pyx_v_self), __pyx_tp_dict_version, __pyx_obj_dict_version))) {
-      PY_UINT64_T __pyx_type_dict_guard = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
-      #endif
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_get_rhs_from_history_load); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 139, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_1);
-      if (!PyCFunction_Check(__pyx_t_1) || (PyCFunction_GET_FUNCTION(__pyx_t_1) != (PyCFunction)(void*)__pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_15get_rhs_from_history_load)) {
-        __Pyx_XDECREF(__pyx_r);
-        __Pyx_INCREF(__pyx_t_1);
-        __pyx_t_3 = __pyx_t_1; __pyx_t_4 = NULL;
-        if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
-          __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_3);
-          if (likely(__pyx_t_4)) {
-            PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
-            __Pyx_INCREF(__pyx_t_4);
-            __Pyx_INCREF(function);
-            __Pyx_DECREF_SET(__pyx_t_3, function);
-          }
-        }
-        __pyx_t_2 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_4, __pyx_v_timestep) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_v_timestep);
-        __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 139, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_2);
-        __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-        __pyx_r = __pyx_t_2;
-        __pyx_t_2 = 0;
-        __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-        goto __pyx_L0;
-      }
-      #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-      __pyx_tp_dict_version = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
-      __pyx_obj_dict_version = __Pyx_get_object_dict_version(((PyObject *)__pyx_v_self));
-      if (unlikely(__pyx_type_dict_guard != __pyx_tp_dict_version)) {
-        __pyx_tp_dict_version = __pyx_obj_dict_version = __PYX_DICT_VERSION_INIT;
-      }
-      #endif
-      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-    }
-    #endif
-  }
 
-  /* "fempy/fem/problems.pyx":140
+  /* "fempy/fem/_problems.pyx":144
  * 
- *     cpdef get_rhs_from_history_load(self, timestep):
+ *     def get_rhs_from_history_load(self, timestep):
  *         model = self.model             # <<<<<<<<<<<<<<
  *         provider = self.global_matrix_provider
  *         stforces = model.forces
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_model); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 140, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_model); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 144, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_model = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "fempy/fem/problems.pyx":141
- *     cpdef get_rhs_from_history_load(self, timestep):
+  /* "fempy/fem/_problems.pyx":145
+ *     def get_rhs_from_history_load(self, timestep):
  *         model = self.model
  *         provider = self.global_matrix_provider             # <<<<<<<<<<<<<<
  *         stforces = model.forces
  *         dyforces = model.dynamic_forces
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_global_matrix_provider); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 141, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_global_matrix_provider); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 145, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_provider = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "fempy/fem/problems.pyx":142
+  /* "fempy/fem/_problems.pyx":146
  *         model = self.model
  *         provider = self.global_matrix_provider
  *         stforces = model.forces             # <<<<<<<<<<<<<<
  *         dyforces = model.dynamic_forces
  *         inloads = model.inertia_loads
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_model, __pyx_n_s_forces); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 142, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_model, __pyx_n_s_forces); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 146, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_stforces = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "fempy/fem/problems.pyx":143
+  /* "fempy/fem/_problems.pyx":147
  *         provider = self.global_matrix_provider
  *         stforces = model.forces
  *         dyforces = model.dynamic_forces             # <<<<<<<<<<<<<<
  *         inloads = model.inertia_loads
  *         in_dir_vectors = model.inertia_forces_direction_vectors
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_model, __pyx_n_s_dynamic_forces); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 143, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_model, __pyx_n_s_dynamic_forces); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 147, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_dyforces = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "fempy/fem/problems.pyx":144
+  /* "fempy/fem/_problems.pyx":148
  *         stforces = model.forces
  *         dyforces = model.dynamic_forces
  *         inloads = model.inertia_loads             # <<<<<<<<<<<<<<
  *         in_dir_vectors = model.inertia_forces_direction_vectors
  *         return provider.get_rhs_from_history_loads(timestep, stforces, dyforces,
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_model, __pyx_n_s_inertia_loads); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 144, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_model, __pyx_n_s_inertia_loads); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 148, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_inloads = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "fempy/fem/problems.pyx":145
+  /* "fempy/fem/_problems.pyx":149
  *         dyforces = model.dynamic_forces
  *         inloads = model.inertia_loads
  *         in_dir_vectors = model.inertia_forces_direction_vectors             # <<<<<<<<<<<<<<
  *         return provider.get_rhs_from_history_loads(timestep, stforces, dyforces,
  *                                                    inloads, in_dir_vectors, self._mass_matrix)
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_model, __pyx_n_s_inertia_forces_direction_vectors); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 145, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_model, __pyx_n_s_inertia_forces_direction_vectors); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 149, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_in_dir_vectors = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "fempy/fem/problems.pyx":146
+  /* "fempy/fem/_problems.pyx":150
  *         inloads = model.inertia_loads
  *         in_dir_vectors = model.inertia_forces_direction_vectors
  *         return provider.get_rhs_from_history_loads(timestep, stforces, dyforces,             # <<<<<<<<<<<<<<
@@ -4444,17 +4617,17 @@ static PyObject *__pyx_f_5fempy_3fem_8problems_24ProblemStructuralDynamic_get_rh
  * 
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_provider, __pyx_n_s_get_rhs_from_history_loads); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 146, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_provider, __pyx_n_s_get_rhs_from_history_loads); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 150, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
 
-  /* "fempy/fem/problems.pyx":147
+  /* "fempy/fem/_problems.pyx":151
  *         in_dir_vectors = model.inertia_forces_direction_vectors
  *         return provider.get_rhs_from_history_loads(timestep, stforces, dyforces,
  *                                                    inloads, in_dir_vectors, self._mass_matrix)             # <<<<<<<<<<<<<<
  * 
- *     cpdef mass_matrix_vector_product(self, vector):
+ *     def mass_matrix_vector_product(self, vector):
  */
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_mass_matrix); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 147, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_mass_matrix); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 151, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_t_4 = NULL;
   __pyx_t_5 = 0;
@@ -4471,7 +4644,7 @@ static PyObject *__pyx_f_5fempy_3fem_8problems_24ProblemStructuralDynamic_get_rh
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_2)) {
     PyObject *__pyx_temp[7] = {__pyx_t_4, __pyx_v_timestep, __pyx_v_stforces, __pyx_v_dyforces, __pyx_v_inloads, __pyx_v_in_dir_vectors, __pyx_t_3};
-    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_5, 6+__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 146, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_5, 6+__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 150, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -4480,14 +4653,14 @@ static PyObject *__pyx_f_5fempy_3fem_8problems_24ProblemStructuralDynamic_get_rh
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
     PyObject *__pyx_temp[7] = {__pyx_t_4, __pyx_v_timestep, __pyx_v_stforces, __pyx_v_dyforces, __pyx_v_inloads, __pyx_v_in_dir_vectors, __pyx_t_3};
-    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_5, 6+__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 146, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_5, 6+__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 150, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   } else
   #endif
   {
-    __pyx_t_6 = PyTuple_New(6+__pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 146, __pyx_L1_error)
+    __pyx_t_6 = PyTuple_New(6+__pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 150, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     if (__pyx_t_4) {
       __Pyx_GIVEREF(__pyx_t_4); PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_4); __pyx_t_4 = NULL;
@@ -4510,7 +4683,7 @@ static PyObject *__pyx_f_5fempy_3fem_8problems_24ProblemStructuralDynamic_get_rh
     __Pyx_GIVEREF(__pyx_t_3);
     PyTuple_SET_ITEM(__pyx_t_6, 5+__pyx_t_5, __pyx_t_3);
     __pyx_t_3 = 0;
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 146, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 150, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   }
@@ -4519,10 +4692,10 @@ static PyObject *__pyx_f_5fempy_3fem_8problems_24ProblemStructuralDynamic_get_rh
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "fempy/fem/problems.pyx":139
+  /* "fempy/fem/_problems.pyx":143
  *                                                                self.damping_provider)
  * 
- *     cpdef get_rhs_from_history_load(self, timestep):             # <<<<<<<<<<<<<<
+ *     def get_rhs_from_history_load(self, timestep):             # <<<<<<<<<<<<<<
  *         model = self.model
  *         provider = self.global_matrix_provider
  */
@@ -4534,8 +4707,8 @@ static PyObject *__pyx_f_5fempy_3fem_8problems_24ProblemStructuralDynamic_get_rh
   __Pyx_XDECREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_4);
   __Pyx_XDECREF(__pyx_t_6);
-  __Pyx_AddTraceback("fempy.fem.problems.ProblemStructuralDynamic.get_rhs_from_history_load", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = 0;
+  __Pyx_AddTraceback("fempy.fem._problems.ProblemStructuralDynamic.get_rhs_from_history_load", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_model);
   __Pyx_XDECREF(__pyx_v_provider);
@@ -4548,764 +4721,30 @@ static PyObject *__pyx_f_5fempy_3fem_8problems_24ProblemStructuralDynamic_get_rh
   return __pyx_r;
 }
 
-/* Python wrapper */
-static PyObject *__pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_15get_rhs_from_history_load(PyObject *__pyx_v_self, PyObject *__pyx_v_timestep); /*proto*/
-static PyObject *__pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_15get_rhs_from_history_load(PyObject *__pyx_v_self, PyObject *__pyx_v_timestep) {
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("get_rhs_from_history_load (wrapper)", 0);
-  __pyx_r = __pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_14get_rhs_from_history_load(((struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *)__pyx_v_self), ((PyObject *)__pyx_v_timestep));
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_14get_rhs_from_history_load(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *__pyx_v_self, PyObject *__pyx_v_timestep) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  __Pyx_RefNannySetupContext("get_rhs_from_history_load", 0);
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_5fempy_3fem_8problems_24ProblemStructuralDynamic_get_rhs_from_history_load(__pyx_v_self, __pyx_v_timestep, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 139, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_r = __pyx_t_1;
-  __pyx_t_1 = 0;
-  goto __pyx_L0;
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("fempy.fem.problems.ProblemStructuralDynamic.get_rhs_from_history_load", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "fempy/fem/problems.pyx":149
+/* "fempy/fem/_problems.pyx":153
  *                                                    inloads, in_dir_vectors, self._mass_matrix)
  * 
- *     cpdef mass_matrix_vector_product(self, vector):             # <<<<<<<<<<<<<<
+ *     def mass_matrix_vector_product(self, vector):             # <<<<<<<<<<<<<<
  *         return self._mass_matrix @ vector
  * 
  */
 
-static PyObject *__pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_17mass_matrix_vector_product(PyObject *__pyx_v_self, PyObject *__pyx_v_vector); /*proto*/
-static PyObject *__pyx_f_5fempy_3fem_8problems_24ProblemStructuralDynamic_mass_matrix_vector_product(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *__pyx_v_self, PyObject *__pyx_v_vector, int __pyx_skip_dispatch) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  PyObject *__pyx_t_2 = NULL;
-  PyObject *__pyx_t_3 = NULL;
-  PyObject *__pyx_t_4 = NULL;
-  __Pyx_RefNannySetupContext("mass_matrix_vector_product", 0);
-  /* Check if called by wrapper */
-  if (unlikely(__pyx_skip_dispatch)) ;
-  /* Check if overridden in Python */
-  else if (unlikely((Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0) || (Py_TYPE(((PyObject *)__pyx_v_self))->tp_flags & (Py_TPFLAGS_IS_ABSTRACT | Py_TPFLAGS_HEAPTYPE)))) {
-    #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-    static PY_UINT64_T __pyx_tp_dict_version = __PYX_DICT_VERSION_INIT, __pyx_obj_dict_version = __PYX_DICT_VERSION_INIT;
-    if (unlikely(!__Pyx_object_dict_version_matches(((PyObject *)__pyx_v_self), __pyx_tp_dict_version, __pyx_obj_dict_version))) {
-      PY_UINT64_T __pyx_type_dict_guard = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
-      #endif
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_mass_matrix_vector_product); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 149, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_1);
-      if (!PyCFunction_Check(__pyx_t_1) || (PyCFunction_GET_FUNCTION(__pyx_t_1) != (PyCFunction)(void*)__pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_17mass_matrix_vector_product)) {
-        __Pyx_XDECREF(__pyx_r);
-        __Pyx_INCREF(__pyx_t_1);
-        __pyx_t_3 = __pyx_t_1; __pyx_t_4 = NULL;
-        if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
-          __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_3);
-          if (likely(__pyx_t_4)) {
-            PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
-            __Pyx_INCREF(__pyx_t_4);
-            __Pyx_INCREF(function);
-            __Pyx_DECREF_SET(__pyx_t_3, function);
-          }
-        }
-        __pyx_t_2 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_4, __pyx_v_vector) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_v_vector);
-        __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 149, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_2);
-        __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-        __pyx_r = __pyx_t_2;
-        __pyx_t_2 = 0;
-        __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-        goto __pyx_L0;
-      }
-      #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-      __pyx_tp_dict_version = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
-      __pyx_obj_dict_version = __Pyx_get_object_dict_version(((PyObject *)__pyx_v_self));
-      if (unlikely(__pyx_type_dict_guard != __pyx_tp_dict_version)) {
-        __pyx_tp_dict_version = __pyx_obj_dict_version = __PYX_DICT_VERSION_INIT;
-      }
-      #endif
-      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-    }
-    #endif
-  }
-
-  /* "fempy/fem/problems.pyx":150
- * 
- *     cpdef mass_matrix_vector_product(self, vector):
- *         return self._mass_matrix @ vector             # <<<<<<<<<<<<<<
- * 
- *     cpdef stiffness_matrix_vector_product(self, vector):
- */
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_mass_matrix); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 150, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyNumber_MatrixMultiply(__pyx_t_1, __pyx_v_vector); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 150, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_r = __pyx_t_2;
-  __pyx_t_2 = 0;
-  goto __pyx_L0;
-
-  /* "fempy/fem/problems.pyx":149
- *                                                    inloads, in_dir_vectors, self._mass_matrix)
- * 
- *     cpdef mass_matrix_vector_product(self, vector):             # <<<<<<<<<<<<<<
- *         return self._mass_matrix @ vector
- * 
- */
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_XDECREF(__pyx_t_4);
-  __Pyx_AddTraceback("fempy.fem.problems.ProblemStructuralDynamic.mass_matrix_vector_product", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = 0;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
 /* Python wrapper */
-static PyObject *__pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_17mass_matrix_vector_product(PyObject *__pyx_v_self, PyObject *__pyx_v_vector); /*proto*/
-static PyObject *__pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_17mass_matrix_vector_product(PyObject *__pyx_v_self, PyObject *__pyx_v_vector) {
+static PyObject *__pyx_pw_5fempy_3fem_9_problems_24ProblemStructuralDynamic_29mass_matrix_vector_product(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_5fempy_3fem_9_problems_24ProblemStructuralDynamic_29mass_matrix_vector_product = {"mass_matrix_vector_product", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_5fempy_3fem_9_problems_24ProblemStructuralDynamic_29mass_matrix_vector_product, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_5fempy_3fem_9_problems_24ProblemStructuralDynamic_29mass_matrix_vector_product(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  PyObject *__pyx_v_self = 0;
+  PyObject *__pyx_v_vector = 0;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("mass_matrix_vector_product (wrapper)", 0);
-  __pyx_r = __pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_16mass_matrix_vector_product(((struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *)__pyx_v_self), ((PyObject *)__pyx_v_vector));
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_16mass_matrix_vector_product(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *__pyx_v_self, PyObject *__pyx_v_vector) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  __Pyx_RefNannySetupContext("mass_matrix_vector_product", 0);
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_5fempy_3fem_8problems_24ProblemStructuralDynamic_mass_matrix_vector_product(__pyx_v_self, __pyx_v_vector, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 149, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_r = __pyx_t_1;
-  __pyx_t_1 = 0;
-  goto __pyx_L0;
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("fempy.fem.problems.ProblemStructuralDynamic.mass_matrix_vector_product", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "fempy/fem/problems.pyx":152
- *         return self._mass_matrix @ vector
- * 
- *     cpdef stiffness_matrix_vector_product(self, vector):             # <<<<<<<<<<<<<<
- *         return self._stiffness_matrix @ vector
- * 
- */
-
-static PyObject *__pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_19stiffness_matrix_vector_product(PyObject *__pyx_v_self, PyObject *__pyx_v_vector); /*proto*/
-static PyObject *__pyx_f_5fempy_3fem_8problems_24ProblemStructuralDynamic_stiffness_matrix_vector_product(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *__pyx_v_self, PyObject *__pyx_v_vector, int __pyx_skip_dispatch) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  PyObject *__pyx_t_2 = NULL;
-  PyObject *__pyx_t_3 = NULL;
-  PyObject *__pyx_t_4 = NULL;
-  __Pyx_RefNannySetupContext("stiffness_matrix_vector_product", 0);
-  /* Check if called by wrapper */
-  if (unlikely(__pyx_skip_dispatch)) ;
-  /* Check if overridden in Python */
-  else if (unlikely((Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0) || (Py_TYPE(((PyObject *)__pyx_v_self))->tp_flags & (Py_TPFLAGS_IS_ABSTRACT | Py_TPFLAGS_HEAPTYPE)))) {
-    #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-    static PY_UINT64_T __pyx_tp_dict_version = __PYX_DICT_VERSION_INIT, __pyx_obj_dict_version = __PYX_DICT_VERSION_INIT;
-    if (unlikely(!__Pyx_object_dict_version_matches(((PyObject *)__pyx_v_self), __pyx_tp_dict_version, __pyx_obj_dict_version))) {
-      PY_UINT64_T __pyx_type_dict_guard = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
-      #endif
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_stiffness_matrix_vector_product); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 152, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_1);
-      if (!PyCFunction_Check(__pyx_t_1) || (PyCFunction_GET_FUNCTION(__pyx_t_1) != (PyCFunction)(void*)__pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_19stiffness_matrix_vector_product)) {
-        __Pyx_XDECREF(__pyx_r);
-        __Pyx_INCREF(__pyx_t_1);
-        __pyx_t_3 = __pyx_t_1; __pyx_t_4 = NULL;
-        if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
-          __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_3);
-          if (likely(__pyx_t_4)) {
-            PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
-            __Pyx_INCREF(__pyx_t_4);
-            __Pyx_INCREF(function);
-            __Pyx_DECREF_SET(__pyx_t_3, function);
-          }
-        }
-        __pyx_t_2 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_4, __pyx_v_vector) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_v_vector);
-        __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 152, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_2);
-        __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-        __pyx_r = __pyx_t_2;
-        __pyx_t_2 = 0;
-        __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-        goto __pyx_L0;
-      }
-      #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-      __pyx_tp_dict_version = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
-      __pyx_obj_dict_version = __Pyx_get_object_dict_version(((PyObject *)__pyx_v_self));
-      if (unlikely(__pyx_type_dict_guard != __pyx_tp_dict_version)) {
-        __pyx_tp_dict_version = __pyx_obj_dict_version = __PYX_DICT_VERSION_INIT;
-      }
-      #endif
-      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-    }
-    #endif
-  }
-
-  /* "fempy/fem/problems.pyx":153
- * 
- *     cpdef stiffness_matrix_vector_product(self, vector):
- *         return self._stiffness_matrix @ vector             # <<<<<<<<<<<<<<
- * 
- *     cpdef damping_matrix_vector_product(self, vector):
- */
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_stiffness_matrix); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 153, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyNumber_MatrixMultiply(__pyx_t_1, __pyx_v_vector); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 153, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_r = __pyx_t_2;
-  __pyx_t_2 = 0;
-  goto __pyx_L0;
-
-  /* "fempy/fem/problems.pyx":152
- *         return self._mass_matrix @ vector
- * 
- *     cpdef stiffness_matrix_vector_product(self, vector):             # <<<<<<<<<<<<<<
- *         return self._stiffness_matrix @ vector
- * 
- */
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_XDECREF(__pyx_t_4);
-  __Pyx_AddTraceback("fempy.fem.problems.ProblemStructuralDynamic.stiffness_matrix_vector_product", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = 0;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* Python wrapper */
-static PyObject *__pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_19stiffness_matrix_vector_product(PyObject *__pyx_v_self, PyObject *__pyx_v_vector); /*proto*/
-static PyObject *__pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_19stiffness_matrix_vector_product(PyObject *__pyx_v_self, PyObject *__pyx_v_vector) {
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("stiffness_matrix_vector_product (wrapper)", 0);
-  __pyx_r = __pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_18stiffness_matrix_vector_product(((struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *)__pyx_v_self), ((PyObject *)__pyx_v_vector));
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_18stiffness_matrix_vector_product(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *__pyx_v_self, PyObject *__pyx_v_vector) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  __Pyx_RefNannySetupContext("stiffness_matrix_vector_product", 0);
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_5fempy_3fem_8problems_24ProblemStructuralDynamic_stiffness_matrix_vector_product(__pyx_v_self, __pyx_v_vector, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 152, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_r = __pyx_t_1;
-  __pyx_t_1 = 0;
-  goto __pyx_L0;
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("fempy.fem.problems.ProblemStructuralDynamic.stiffness_matrix_vector_product", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "fempy/fem/problems.pyx":155
- *         return self._stiffness_matrix @ vector
- * 
- *     cpdef damping_matrix_vector_product(self, vector):             # <<<<<<<<<<<<<<
- *         return self._damping_matrix @ vector
- * 
- */
-
-static PyObject *__pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_21damping_matrix_vector_product(PyObject *__pyx_v_self, PyObject *__pyx_v_vector); /*proto*/
-static PyObject *__pyx_f_5fempy_3fem_8problems_24ProblemStructuralDynamic_damping_matrix_vector_product(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *__pyx_v_self, PyObject *__pyx_v_vector, int __pyx_skip_dispatch) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  PyObject *__pyx_t_2 = NULL;
-  PyObject *__pyx_t_3 = NULL;
-  PyObject *__pyx_t_4 = NULL;
-  __Pyx_RefNannySetupContext("damping_matrix_vector_product", 0);
-  /* Check if called by wrapper */
-  if (unlikely(__pyx_skip_dispatch)) ;
-  /* Check if overridden in Python */
-  else if (unlikely((Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0) || (Py_TYPE(((PyObject *)__pyx_v_self))->tp_flags & (Py_TPFLAGS_IS_ABSTRACT | Py_TPFLAGS_HEAPTYPE)))) {
-    #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-    static PY_UINT64_T __pyx_tp_dict_version = __PYX_DICT_VERSION_INIT, __pyx_obj_dict_version = __PYX_DICT_VERSION_INIT;
-    if (unlikely(!__Pyx_object_dict_version_matches(((PyObject *)__pyx_v_self), __pyx_tp_dict_version, __pyx_obj_dict_version))) {
-      PY_UINT64_T __pyx_type_dict_guard = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
-      #endif
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_damping_matrix_vector_product); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 155, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_1);
-      if (!PyCFunction_Check(__pyx_t_1) || (PyCFunction_GET_FUNCTION(__pyx_t_1) != (PyCFunction)(void*)__pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_21damping_matrix_vector_product)) {
-        __Pyx_XDECREF(__pyx_r);
-        __Pyx_INCREF(__pyx_t_1);
-        __pyx_t_3 = __pyx_t_1; __pyx_t_4 = NULL;
-        if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
-          __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_3);
-          if (likely(__pyx_t_4)) {
-            PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
-            __Pyx_INCREF(__pyx_t_4);
-            __Pyx_INCREF(function);
-            __Pyx_DECREF_SET(__pyx_t_3, function);
-          }
-        }
-        __pyx_t_2 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_4, __pyx_v_vector) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_v_vector);
-        __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 155, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_2);
-        __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-        __pyx_r = __pyx_t_2;
-        __pyx_t_2 = 0;
-        __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-        goto __pyx_L0;
-      }
-      #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-      __pyx_tp_dict_version = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
-      __pyx_obj_dict_version = __Pyx_get_object_dict_version(((PyObject *)__pyx_v_self));
-      if (unlikely(__pyx_type_dict_guard != __pyx_tp_dict_version)) {
-        __pyx_tp_dict_version = __pyx_obj_dict_version = __PYX_DICT_VERSION_INIT;
-      }
-      #endif
-      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-    }
-    #endif
-  }
-
-  /* "fempy/fem/problems.pyx":156
- * 
- *     cpdef damping_matrix_vector_product(self, vector):
- *         return self._damping_matrix @ vector             # <<<<<<<<<<<<<<
- * 
- */
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_damping_matrix); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 156, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyNumber_MatrixMultiply(__pyx_t_1, __pyx_v_vector); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 156, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_r = __pyx_t_2;
-  __pyx_t_2 = 0;
-  goto __pyx_L0;
-
-  /* "fempy/fem/problems.pyx":155
- *         return self._stiffness_matrix @ vector
- * 
- *     cpdef damping_matrix_vector_product(self, vector):             # <<<<<<<<<<<<<<
- *         return self._damping_matrix @ vector
- * 
- */
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_XDECREF(__pyx_t_4);
-  __Pyx_AddTraceback("fempy.fem.problems.ProblemStructuralDynamic.damping_matrix_vector_product", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = 0;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* Python wrapper */
-static PyObject *__pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_21damping_matrix_vector_product(PyObject *__pyx_v_self, PyObject *__pyx_v_vector); /*proto*/
-static PyObject *__pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_21damping_matrix_vector_product(PyObject *__pyx_v_self, PyObject *__pyx_v_vector) {
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("damping_matrix_vector_product (wrapper)", 0);
-  __pyx_r = __pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_20damping_matrix_vector_product(((struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *)__pyx_v_self), ((PyObject *)__pyx_v_vector));
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_20damping_matrix_vector_product(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *__pyx_v_self, PyObject *__pyx_v_vector) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  __Pyx_RefNannySetupContext("damping_matrix_vector_product", 0);
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_5fempy_3fem_8problems_24ProblemStructuralDynamic_damping_matrix_vector_product(__pyx_v_self, __pyx_v_vector, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 155, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_r = __pyx_t_1;
-  __pyx_t_1 = 0;
-  goto __pyx_L0;
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("fempy.fem.problems.ProblemStructuralDynamic.damping_matrix_vector_product", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "(tree fragment)":1
- * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
- *     cdef tuple state
- *     cdef object _dict
- */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_23__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static PyObject *__pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_23__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("__reduce_cython__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_22__reduce_cython__(((struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *)__pyx_v_self));
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_22__reduce_cython__(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *__pyx_v_self) {
-  PyObject *__pyx_v_state = 0;
-  PyObject *__pyx_v__dict = 0;
-  int __pyx_v_use_setstate;
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  int __pyx_t_2;
-  int __pyx_t_3;
-  PyObject *__pyx_t_4 = NULL;
-  PyObject *__pyx_t_5 = NULL;
-  __Pyx_RefNannySetupContext("__reduce_cython__", 0);
-
-  /* "(tree fragment)":5
- *     cdef object _dict
- *     cdef bint use_setstate
- *     state = ()             # <<<<<<<<<<<<<<
- *     _dict = getattr(self, '__dict__', None)
- *     if _dict is not None:
- */
-  __Pyx_INCREF(__pyx_empty_tuple);
-  __pyx_v_state = __pyx_empty_tuple;
-
-  /* "(tree fragment)":6
- *     cdef bint use_setstate
- *     state = ()
- *     _dict = getattr(self, '__dict__', None)             # <<<<<<<<<<<<<<
- *     if _dict is not None:
- *         state += (_dict,)
- */
-  __pyx_t_1 = __Pyx_GetAttr3(((PyObject *)__pyx_v_self), __pyx_n_s_dict, Py_None); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 6, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_v__dict = __pyx_t_1;
-  __pyx_t_1 = 0;
-
-  /* "(tree fragment)":7
- *     state = ()
- *     _dict = getattr(self, '__dict__', None)
- *     if _dict is not None:             # <<<<<<<<<<<<<<
- *         state += (_dict,)
- *         use_setstate = True
- */
-  __pyx_t_2 = (__pyx_v__dict != Py_None);
-  __pyx_t_3 = (__pyx_t_2 != 0);
-  if (__pyx_t_3) {
-
-    /* "(tree fragment)":8
- *     _dict = getattr(self, '__dict__', None)
- *     if _dict is not None:
- *         state += (_dict,)             # <<<<<<<<<<<<<<
- *         use_setstate = True
- *     else:
- */
-    __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 8, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_INCREF(__pyx_v__dict);
-    __Pyx_GIVEREF(__pyx_v__dict);
-    PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_v__dict);
-    __pyx_t_4 = PyNumber_InPlaceAdd(__pyx_v_state, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 8, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __Pyx_DECREF_SET(__pyx_v_state, ((PyObject*)__pyx_t_4));
-    __pyx_t_4 = 0;
-
-    /* "(tree fragment)":9
- *     if _dict is not None:
- *         state += (_dict,)
- *         use_setstate = True             # <<<<<<<<<<<<<<
- *     else:
- *         use_setstate = False
- */
-    __pyx_v_use_setstate = 1;
-
-    /* "(tree fragment)":7
- *     state = ()
- *     _dict = getattr(self, '__dict__', None)
- *     if _dict is not None:             # <<<<<<<<<<<<<<
- *         state += (_dict,)
- *         use_setstate = True
- */
-    goto __pyx_L3;
-  }
-
-  /* "(tree fragment)":11
- *         use_setstate = True
- *     else:
- *         use_setstate = False             # <<<<<<<<<<<<<<
- *     if use_setstate:
- *         return __pyx_unpickle_ProblemStructuralDynamic, (type(self), 0xd41d8cd, None), state
- */
-  /*else*/ {
-    __pyx_v_use_setstate = 0;
-  }
-  __pyx_L3:;
-
-  /* "(tree fragment)":12
- *     else:
- *         use_setstate = False
- *     if use_setstate:             # <<<<<<<<<<<<<<
- *         return __pyx_unpickle_ProblemStructuralDynamic, (type(self), 0xd41d8cd, None), state
- *     else:
- */
-  __pyx_t_3 = (__pyx_v_use_setstate != 0);
-  if (__pyx_t_3) {
-
-    /* "(tree fragment)":13
- *         use_setstate = False
- *     if use_setstate:
- *         return __pyx_unpickle_ProblemStructuralDynamic, (type(self), 0xd41d8cd, None), state             # <<<<<<<<<<<<<<
- *     else:
- *         return __pyx_unpickle_ProblemStructuralDynamic, (type(self), 0xd41d8cd, state)
- */
-    __Pyx_XDECREF(__pyx_r);
-    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_pyx_unpickle_ProblemStructural); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 13, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_1 = PyTuple_New(3); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 13, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_INCREF(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
-    __Pyx_GIVEREF(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
-    PyTuple_SET_ITEM(__pyx_t_1, 0, ((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
-    __Pyx_INCREF(__pyx_int_222419149);
-    __Pyx_GIVEREF(__pyx_int_222419149);
-    PyTuple_SET_ITEM(__pyx_t_1, 1, __pyx_int_222419149);
-    __Pyx_INCREF(Py_None);
-    __Pyx_GIVEREF(Py_None);
-    PyTuple_SET_ITEM(__pyx_t_1, 2, Py_None);
-    __pyx_t_5 = PyTuple_New(3); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 13, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
-    __Pyx_GIVEREF(__pyx_t_4);
-    PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_4);
-    __Pyx_GIVEREF(__pyx_t_1);
-    PyTuple_SET_ITEM(__pyx_t_5, 1, __pyx_t_1);
-    __Pyx_INCREF(__pyx_v_state);
-    __Pyx_GIVEREF(__pyx_v_state);
-    PyTuple_SET_ITEM(__pyx_t_5, 2, __pyx_v_state);
-    __pyx_t_4 = 0;
-    __pyx_t_1 = 0;
-    __pyx_r = __pyx_t_5;
-    __pyx_t_5 = 0;
-    goto __pyx_L0;
-
-    /* "(tree fragment)":12
- *     else:
- *         use_setstate = False
- *     if use_setstate:             # <<<<<<<<<<<<<<
- *         return __pyx_unpickle_ProblemStructuralDynamic, (type(self), 0xd41d8cd, None), state
- *     else:
- */
-  }
-
-  /* "(tree fragment)":15
- *         return __pyx_unpickle_ProblemStructuralDynamic, (type(self), 0xd41d8cd, None), state
- *     else:
- *         return __pyx_unpickle_ProblemStructuralDynamic, (type(self), 0xd41d8cd, state)             # <<<<<<<<<<<<<<
- * def __setstate_cython__(self, __pyx_state):
- *     __pyx_unpickle_ProblemStructuralDynamic__set_state(self, __pyx_state)
- */
-  /*else*/ {
-    __Pyx_XDECREF(__pyx_r);
-    __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_pyx_unpickle_ProblemStructural); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 15, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_1 = PyTuple_New(3); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 15, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_INCREF(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
-    __Pyx_GIVEREF(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
-    PyTuple_SET_ITEM(__pyx_t_1, 0, ((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
-    __Pyx_INCREF(__pyx_int_222419149);
-    __Pyx_GIVEREF(__pyx_int_222419149);
-    PyTuple_SET_ITEM(__pyx_t_1, 1, __pyx_int_222419149);
-    __Pyx_INCREF(__pyx_v_state);
-    __Pyx_GIVEREF(__pyx_v_state);
-    PyTuple_SET_ITEM(__pyx_t_1, 2, __pyx_v_state);
-    __pyx_t_4 = PyTuple_New(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 15, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __Pyx_GIVEREF(__pyx_t_5);
-    PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_5);
-    __Pyx_GIVEREF(__pyx_t_1);
-    PyTuple_SET_ITEM(__pyx_t_4, 1, __pyx_t_1);
-    __pyx_t_5 = 0;
-    __pyx_t_1 = 0;
-    __pyx_r = __pyx_t_4;
-    __pyx_t_4 = 0;
-    goto __pyx_L0;
-  }
-
-  /* "(tree fragment)":1
- * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
- *     cdef tuple state
- *     cdef object _dict
- */
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_4);
-  __Pyx_XDECREF(__pyx_t_5);
-  __Pyx_AddTraceback("fempy.fem.problems.ProblemStructuralDynamic.__reduce_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XDECREF(__pyx_v_state);
-  __Pyx_XDECREF(__pyx_v__dict);
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "(tree fragment)":16
- *     else:
- *         return __pyx_unpickle_ProblemStructuralDynamic, (type(self), 0xd41d8cd, state)
- * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
- *     __pyx_unpickle_ProblemStructuralDynamic__set_state(self, __pyx_state)
- */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_25__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state); /*proto*/
-static PyObject *__pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_25__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("__setstate_cython__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_24__setstate_cython__(((struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *)__pyx_v_self), ((PyObject *)__pyx_v___pyx_state));
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_5fempy_3fem_8problems_24ProblemStructuralDynamic_24__setstate_cython__(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  __Pyx_RefNannySetupContext("__setstate_cython__", 0);
-
-  /* "(tree fragment)":17
- *         return __pyx_unpickle_ProblemStructuralDynamic, (type(self), 0xd41d8cd, state)
- * def __setstate_cython__(self, __pyx_state):
- *     __pyx_unpickle_ProblemStructuralDynamic__set_state(self, __pyx_state)             # <<<<<<<<<<<<<<
- */
-  if (!(likely(PyTuple_CheckExact(__pyx_v___pyx_state))||((__pyx_v___pyx_state) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "tuple", Py_TYPE(__pyx_v___pyx_state)->tp_name), 0))) __PYX_ERR(1, 17, __pyx_L1_error)
-  __pyx_t_1 = __pyx_f_5fempy_3fem_8problems___pyx_unpickle_ProblemStructuralDynamic__set_state(__pyx_v_self, ((PyObject*)__pyx_v___pyx_state)); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 17, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-  /* "(tree fragment)":16
- *     else:
- *         return __pyx_unpickle_ProblemStructuralDynamic, (type(self), 0xd41d8cd, state)
- * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
- *     __pyx_unpickle_ProblemStructuralDynamic__set_state(self, __pyx_state)
- */
-
-  /* function exit code */
-  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
-  goto __pyx_L0;
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("fempy.fem.problems.ProblemStructuralDynamic.__setstate_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "(tree fragment)":1
- * def __pyx_unpickle_ProblemStructuralDynamic(__pyx_type, long __pyx_checksum, __pyx_state):             # <<<<<<<<<<<<<<
- *     cdef object __pyx_PickleError
- *     cdef object __pyx_result
- */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_5fempy_3fem_8problems_1__pyx_unpickle_ProblemStructuralDynamic(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_5fempy_3fem_8problems_1__pyx_unpickle_ProblemStructuralDynamic = {"__pyx_unpickle_ProblemStructuralDynamic", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_5fempy_3fem_8problems_1__pyx_unpickle_ProblemStructuralDynamic, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_5fempy_3fem_8problems_1__pyx_unpickle_ProblemStructuralDynamic(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
-  PyObject *__pyx_v___pyx_type = 0;
-  long __pyx_v___pyx_checksum;
-  PyObject *__pyx_v___pyx_state = 0;
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("__pyx_unpickle_ProblemStructuralDynamic (wrapper)", 0);
   {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_pyx_type,&__pyx_n_s_pyx_checksum,&__pyx_n_s_pyx_state,0};
-    PyObject* values[3] = {0,0,0};
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_self,&__pyx_n_s_vector,0};
+    PyObject* values[2] = {0,0};
     if (unlikely(__pyx_kwds)) {
       Py_ssize_t kw_args;
       const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
       switch (pos_args) {
-        case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
-        CYTHON_FALLTHROUGH;
         case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
         CYTHON_FALLTHROUGH;
         case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
@@ -5316,489 +4755,312 @@ static PyObject *__pyx_pw_5fempy_3fem_8problems_1__pyx_unpickle_ProblemStructura
       kw_args = PyDict_Size(__pyx_kwds);
       switch (pos_args) {
         case  0:
-        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_pyx_type)) != 0)) kw_args--;
+        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_self)) != 0)) kw_args--;
         else goto __pyx_L5_argtuple_error;
         CYTHON_FALLTHROUGH;
         case  1:
-        if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_pyx_checksum)) != 0)) kw_args--;
+        if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_vector)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__pyx_unpickle_ProblemStructuralDynamic", 1, 3, 3, 1); __PYX_ERR(1, 1, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  2:
-        if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_pyx_state)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("__pyx_unpickle_ProblemStructuralDynamic", 1, 3, 3, 2); __PYX_ERR(1, 1, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("mass_matrix_vector_product", 1, 2, 2, 1); __PYX_ERR(0, 153, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__pyx_unpickle_ProblemStructuralDynamic") < 0)) __PYX_ERR(1, 1, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "mass_matrix_vector_product") < 0)) __PYX_ERR(0, 153, __pyx_L3_error)
       }
-    } else if (PyTuple_GET_SIZE(__pyx_args) != 3) {
+    } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
       values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
-      values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
     }
-    __pyx_v___pyx_type = values[0];
-    __pyx_v___pyx_checksum = __Pyx_PyInt_As_long(values[1]); if (unlikely((__pyx_v___pyx_checksum == (long)-1) && PyErr_Occurred())) __PYX_ERR(1, 1, __pyx_L3_error)
-    __pyx_v___pyx_state = values[2];
+    __pyx_v_self = values[0];
+    __pyx_v_vector = values[1];
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__pyx_unpickle_ProblemStructuralDynamic", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(1, 1, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("mass_matrix_vector_product", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 153, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("fempy.fem.problems.__pyx_unpickle_ProblemStructuralDynamic", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("fempy.fem._problems.ProblemStructuralDynamic.mass_matrix_vector_product", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_5fempy_3fem_8problems___pyx_unpickle_ProblemStructuralDynamic(__pyx_self, __pyx_v___pyx_type, __pyx_v___pyx_checksum, __pyx_v___pyx_state);
+  __pyx_r = __pyx_pf_5fempy_3fem_9_problems_24ProblemStructuralDynamic_28mass_matrix_vector_product(__pyx_self, __pyx_v_self, __pyx_v_vector);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_5fempy_3fem_8problems___pyx_unpickle_ProblemStructuralDynamic(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v___pyx_type, long __pyx_v___pyx_checksum, PyObject *__pyx_v___pyx_state) {
-  PyObject *__pyx_v___pyx_PickleError = 0;
-  PyObject *__pyx_v___pyx_result = 0;
+static PyObject *__pyx_pf_5fempy_3fem_9_problems_24ProblemStructuralDynamic_28mass_matrix_vector_product(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_vector) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
-  int __pyx_t_1;
+  PyObject *__pyx_t_1 = NULL;
   PyObject *__pyx_t_2 = NULL;
-  PyObject *__pyx_t_3 = NULL;
-  PyObject *__pyx_t_4 = NULL;
-  PyObject *__pyx_t_5 = NULL;
-  int __pyx_t_6;
-  __Pyx_RefNannySetupContext("__pyx_unpickle_ProblemStructuralDynamic", 0);
+  __Pyx_RefNannySetupContext("mass_matrix_vector_product", 0);
 
-  /* "(tree fragment)":4
- *     cdef object __pyx_PickleError
- *     cdef object __pyx_result
- *     if __pyx_checksum != 0xd41d8cd:             # <<<<<<<<<<<<<<
- *         from pickle import PickleError as __pyx_PickleError
- *         raise __pyx_PickleError("Incompatible checksums (%s vs 0xd41d8cd = ())" % __pyx_checksum)
- */
-  __pyx_t_1 = ((__pyx_v___pyx_checksum != 0xd41d8cd) != 0);
-  if (__pyx_t_1) {
-
-    /* "(tree fragment)":5
- *     cdef object __pyx_result
- *     if __pyx_checksum != 0xd41d8cd:
- *         from pickle import PickleError as __pyx_PickleError             # <<<<<<<<<<<<<<
- *         raise __pyx_PickleError("Incompatible checksums (%s vs 0xd41d8cd = ())" % __pyx_checksum)
- *     __pyx_result = ProblemStructuralDynamic.__new__(__pyx_type)
- */
-    __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 5, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __Pyx_INCREF(__pyx_n_s_PickleError);
-    __Pyx_GIVEREF(__pyx_n_s_PickleError);
-    PyList_SET_ITEM(__pyx_t_2, 0, __pyx_n_s_PickleError);
-    __pyx_t_3 = __Pyx_Import(__pyx_n_s_pickle, __pyx_t_2, -1); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 5, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = __Pyx_ImportFrom(__pyx_t_3, __pyx_n_s_PickleError); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 5, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __Pyx_INCREF(__pyx_t_2);
-    __pyx_v___pyx_PickleError = __pyx_t_2;
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-
-    /* "(tree fragment)":6
- *     if __pyx_checksum != 0xd41d8cd:
- *         from pickle import PickleError as __pyx_PickleError
- *         raise __pyx_PickleError("Incompatible checksums (%s vs 0xd41d8cd = ())" % __pyx_checksum)             # <<<<<<<<<<<<<<
- *     __pyx_result = ProblemStructuralDynamic.__new__(__pyx_type)
- *     if __pyx_state is not None:
- */
-    __pyx_t_2 = __Pyx_PyInt_From_long(__pyx_v___pyx_checksum); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 6, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_4 = __Pyx_PyString_Format(__pyx_kp_s_Incompatible_checksums_s_vs_0xd4, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 6, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __Pyx_INCREF(__pyx_v___pyx_PickleError);
-    __pyx_t_2 = __pyx_v___pyx_PickleError; __pyx_t_5 = NULL;
-    if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
-      __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_2);
-      if (likely(__pyx_t_5)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
-        __Pyx_INCREF(__pyx_t_5);
-        __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_2, function);
-      }
-    }
-    __pyx_t_3 = (__pyx_t_5) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_5, __pyx_t_4) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_4);
-    __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 6, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __Pyx_Raise(__pyx_t_3, 0, 0, 0);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __PYX_ERR(1, 6, __pyx_L1_error)
-
-    /* "(tree fragment)":4
- *     cdef object __pyx_PickleError
- *     cdef object __pyx_result
- *     if __pyx_checksum != 0xd41d8cd:             # <<<<<<<<<<<<<<
- *         from pickle import PickleError as __pyx_PickleError
- *         raise __pyx_PickleError("Incompatible checksums (%s vs 0xd41d8cd = ())" % __pyx_checksum)
- */
-  }
-
-  /* "(tree fragment)":7
- *         from pickle import PickleError as __pyx_PickleError
- *         raise __pyx_PickleError("Incompatible checksums (%s vs 0xd41d8cd = ())" % __pyx_checksum)
- *     __pyx_result = ProblemStructuralDynamic.__new__(__pyx_type)             # <<<<<<<<<<<<<<
- *     if __pyx_state is not None:
- *         __pyx_unpickle_ProblemStructuralDynamic__set_state(<ProblemStructuralDynamic> __pyx_result, __pyx_state)
- */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_ptype_5fempy_3fem_8problems_ProblemStructuralDynamic), __pyx_n_s_new); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 7, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = NULL;
-  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
-    __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_2);
-    if (likely(__pyx_t_4)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
-      __Pyx_INCREF(__pyx_t_4);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_2, function);
-    }
-  }
-  __pyx_t_3 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_4, __pyx_v___pyx_type) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v___pyx_type);
-  __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 7, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_v___pyx_result = __pyx_t_3;
-  __pyx_t_3 = 0;
-
-  /* "(tree fragment)":8
- *         raise __pyx_PickleError("Incompatible checksums (%s vs 0xd41d8cd = ())" % __pyx_checksum)
- *     __pyx_result = ProblemStructuralDynamic.__new__(__pyx_type)
- *     if __pyx_state is not None:             # <<<<<<<<<<<<<<
- *         __pyx_unpickle_ProblemStructuralDynamic__set_state(<ProblemStructuralDynamic> __pyx_result, __pyx_state)
- *     return __pyx_result
- */
-  __pyx_t_1 = (__pyx_v___pyx_state != Py_None);
-  __pyx_t_6 = (__pyx_t_1 != 0);
-  if (__pyx_t_6) {
-
-    /* "(tree fragment)":9
- *     __pyx_result = ProblemStructuralDynamic.__new__(__pyx_type)
- *     if __pyx_state is not None:
- *         __pyx_unpickle_ProblemStructuralDynamic__set_state(<ProblemStructuralDynamic> __pyx_result, __pyx_state)             # <<<<<<<<<<<<<<
- *     return __pyx_result
- * cdef __pyx_unpickle_ProblemStructuralDynamic__set_state(ProblemStructuralDynamic __pyx_result, tuple __pyx_state):
- */
-    if (!(likely(PyTuple_CheckExact(__pyx_v___pyx_state))||((__pyx_v___pyx_state) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "tuple", Py_TYPE(__pyx_v___pyx_state)->tp_name), 0))) __PYX_ERR(1, 9, __pyx_L1_error)
-    __pyx_t_3 = __pyx_f_5fempy_3fem_8problems___pyx_unpickle_ProblemStructuralDynamic__set_state(((struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *)__pyx_v___pyx_result), ((PyObject*)__pyx_v___pyx_state)); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 9, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-
-    /* "(tree fragment)":8
- *         raise __pyx_PickleError("Incompatible checksums (%s vs 0xd41d8cd = ())" % __pyx_checksum)
- *     __pyx_result = ProblemStructuralDynamic.__new__(__pyx_type)
- *     if __pyx_state is not None:             # <<<<<<<<<<<<<<
- *         __pyx_unpickle_ProblemStructuralDynamic__set_state(<ProblemStructuralDynamic> __pyx_result, __pyx_state)
- *     return __pyx_result
- */
-  }
-
-  /* "(tree fragment)":10
- *     if __pyx_state is not None:
- *         __pyx_unpickle_ProblemStructuralDynamic__set_state(<ProblemStructuralDynamic> __pyx_result, __pyx_state)
- *     return __pyx_result             # <<<<<<<<<<<<<<
- * cdef __pyx_unpickle_ProblemStructuralDynamic__set_state(ProblemStructuralDynamic __pyx_result, tuple __pyx_state):
- *     if len(__pyx_state) > 0 and hasattr(__pyx_result, '__dict__'):
+  /* "fempy/fem/_problems.pyx":154
+ * 
+ *     def mass_matrix_vector_product(self, vector):
+ *         return self._mass_matrix @ vector             # <<<<<<<<<<<<<<
+ * 
+ *     def stiffness_matrix_vector_product(self, vector):
  */
   __Pyx_XDECREF(__pyx_r);
-  __Pyx_INCREF(__pyx_v___pyx_result);
-  __pyx_r = __pyx_v___pyx_result;
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_mass_matrix); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 154, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = __Pyx_PyNumber_MatrixMultiply(__pyx_t_1, __pyx_v_vector); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 154, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_r = __pyx_t_2;
+  __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "(tree fragment)":1
- * def __pyx_unpickle_ProblemStructuralDynamic(__pyx_type, long __pyx_checksum, __pyx_state):             # <<<<<<<<<<<<<<
- *     cdef object __pyx_PickleError
- *     cdef object __pyx_result
+  /* "fempy/fem/_problems.pyx":153
+ *                                                    inloads, in_dir_vectors, self._mass_matrix)
+ * 
+ *     def mass_matrix_vector_product(self, vector):             # <<<<<<<<<<<<<<
+ *         return self._mass_matrix @ vector
+ * 
  */
 
   /* function exit code */
   __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_XDECREF(__pyx_t_4);
-  __Pyx_XDECREF(__pyx_t_5);
-  __Pyx_AddTraceback("fempy.fem.problems.__pyx_unpickle_ProblemStructuralDynamic", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("fempy.fem._problems.ProblemStructuralDynamic.mass_matrix_vector_product", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
-  __Pyx_XDECREF(__pyx_v___pyx_PickleError);
-  __Pyx_XDECREF(__pyx_v___pyx_result);
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* "(tree fragment)":11
- *         __pyx_unpickle_ProblemStructuralDynamic__set_state(<ProblemStructuralDynamic> __pyx_result, __pyx_state)
- *     return __pyx_result
- * cdef __pyx_unpickle_ProblemStructuralDynamic__set_state(ProblemStructuralDynamic __pyx_result, tuple __pyx_state):             # <<<<<<<<<<<<<<
- *     if len(__pyx_state) > 0 and hasattr(__pyx_result, '__dict__'):
- *         __pyx_result.__dict__.update(__pyx_state[0])
+/* "fempy/fem/_problems.pyx":156
+ *         return self._mass_matrix @ vector
+ * 
+ *     def stiffness_matrix_vector_product(self, vector):             # <<<<<<<<<<<<<<
+ *         return self._stiffness_matrix @ vector
+ * 
  */
 
-static PyObject *__pyx_f_5fempy_3fem_8problems___pyx_unpickle_ProblemStructuralDynamic__set_state(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *__pyx_v___pyx_result, PyObject *__pyx_v___pyx_state) {
+/* Python wrapper */
+static PyObject *__pyx_pw_5fempy_3fem_9_problems_24ProblemStructuralDynamic_31stiffness_matrix_vector_product(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_5fempy_3fem_9_problems_24ProblemStructuralDynamic_31stiffness_matrix_vector_product = {"stiffness_matrix_vector_product", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_5fempy_3fem_9_problems_24ProblemStructuralDynamic_31stiffness_matrix_vector_product, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_5fempy_3fem_9_problems_24ProblemStructuralDynamic_31stiffness_matrix_vector_product(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  PyObject *__pyx_v_self = 0;
+  PyObject *__pyx_v_vector = 0;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("stiffness_matrix_vector_product (wrapper)", 0);
+  {
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_self,&__pyx_n_s_vector,0};
+    PyObject* values[2] = {0,0};
+    if (unlikely(__pyx_kwds)) {
+      Py_ssize_t kw_args;
+      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
+      switch (pos_args) {
+        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        CYTHON_FALLTHROUGH;
+        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      kw_args = PyDict_Size(__pyx_kwds);
+      switch (pos_args) {
+        case  0:
+        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_self)) != 0)) kw_args--;
+        else goto __pyx_L5_argtuple_error;
+        CYTHON_FALLTHROUGH;
+        case  1:
+        if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_vector)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("stiffness_matrix_vector_product", 1, 2, 2, 1); __PYX_ERR(0, 156, __pyx_L3_error)
+        }
+      }
+      if (unlikely(kw_args > 0)) {
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "stiffness_matrix_vector_product") < 0)) __PYX_ERR(0, 156, __pyx_L3_error)
+      }
+    } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+      values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+    }
+    __pyx_v_self = values[0];
+    __pyx_v_vector = values[1];
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("stiffness_matrix_vector_product", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 156, __pyx_L3_error)
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("fempy.fem._problems.ProblemStructuralDynamic.stiffness_matrix_vector_product", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_5fempy_3fem_9_problems_24ProblemStructuralDynamic_30stiffness_matrix_vector_product(__pyx_self, __pyx_v_self, __pyx_v_vector);
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_5fempy_3fem_9_problems_24ProblemStructuralDynamic_30stiffness_matrix_vector_product(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_vector) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
-  int __pyx_t_1;
-  Py_ssize_t __pyx_t_2;
-  int __pyx_t_3;
-  int __pyx_t_4;
-  PyObject *__pyx_t_5 = NULL;
-  PyObject *__pyx_t_6 = NULL;
-  PyObject *__pyx_t_7 = NULL;
-  PyObject *__pyx_t_8 = NULL;
-  __Pyx_RefNannySetupContext("__pyx_unpickle_ProblemStructuralDynamic__set_state", 0);
+  PyObject *__pyx_t_1 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  __Pyx_RefNannySetupContext("stiffness_matrix_vector_product", 0);
 
-  /* "(tree fragment)":12
- *     return __pyx_result
- * cdef __pyx_unpickle_ProblemStructuralDynamic__set_state(ProblemStructuralDynamic __pyx_result, tuple __pyx_state):
- *     if len(__pyx_state) > 0 and hasattr(__pyx_result, '__dict__'):             # <<<<<<<<<<<<<<
- *         __pyx_result.__dict__.update(__pyx_state[0])
+  /* "fempy/fem/_problems.pyx":157
+ * 
+ *     def stiffness_matrix_vector_product(self, vector):
+ *         return self._stiffness_matrix @ vector             # <<<<<<<<<<<<<<
+ * 
+ *     def damping_matrix_vector_product(self, vector):
  */
-  if (unlikely(__pyx_v___pyx_state == Py_None)) {
-    PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
-    __PYX_ERR(1, 12, __pyx_L1_error)
-  }
-  __pyx_t_2 = PyTuple_GET_SIZE(__pyx_v___pyx_state); if (unlikely(__pyx_t_2 == ((Py_ssize_t)-1))) __PYX_ERR(1, 12, __pyx_L1_error)
-  __pyx_t_3 = ((__pyx_t_2 > 0) != 0);
-  if (__pyx_t_3) {
-  } else {
-    __pyx_t_1 = __pyx_t_3;
-    goto __pyx_L4_bool_binop_done;
-  }
-  __pyx_t_3 = __Pyx_HasAttr(((PyObject *)__pyx_v___pyx_result), __pyx_n_s_dict); if (unlikely(__pyx_t_3 == ((int)-1))) __PYX_ERR(1, 12, __pyx_L1_error)
-  __pyx_t_4 = (__pyx_t_3 != 0);
-  __pyx_t_1 = __pyx_t_4;
-  __pyx_L4_bool_binop_done:;
-  if (__pyx_t_1) {
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_stiffness_matrix); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 157, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = __Pyx_PyNumber_MatrixMultiply(__pyx_t_1, __pyx_v_vector); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 157, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_r = __pyx_t_2;
+  __pyx_t_2 = 0;
+  goto __pyx_L0;
 
-    /* "(tree fragment)":13
- * cdef __pyx_unpickle_ProblemStructuralDynamic__set_state(ProblemStructuralDynamic __pyx_result, tuple __pyx_state):
- *     if len(__pyx_state) > 0 and hasattr(__pyx_result, '__dict__'):
- *         __pyx_result.__dict__.update(__pyx_state[0])             # <<<<<<<<<<<<<<
- */
-    __pyx_t_6 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v___pyx_result), __pyx_n_s_dict); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 13, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_6);
-    __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_update); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 13, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_7);
-    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(__pyx_v___pyx_state == Py_None)) {
-      PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(1, 13, __pyx_L1_error)
-    }
-    __pyx_t_6 = __Pyx_GetItemInt_Tuple(__pyx_v___pyx_state, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 13, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_6);
-    __pyx_t_8 = NULL;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_7))) {
-      __pyx_t_8 = PyMethod_GET_SELF(__pyx_t_7);
-      if (likely(__pyx_t_8)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_7);
-        __Pyx_INCREF(__pyx_t_8);
-        __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_7, function);
-      }
-    }
-    __pyx_t_5 = (__pyx_t_8) ? __Pyx_PyObject_Call2Args(__pyx_t_7, __pyx_t_8, __pyx_t_6) : __Pyx_PyObject_CallOneArg(__pyx_t_7, __pyx_t_6);
-    __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
-    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 13, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
-    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-
-    /* "(tree fragment)":12
- *     return __pyx_result
- * cdef __pyx_unpickle_ProblemStructuralDynamic__set_state(ProblemStructuralDynamic __pyx_result, tuple __pyx_state):
- *     if len(__pyx_state) > 0 and hasattr(__pyx_result, '__dict__'):             # <<<<<<<<<<<<<<
- *         __pyx_result.__dict__.update(__pyx_state[0])
- */
-  }
-
-  /* "(tree fragment)":11
- *         __pyx_unpickle_ProblemStructuralDynamic__set_state(<ProblemStructuralDynamic> __pyx_result, __pyx_state)
- *     return __pyx_result
- * cdef __pyx_unpickle_ProblemStructuralDynamic__set_state(ProblemStructuralDynamic __pyx_result, tuple __pyx_state):             # <<<<<<<<<<<<<<
- *     if len(__pyx_state) > 0 and hasattr(__pyx_result, '__dict__'):
- *         __pyx_result.__dict__.update(__pyx_state[0])
+  /* "fempy/fem/_problems.pyx":156
+ *         return self._mass_matrix @ vector
+ * 
+ *     def stiffness_matrix_vector_product(self, vector):             # <<<<<<<<<<<<<<
+ *         return self._stiffness_matrix @ vector
+ * 
  */
 
   /* function exit code */
-  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
-  goto __pyx_L0;
   __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_5);
-  __Pyx_XDECREF(__pyx_t_6);
-  __Pyx_XDECREF(__pyx_t_7);
-  __Pyx_XDECREF(__pyx_t_8);
-  __Pyx_AddTraceback("fempy.fem.problems.__pyx_unpickle_ProblemStructuralDynamic__set_state", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = 0;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_AddTraceback("fempy.fem._problems.ProblemStructuralDynamic.stiffness_matrix_vector_product", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
-static struct __pyx_vtabstruct_5fempy_3fem_8problems_ProblemStructuralDynamic __pyx_vtable_5fempy_3fem_8problems_ProblemStructuralDynamic;
 
-static PyObject *__pyx_tp_new_5fempy_3fem_8problems_ProblemStructuralDynamic(PyTypeObject *t, CYTHON_UNUSED PyObject *a, CYTHON_UNUSED PyObject *k) {
-  struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *p;
-  PyObject *o;
-  if (likely((t->tp_flags & Py_TPFLAGS_IS_ABSTRACT) == 0)) {
-    o = (*t->tp_alloc)(t, 0);
-  } else {
-    o = (PyObject *) PyBaseObject_Type.tp_new(t, __pyx_empty_tuple, 0);
+/* "fempy/fem/_problems.pyx":159
+ *         return self._stiffness_matrix @ vector
+ * 
+ *     def damping_matrix_vector_product(self, vector):             # <<<<<<<<<<<<<<
+ *         return self._damping_matrix @ vector
+ * 
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_5fempy_3fem_9_problems_24ProblemStructuralDynamic_33damping_matrix_vector_product(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_5fempy_3fem_9_problems_24ProblemStructuralDynamic_33damping_matrix_vector_product = {"damping_matrix_vector_product", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_5fempy_3fem_9_problems_24ProblemStructuralDynamic_33damping_matrix_vector_product, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_5fempy_3fem_9_problems_24ProblemStructuralDynamic_33damping_matrix_vector_product(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  PyObject *__pyx_v_self = 0;
+  PyObject *__pyx_v_vector = 0;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("damping_matrix_vector_product (wrapper)", 0);
+  {
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_self,&__pyx_n_s_vector,0};
+    PyObject* values[2] = {0,0};
+    if (unlikely(__pyx_kwds)) {
+      Py_ssize_t kw_args;
+      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
+      switch (pos_args) {
+        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        CYTHON_FALLTHROUGH;
+        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      kw_args = PyDict_Size(__pyx_kwds);
+      switch (pos_args) {
+        case  0:
+        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_self)) != 0)) kw_args--;
+        else goto __pyx_L5_argtuple_error;
+        CYTHON_FALLTHROUGH;
+        case  1:
+        if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_vector)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("damping_matrix_vector_product", 1, 2, 2, 1); __PYX_ERR(0, 159, __pyx_L3_error)
+        }
+      }
+      if (unlikely(kw_args > 0)) {
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "damping_matrix_vector_product") < 0)) __PYX_ERR(0, 159, __pyx_L3_error)
+      }
+    } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+      values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+    }
+    __pyx_v_self = values[0];
+    __pyx_v_vector = values[1];
   }
-  if (unlikely(!o)) return 0;
-  p = ((struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *)o);
-  p->__pyx_vtab = __pyx_vtabptr_5fempy_3fem_8problems_ProblemStructuralDynamic;
-  return o;
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("damping_matrix_vector_product", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 159, __pyx_L3_error)
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("fempy.fem._problems.ProblemStructuralDynamic.damping_matrix_vector_product", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_5fempy_3fem_9_problems_24ProblemStructuralDynamic_32damping_matrix_vector_product(__pyx_self, __pyx_v_self, __pyx_v_vector);
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
 }
 
-static void __pyx_tp_dealloc_5fempy_3fem_8problems_ProblemStructuralDynamic(PyObject *o) {
-  #if CYTHON_USE_TP_FINALIZE
-  if (unlikely(PyType_HasFeature(Py_TYPE(o), Py_TPFLAGS_HAVE_FINALIZE) && Py_TYPE(o)->tp_finalize) && (!PyType_IS_GC(Py_TYPE(o)) || !_PyGC_FINALIZED(o))) {
-    if (PyObject_CallFinalizerFromDealloc(o)) return;
-  }
-  #endif
-  (*Py_TYPE(o)->tp_free)(o);
+static PyObject *__pyx_pf_5fempy_3fem_9_problems_24ProblemStructuralDynamic_32damping_matrix_vector_product(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_vector) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  __Pyx_RefNannySetupContext("damping_matrix_vector_product", 0);
+
+  /* "fempy/fem/_problems.pyx":160
+ * 
+ *     def damping_matrix_vector_product(self, vector):
+ *         return self._damping_matrix @ vector             # <<<<<<<<<<<<<<
+ * 
+ */
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_damping_matrix); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 160, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = __Pyx_PyNumber_MatrixMultiply(__pyx_t_1, __pyx_v_vector); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 160, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_r = __pyx_t_2;
+  __pyx_t_2 = 0;
+  goto __pyx_L0;
+
+  /* "fempy/fem/_problems.pyx":159
+ *         return self._stiffness_matrix @ vector
+ * 
+ *     def damping_matrix_vector_product(self, vector):             # <<<<<<<<<<<<<<
+ *         return self._damping_matrix @ vector
+ * 
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_AddTraceback("fempy.fem._problems.ProblemStructuralDynamic.damping_matrix_vector_product", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
 }
-
-static PyObject *__pyx_getprop_5fempy_3fem_8problems_24ProblemStructuralDynamic_stiffness_matrix(PyObject *o, CYTHON_UNUSED void *x) {
-  return __pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_16stiffness_matrix_1__get__(o);
-}
-
-static int __pyx_setprop_5fempy_3fem_8problems_24ProblemStructuralDynamic_stiffness_matrix(PyObject *o, PyObject *v, CYTHON_UNUSED void *x) {
-  if (v) {
-    return __pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_16stiffness_matrix_3__set__(o, v);
-  }
-  else {
-    PyErr_SetString(PyExc_NotImplementedError, "__del__");
-    return -1;
-  }
-}
-
-static PyObject *__pyx_getprop_5fempy_3fem_8problems_24ProblemStructuralDynamic_mass_matrix(PyObject *o, CYTHON_UNUSED void *x) {
-  return __pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_11mass_matrix_1__get__(o);
-}
-
-static int __pyx_setprop_5fempy_3fem_8problems_24ProblemStructuralDynamic_mass_matrix(PyObject *o, PyObject *v, CYTHON_UNUSED void *x) {
-  if (v) {
-    return __pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_11mass_matrix_3__set__(o, v);
-  }
-  else {
-    PyErr_SetString(PyExc_NotImplementedError, "__del__");
-    return -1;
-  }
-}
-
-static PyObject *__pyx_getprop_5fempy_3fem_8problems_24ProblemStructuralDynamic_damping_matrix(PyObject *o, CYTHON_UNUSED void *x) {
-  return __pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_14damping_matrix_1__get__(o);
-}
-
-static int __pyx_setprop_5fempy_3fem_8problems_24ProblemStructuralDynamic_damping_matrix(PyObject *o, PyObject *v, CYTHON_UNUSED void *x) {
-  if (v) {
-    return __pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_14damping_matrix_3__set__(o, v);
-  }
-  else {
-    PyErr_SetString(PyExc_NotImplementedError, "__del__");
-    return -1;
-  }
-}
-
-static PyMethodDef __pyx_methods_5fempy_3fem_8problems_ProblemStructuralDynamic[] = {
-  {"build_stiffness_matrix", (PyCFunction)__pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_3build_stiffness_matrix, METH_NOARGS, __pyx_doc_5fempy_3fem_8problems_24ProblemStructuralDynamic_2build_stiffness_matrix},
-  {"build_mass_matrix", (PyCFunction)__pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_5build_mass_matrix, METH_NOARGS, __pyx_doc_5fempy_3fem_8problems_24ProblemStructuralDynamic_4build_mass_matrix},
-  {"build_damping_matrix", (PyCFunction)__pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_7build_damping_matrix, METH_NOARGS, __pyx_doc_5fempy_3fem_8problems_24ProblemStructuralDynamic_6build_damping_matrix},
-  {"rebuild_stiffness_matrix", (PyCFunction)__pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_9rebuild_stiffness_matrix, METH_NOARGS, __pyx_doc_5fempy_3fem_8problems_24ProblemStructuralDynamic_8rebuild_stiffness_matrix},
-  {"rebuild_mass_matrix", (PyCFunction)__pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_11rebuild_mass_matrix, METH_NOARGS, __pyx_doc_5fempy_3fem_8problems_24ProblemStructuralDynamic_10rebuild_mass_matrix},
-  {"rebuild_damping_matrix", (PyCFunction)__pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_13rebuild_damping_matrix, METH_NOARGS, __pyx_doc_5fempy_3fem_8problems_24ProblemStructuralDynamic_12rebuild_damping_matrix},
-  {"get_rhs_from_history_load", (PyCFunction)__pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_15get_rhs_from_history_load, METH_O, 0},
-  {"mass_matrix_vector_product", (PyCFunction)__pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_17mass_matrix_vector_product, METH_O, 0},
-  {"stiffness_matrix_vector_product", (PyCFunction)__pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_19stiffness_matrix_vector_product, METH_O, 0},
-  {"damping_matrix_vector_product", (PyCFunction)__pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_21damping_matrix_vector_product, METH_O, 0},
-  {"__reduce_cython__", (PyCFunction)__pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_23__reduce_cython__, METH_NOARGS, 0},
-  {"__setstate_cython__", (PyCFunction)__pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_25__setstate_cython__, METH_O, 0},
-  {0, 0, 0, 0}
-};
-
-static struct PyGetSetDef __pyx_getsets_5fempy_3fem_8problems_ProblemStructuralDynamic[] = {
-  {(char *)"stiffness_matrix", __pyx_getprop_5fempy_3fem_8problems_24ProblemStructuralDynamic_stiffness_matrix, __pyx_setprop_5fempy_3fem_8problems_24ProblemStructuralDynamic_stiffness_matrix, (char *)0, 0},
-  {(char *)"mass_matrix", __pyx_getprop_5fempy_3fem_8problems_24ProblemStructuralDynamic_mass_matrix, __pyx_setprop_5fempy_3fem_8problems_24ProblemStructuralDynamic_mass_matrix, (char *)0, 0},
-  {(char *)"damping_matrix", __pyx_getprop_5fempy_3fem_8problems_24ProblemStructuralDynamic_damping_matrix, __pyx_setprop_5fempy_3fem_8problems_24ProblemStructuralDynamic_damping_matrix, (char *)0, 0},
-  {0, 0, 0, 0, 0}
-};
-
-static PyTypeObject __pyx_type_5fempy_3fem_8problems_ProblemStructuralDynamic = {
-  PyVarObject_HEAD_INIT(0, 0)
-  "fempy.fem.problems.ProblemStructuralDynamic", /*tp_name*/
-  sizeof(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic), /*tp_basicsize*/
-  0, /*tp_itemsize*/
-  __pyx_tp_dealloc_5fempy_3fem_8problems_ProblemStructuralDynamic, /*tp_dealloc*/
-  0, /*tp_print*/
-  0, /*tp_getattr*/
-  0, /*tp_setattr*/
-  #if PY_MAJOR_VERSION < 3
-  0, /*tp_compare*/
-  #endif
-  #if PY_MAJOR_VERSION >= 3
-  0, /*tp_as_async*/
-  #endif
-  0, /*tp_repr*/
-  0, /*tp_as_number*/
-  0, /*tp_as_sequence*/
-  0, /*tp_as_mapping*/
-  0, /*tp_hash*/
-  0, /*tp_call*/
-  0, /*tp_str*/
-  0, /*tp_getattro*/
-  0, /*tp_setattro*/
-  0, /*tp_as_buffer*/
-  Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_BASETYPE, /*tp_flags*/
-  "Provider responsible for the assembly of the global matrices.", /*tp_doc*/
-  0, /*tp_traverse*/
-  0, /*tp_clear*/
-  0, /*tp_richcompare*/
-  0, /*tp_weaklistoffset*/
-  0, /*tp_iter*/
-  0, /*tp_iternext*/
-  __pyx_methods_5fempy_3fem_8problems_ProblemStructuralDynamic, /*tp_methods*/
-  0, /*tp_members*/
-  __pyx_getsets_5fempy_3fem_8problems_ProblemStructuralDynamic, /*tp_getset*/
-  0, /*tp_base*/
-  0, /*tp_dict*/
-  0, /*tp_descr_get*/
-  0, /*tp_descr_set*/
-  0, /*tp_dictoffset*/
-  __pyx_pw_5fempy_3fem_8problems_24ProblemStructuralDynamic_1__init__, /*tp_init*/
-  0, /*tp_alloc*/
-  __pyx_tp_new_5fempy_3fem_8problems_ProblemStructuralDynamic, /*tp_new*/
-  0, /*tp_free*/
-  0, /*tp_is_gc*/
-  0, /*tp_bases*/
-  0, /*tp_mro*/
-  0, /*tp_cache*/
-  0, /*tp_subclasses*/
-  0, /*tp_weaklist*/
-  0, /*tp_del*/
-  0, /*tp_version_tag*/
-  #if PY_VERSION_HEX >= 0x030400a1
-  0, /*tp_finalize*/
-  #endif
-  #if PY_VERSION_HEX >= 0x030800b1
-  0, /*tp_vectorcall*/
-  #endif
-};
 
 static PyMethodDef __pyx_methods[] = {
   {0, 0, 0, 0}
@@ -5807,17 +5069,17 @@ static PyMethodDef __pyx_methods[] = {
 #if PY_MAJOR_VERSION >= 3
 #if CYTHON_PEP489_MULTI_PHASE_INIT
 static PyObject* __pyx_pymod_create(PyObject *spec, PyModuleDef *def); /*proto*/
-static int __pyx_pymod_exec_problems(PyObject* module); /*proto*/
+static int __pyx_pymod_exec__problems(PyObject* module); /*proto*/
 static PyModuleDef_Slot __pyx_moduledef_slots[] = {
   {Py_mod_create, (void*)__pyx_pymod_create},
-  {Py_mod_exec, (void*)__pyx_pymod_exec_problems},
+  {Py_mod_exec, (void*)__pyx_pymod_exec__problems},
   {0, NULL}
 };
 #endif
 
 static struct PyModuleDef __pyx_moduledef = {
     PyModuleDef_HEAD_INIT,
-    "problems",
+    "_problems",
     0, /* m_doc */
   #if CYTHON_PEP489_MULTI_PHASE_INIT
     0, /* m_size */
@@ -5849,15 +5111,28 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_ElementMassProvider, __pyx_k_ElementMassProvider, sizeof(__pyx_k_ElementMassProvider), 0, 0, 1, 1},
   {&__pyx_n_s_ElementStiffnessProvider, __pyx_k_ElementStiffnessProvider, sizeof(__pyx_k_ElementStiffnessProvider), 0, 0, 1, 1},
   {&__pyx_n_s_GlobalMatrixProvider, __pyx_k_GlobalMatrixProvider, sizeof(__pyx_k_GlobalMatrixProvider), 0, 0, 1, 1},
-  {&__pyx_kp_s_Incompatible_checksums_s_vs_0xd4, __pyx_k_Incompatible_checksums_s_vs_0xd4, sizeof(__pyx_k_Incompatible_checksums_s_vs_0xd4), 0, 0, 1, 0},
-  {&__pyx_n_s_PickleError, __pyx_k_PickleError, sizeof(__pyx_k_PickleError), 0, 0, 1, 1},
   {&__pyx_n_s_ProblemStructural, __pyx_k_ProblemStructural, sizeof(__pyx_k_ProblemStructural), 0, 0, 1, 1},
   {&__pyx_n_s_ProblemStructuralDynamic, __pyx_k_ProblemStructuralDynamic, sizeof(__pyx_k_ProblemStructuralDynamic), 0, 0, 1, 1},
+  {&__pyx_n_s_ProblemStructuralDynamic___init, __pyx_k_ProblemStructuralDynamic___init, sizeof(__pyx_k_ProblemStructuralDynamic___init), 0, 0, 1, 1},
+  {&__pyx_n_s_ProblemStructuralDynamic_build_d, __pyx_k_ProblemStructuralDynamic_build_d, sizeof(__pyx_k_ProblemStructuralDynamic_build_d), 0, 0, 1, 1},
+  {&__pyx_n_s_ProblemStructuralDynamic_build_m, __pyx_k_ProblemStructuralDynamic_build_m, sizeof(__pyx_k_ProblemStructuralDynamic_build_m), 0, 0, 1, 1},
+  {&__pyx_n_s_ProblemStructuralDynamic_build_s, __pyx_k_ProblemStructuralDynamic_build_s, sizeof(__pyx_k_ProblemStructuralDynamic_build_s), 0, 0, 1, 1},
+  {&__pyx_n_s_ProblemStructuralDynamic_damping, __pyx_k_ProblemStructuralDynamic_damping, sizeof(__pyx_k_ProblemStructuralDynamic_damping), 0, 0, 1, 1},
+  {&__pyx_n_s_ProblemStructuralDynamic_damping_2, __pyx_k_ProblemStructuralDynamic_damping_2, sizeof(__pyx_k_ProblemStructuralDynamic_damping_2), 0, 0, 1, 1},
+  {&__pyx_n_s_ProblemStructuralDynamic_get_rhs, __pyx_k_ProblemStructuralDynamic_get_rhs, sizeof(__pyx_k_ProblemStructuralDynamic_get_rhs), 0, 0, 1, 1},
+  {&__pyx_n_s_ProblemStructuralDynamic_mass_ma, __pyx_k_ProblemStructuralDynamic_mass_ma, sizeof(__pyx_k_ProblemStructuralDynamic_mass_ma), 0, 0, 1, 1},
+  {&__pyx_n_s_ProblemStructuralDynamic_mass_ma_2, __pyx_k_ProblemStructuralDynamic_mass_ma_2, sizeof(__pyx_k_ProblemStructuralDynamic_mass_ma_2), 0, 0, 1, 1},
+  {&__pyx_n_s_ProblemStructuralDynamic_rebuild, __pyx_k_ProblemStructuralDynamic_rebuild, sizeof(__pyx_k_ProblemStructuralDynamic_rebuild), 0, 0, 1, 1},
+  {&__pyx_n_s_ProblemStructuralDynamic_rebuild_2, __pyx_k_ProblemStructuralDynamic_rebuild_2, sizeof(__pyx_k_ProblemStructuralDynamic_rebuild_2), 0, 0, 1, 1},
+  {&__pyx_n_s_ProblemStructuralDynamic_rebuild_3, __pyx_k_ProblemStructuralDynamic_rebuild_3, sizeof(__pyx_k_ProblemStructuralDynamic_rebuild_3), 0, 0, 1, 1},
+  {&__pyx_n_s_ProblemStructuralDynamic_stiffne, __pyx_k_ProblemStructuralDynamic_stiffne, sizeof(__pyx_k_ProblemStructuralDynamic_stiffne), 0, 0, 1, 1},
+  {&__pyx_n_s_ProblemStructuralDynamic_stiffne_2, __pyx_k_ProblemStructuralDynamic_stiffne_2, sizeof(__pyx_k_ProblemStructuralDynamic_stiffne_2), 0, 0, 1, 1},
   {&__pyx_n_s_ProblemStructural___init, __pyx_k_ProblemStructural___init, sizeof(__pyx_k_ProblemStructural___init), 0, 0, 1, 1},
   {&__pyx_n_s_ProblemStructural_build_matrix, __pyx_k_ProblemStructural_build_matrix, sizeof(__pyx_k_ProblemStructural_build_matrix), 0, 0, 1, 1},
   {&__pyx_n_s_ProblemStructural_calculate_matr, __pyx_k_ProblemStructural_calculate_matr, sizeof(__pyx_k_ProblemStructural_calculate_matr), 0, 0, 1, 1},
   {&__pyx_n_s_ProblemStructural_matrix, __pyx_k_ProblemStructural_matrix, sizeof(__pyx_k_ProblemStructural_matrix), 0, 0, 1, 1},
   {&__pyx_n_s_ProblemStructural_rebuild_matrix, __pyx_k_ProblemStructural_rebuild_matrix, sizeof(__pyx_k_ProblemStructural_rebuild_matrix), 0, 0, 1, 1},
+  {&__pyx_kp_s_Provider_responsible_for_the_ass, __pyx_k_Provider_responsible_for_the_ass, sizeof(__pyx_k_Provider_responsible_for_the_ass), 0, 0, 1, 0},
   {&__pyx_n_s_RayleighDampingMatrixProvider, __pyx_k_RayleighDampingMatrixProvider, sizeof(__pyx_k_RayleighDampingMatrixProvider), 0, 0, 1, 1},
   {&__pyx_kp_s_Responsible_for_the_assembly_of, __pyx_k_Responsible_for_the_assembly_of, sizeof(__pyx_k_Responsible_for_the_assembly_of), 0, 0, 1, 0},
   {&__pyx_n_s_build_damping_matrix, __pyx_k_build_damping_matrix, sizeof(__pyx_k_build_damping_matrix), 0, 0, 1, 1},
@@ -5873,25 +5148,26 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_damping_matrix_2, __pyx_k_damping_matrix_2, sizeof(__pyx_k_damping_matrix_2), 0, 0, 1, 1},
   {&__pyx_n_s_damping_matrix_vector_product, __pyx_k_damping_matrix_vector_product, sizeof(__pyx_k_damping_matrix_vector_product), 0, 0, 1, 1},
   {&__pyx_n_s_damping_provider, __pyx_k_damping_provider, sizeof(__pyx_k_damping_provider), 0, 0, 1, 1},
-  {&__pyx_n_s_dict, __pyx_k_dict, sizeof(__pyx_k_dict), 0, 0, 1, 1},
   {&__pyx_n_s_doc, __pyx_k_doc, sizeof(__pyx_k_doc), 0, 0, 1, 1},
+  {&__pyx_n_s_dyforces, __pyx_k_dyforces, sizeof(__pyx_k_dyforces), 0, 0, 1, 1},
   {&__pyx_n_s_dynamic_forces, __pyx_k_dynamic_forces, sizeof(__pyx_k_dynamic_forces), 0, 0, 1, 1},
   {&__pyx_n_s_fem_core_providers, __pyx_k_fem_core_providers, sizeof(__pyx_k_fem_core_providers), 0, 0, 1, 1},
-  {&__pyx_n_s_fempy_fem_problems, __pyx_k_fempy_fem_problems, sizeof(__pyx_k_fempy_fem_problems), 0, 0, 1, 1},
+  {&__pyx_n_s_fempy_fem__problems, __pyx_k_fempy_fem__problems, sizeof(__pyx_k_fempy_fem__problems), 0, 0, 1, 1},
   {&__pyx_n_s_forces, __pyx_k_forces, sizeof(__pyx_k_forces), 0, 0, 1, 1},
   {&__pyx_n_s_get_damping_matrix, __pyx_k_get_damping_matrix, sizeof(__pyx_k_get_damping_matrix), 0, 0, 1, 1},
   {&__pyx_n_s_get_mass_matrix, __pyx_k_get_mass_matrix, sizeof(__pyx_k_get_mass_matrix), 0, 0, 1, 1},
   {&__pyx_n_s_get_rhs_from_history_load, __pyx_k_get_rhs_from_history_load, sizeof(__pyx_k_get_rhs_from_history_load), 0, 0, 1, 1},
   {&__pyx_n_s_get_rhs_from_history_loads, __pyx_k_get_rhs_from_history_loads, sizeof(__pyx_k_get_rhs_from_history_loads), 0, 0, 1, 1},
   {&__pyx_n_s_get_stiffness_matrix, __pyx_k_get_stiffness_matrix, sizeof(__pyx_k_get_stiffness_matrix), 0, 0, 1, 1},
-  {&__pyx_n_s_getstate, __pyx_k_getstate, sizeof(__pyx_k_getstate), 0, 0, 1, 1},
   {&__pyx_n_s_global_matrix_provider, __pyx_k_global_matrix_provider, sizeof(__pyx_k_global_matrix_provider), 0, 0, 1, 1},
   {&__pyx_n_s_global_provider, __pyx_k_global_provider, sizeof(__pyx_k_global_provider), 0, 0, 1, 1},
   {&__pyx_n_s_imatmul, __pyx_k_imatmul, sizeof(__pyx_k_imatmul), 0, 0, 1, 1},
   {&__pyx_n_s_import, __pyx_k_import, sizeof(__pyx_k_import), 0, 0, 1, 1},
+  {&__pyx_n_s_in_dir_vectors, __pyx_k_in_dir_vectors, sizeof(__pyx_k_in_dir_vectors), 0, 0, 1, 1},
   {&__pyx_n_s_inertia_forces_direction_vectors, __pyx_k_inertia_forces_direction_vectors, sizeof(__pyx_k_inertia_forces_direction_vectors), 0, 0, 1, 1},
   {&__pyx_n_s_inertia_loads, __pyx_k_inertia_loads, sizeof(__pyx_k_inertia_loads), 0, 0, 1, 1},
   {&__pyx_n_s_init, __pyx_k_init, sizeof(__pyx_k_init), 0, 0, 1, 1},
+  {&__pyx_n_s_inloads, __pyx_k_inloads, sizeof(__pyx_k_inloads), 0, 0, 1, 1},
   {&__pyx_n_s_linear_system, __pyx_k_linear_system, sizeof(__pyx_k_linear_system), 0, 0, 1, 1},
   {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
   {&__pyx_n_s_mass_matrix, __pyx_k_mass_matrix, sizeof(__pyx_k_mass_matrix), 0, 0, 1, 1},
@@ -5905,39 +5181,28 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_model, __pyx_k_model, sizeof(__pyx_k_model), 0, 0, 1, 1},
   {&__pyx_n_s_module, __pyx_k_module, sizeof(__pyx_k_module), 0, 0, 1, 1},
   {&__pyx_n_s_name, __pyx_k_name, sizeof(__pyx_k_name), 0, 0, 1, 1},
-  {&__pyx_n_s_new, __pyx_k_new, sizeof(__pyx_k_new), 0, 0, 1, 1},
-  {&__pyx_n_s_pickle, __pyx_k_pickle, sizeof(__pyx_k_pickle), 0, 0, 1, 1},
   {&__pyx_n_s_prepare, __pyx_k_prepare, sizeof(__pyx_k_prepare), 0, 0, 1, 1},
   {&__pyx_kp_s_problems_pyx, __pyx_k_problems_pyx, sizeof(__pyx_k_problems_pyx), 0, 0, 1, 0},
   {&__pyx_n_s_property, __pyx_k_property, sizeof(__pyx_k_property), 0, 0, 1, 1},
   {&__pyx_n_s_provider, __pyx_k_provider, sizeof(__pyx_k_provider), 0, 0, 1, 1},
-  {&__pyx_n_s_pyx_PickleError, __pyx_k_pyx_PickleError, sizeof(__pyx_k_pyx_PickleError), 0, 0, 1, 1},
-  {&__pyx_n_s_pyx_checksum, __pyx_k_pyx_checksum, sizeof(__pyx_k_pyx_checksum), 0, 0, 1, 1},
-  {&__pyx_n_s_pyx_result, __pyx_k_pyx_result, sizeof(__pyx_k_pyx_result), 0, 0, 1, 1},
-  {&__pyx_n_s_pyx_state, __pyx_k_pyx_state, sizeof(__pyx_k_pyx_state), 0, 0, 1, 1},
-  {&__pyx_n_s_pyx_type, __pyx_k_pyx_type, sizeof(__pyx_k_pyx_type), 0, 0, 1, 1},
-  {&__pyx_n_s_pyx_unpickle_ProblemStructural, __pyx_k_pyx_unpickle_ProblemStructural, sizeof(__pyx_k_pyx_unpickle_ProblemStructural), 0, 0, 1, 1},
-  {&__pyx_n_s_pyx_vtable, __pyx_k_pyx_vtable, sizeof(__pyx_k_pyx_vtable), 0, 0, 1, 1},
   {&__pyx_n_s_qualname, __pyx_k_qualname, sizeof(__pyx_k_qualname), 0, 0, 1, 1},
   {&__pyx_n_s_rebuild_damping_matrix, __pyx_k_rebuild_damping_matrix, sizeof(__pyx_k_rebuild_damping_matrix), 0, 0, 1, 1},
   {&__pyx_n_s_rebuild_mass_matrix, __pyx_k_rebuild_mass_matrix, sizeof(__pyx_k_rebuild_mass_matrix), 0, 0, 1, 1},
   {&__pyx_n_s_rebuild_matrix, __pyx_k_rebuild_matrix, sizeof(__pyx_k_rebuild_matrix), 0, 0, 1, 1},
   {&__pyx_n_s_rebuild_stiffness_matrix, __pyx_k_rebuild_stiffness_matrix, sizeof(__pyx_k_rebuild_stiffness_matrix), 0, 0, 1, 1},
-  {&__pyx_n_s_reduce, __pyx_k_reduce, sizeof(__pyx_k_reduce), 0, 0, 1, 1},
-  {&__pyx_n_s_reduce_cython, __pyx_k_reduce_cython, sizeof(__pyx_k_reduce_cython), 0, 0, 1, 1},
-  {&__pyx_n_s_reduce_ex, __pyx_k_reduce_ex, sizeof(__pyx_k_reduce_ex), 0, 0, 1, 1},
   {&__pyx_n_s_rmatmul, __pyx_k_rmatmul, sizeof(__pyx_k_rmatmul), 0, 0, 1, 1},
   {&__pyx_n_s_self, __pyx_k_self, sizeof(__pyx_k_self), 0, 0, 1, 1},
-  {&__pyx_n_s_setstate, __pyx_k_setstate, sizeof(__pyx_k_setstate), 0, 0, 1, 1},
-  {&__pyx_n_s_setstate_cython, __pyx_k_setstate_cython, sizeof(__pyx_k_setstate_cython), 0, 0, 1, 1},
+  {&__pyx_n_s_setter, __pyx_k_setter, sizeof(__pyx_k_setter), 0, 0, 1, 1},
+  {&__pyx_n_s_stforces, __pyx_k_stforces, sizeof(__pyx_k_stforces), 0, 0, 1, 1},
   {&__pyx_n_s_stiffness, __pyx_k_stiffness, sizeof(__pyx_k_stiffness), 0, 0, 1, 1},
   {&__pyx_n_s_stiffness_matrix, __pyx_k_stiffness_matrix, sizeof(__pyx_k_stiffness_matrix), 0, 0, 1, 1},
   {&__pyx_n_s_stiffness_matrix_2, __pyx_k_stiffness_matrix_2, sizeof(__pyx_k_stiffness_matrix_2), 0, 0, 1, 1},
   {&__pyx_n_s_stiffness_matrix_vector_product, __pyx_k_stiffness_matrix_vector_product, sizeof(__pyx_k_stiffness_matrix_vector_product), 0, 0, 1, 1},
   {&__pyx_n_s_stiffness_provider, __pyx_k_stiffness_provider, sizeof(__pyx_k_stiffness_provider), 0, 0, 1, 1},
-  {&__pyx_kp_s_stringsource, __pyx_k_stringsource, sizeof(__pyx_k_stringsource), 0, 0, 1, 0},
   {&__pyx_n_s_test, __pyx_k_test, sizeof(__pyx_k_test), 0, 0, 1, 1},
-  {&__pyx_n_s_update, __pyx_k_update, sizeof(__pyx_k_update), 0, 0, 1, 1},
+  {&__pyx_n_s_timestep, __pyx_k_timestep, sizeof(__pyx_k_timestep), 0, 0, 1, 1},
+  {&__pyx_n_s_value, __pyx_k_value, sizeof(__pyx_k_value), 0, 0, 1, 1},
+  {&__pyx_n_s_vector, __pyx_k_vector, sizeof(__pyx_k_vector), 0, 0, 1, 1},
   {0, 0, 0, 0, 0, 0, 0}
 };
 static CYTHON_SMALL_CODE int __Pyx_InitCachedBuiltins(void) {
@@ -5951,78 +5216,272 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
 
-  /* "fempy/fem/problems.pyx":9
+  /* "fempy/fem/_problems.pyx":9
  *     """Responsible for the assembly of the global stiffness matrix."""
  * 
  *     def __init__(self, model, global_matrix_provider=None):             # <<<<<<<<<<<<<<
  *         self.model = model
  *         self._matrix = None
  */
-  __pyx_tuple__2 = PyTuple_Pack(3, __pyx_n_s_self, __pyx_n_s_model, __pyx_n_s_global_matrix_provider); if (unlikely(!__pyx_tuple__2)) __PYX_ERR(0, 9, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__2);
-  __Pyx_GIVEREF(__pyx_tuple__2);
-  __pyx_codeobj__3 = (PyObject*)__Pyx_PyCode_New(3, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__2, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_problems_pyx, __pyx_n_s_init, 9, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__3)) __PYX_ERR(0, 9, __pyx_L1_error)
-  __pyx_tuple__4 = PyTuple_Pack(1, ((PyObject *)Py_None)); if (unlikely(!__pyx_tuple__4)) __PYX_ERR(0, 9, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__4);
-  __Pyx_GIVEREF(__pyx_tuple__4);
+  __pyx_tuple_ = PyTuple_Pack(3, __pyx_n_s_self, __pyx_n_s_model, __pyx_n_s_global_matrix_provider); if (unlikely(!__pyx_tuple_)) __PYX_ERR(0, 9, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple_);
+  __Pyx_GIVEREF(__pyx_tuple_);
+  __pyx_codeobj__2 = (PyObject*)__Pyx_PyCode_New(3, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple_, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_problems_pyx, __pyx_n_s_init, 9, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__2)) __PYX_ERR(0, 9, __pyx_L1_error)
+  __pyx_tuple__3 = PyTuple_Pack(1, ((PyObject *)Py_None)); if (unlikely(!__pyx_tuple__3)) __PYX_ERR(0, 9, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__3);
+  __Pyx_GIVEREF(__pyx_tuple__3);
 
-  /* "fempy/fem/problems.pyx":20
+  /* "fempy/fem/_problems.pyx":20
  * 
  *     @property
  *     def matrix(self):             # <<<<<<<<<<<<<<
  *         if self._matrix is None:
  *             self.build_matrix()
  */
-  __pyx_tuple__5 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__5)) __PYX_ERR(0, 20, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__5);
-  __Pyx_GIVEREF(__pyx_tuple__5);
-  __pyx_codeobj__6 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__5, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_problems_pyx, __pyx_n_s_matrix_2, 20, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__6)) __PYX_ERR(0, 20, __pyx_L1_error)
+  __pyx_tuple__4 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__4)) __PYX_ERR(0, 20, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__4);
+  __Pyx_GIVEREF(__pyx_tuple__4);
+  __pyx_codeobj__5 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__4, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_problems_pyx, __pyx_n_s_matrix_2, 20, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__5)) __PYX_ERR(0, 20, __pyx_L1_error)
 
-  /* "fempy/fem/problems.pyx":27
+  /* "fempy/fem/_problems.pyx":27
  *         return self._matrix
  * 
  *     def build_matrix(self):             # <<<<<<<<<<<<<<
  *         """ Builds the global Stiffness Matrix"""
  *         provider = ElementStiffnessProvider()
  */
-  __pyx_tuple__7 = PyTuple_Pack(3, __pyx_n_s_self, __pyx_n_s_provider, __pyx_n_s_global_provider); if (unlikely(!__pyx_tuple__7)) __PYX_ERR(0, 27, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__7);
-  __Pyx_GIVEREF(__pyx_tuple__7);
-  __pyx_codeobj__8 = (PyObject*)__Pyx_PyCode_New(1, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__7, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_problems_pyx, __pyx_n_s_build_matrix, 27, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__8)) __PYX_ERR(0, 27, __pyx_L1_error)
+  __pyx_tuple__6 = PyTuple_Pack(3, __pyx_n_s_self, __pyx_n_s_provider, __pyx_n_s_global_provider); if (unlikely(!__pyx_tuple__6)) __PYX_ERR(0, 27, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__6);
+  __Pyx_GIVEREF(__pyx_tuple__6);
+  __pyx_codeobj__7 = (PyObject*)__Pyx_PyCode_New(1, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__6, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_problems_pyx, __pyx_n_s_build_matrix, 27, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__7)) __PYX_ERR(0, 27, __pyx_L1_error)
 
-  /* "fempy/fem/problems.pyx":33
+  /* "fempy/fem/_problems.pyx":33
  *         self._matrix = global_provider.get_stiffness_matrix(self.model, provider)
  * 
  *     def rebuild_matrix(self):             # <<<<<<<<<<<<<<
  *         """ Rebuilds the global Stiffness Matrix"""
  *         global_provider = self.global_matrix_provider
  */
-  __pyx_tuple__9 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_global_provider); if (unlikely(!__pyx_tuple__9)) __PYX_ERR(0, 33, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__9);
-  __Pyx_GIVEREF(__pyx_tuple__9);
-  __pyx_codeobj__10 = (PyObject*)__Pyx_PyCode_New(1, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__9, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_problems_pyx, __pyx_n_s_rebuild_matrix, 33, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__10)) __PYX_ERR(0, 33, __pyx_L1_error)
+  __pyx_tuple__8 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_global_provider); if (unlikely(!__pyx_tuple__8)) __PYX_ERR(0, 33, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__8);
+  __Pyx_GIVEREF(__pyx_tuple__8);
+  __pyx_codeobj__9 = (PyObject*)__Pyx_PyCode_New(1, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__8, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_problems_pyx, __pyx_n_s_rebuild_matrix, 33, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__9)) __PYX_ERR(0, 33, __pyx_L1_error)
 
-  /* "fempy/fem/problems.pyx":38
+  /* "fempy/fem/_problems.pyx":38
  *         self._matrix = global_provider.get_stiffness_matrix(self.model, self.provider)
  * 
  *     def calculate_matrix(self, linear_system):             # <<<<<<<<<<<<<<
  *         linear_system.matrix = self.matrix
  * 
  */
-  __pyx_tuple__11 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_linear_system); if (unlikely(!__pyx_tuple__11)) __PYX_ERR(0, 38, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__11);
-  __Pyx_GIVEREF(__pyx_tuple__11);
-  __pyx_codeobj__12 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__11, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_problems_pyx, __pyx_n_s_calculate_matrix, 38, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__12)) __PYX_ERR(0, 38, __pyx_L1_error)
+  __pyx_tuple__10 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_linear_system); if (unlikely(!__pyx_tuple__10)) __PYX_ERR(0, 38, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__10);
+  __Pyx_GIVEREF(__pyx_tuple__10);
+  __pyx_codeobj__11 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__10, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_problems_pyx, __pyx_n_s_calculate_matrix, 38, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__11)) __PYX_ERR(0, 38, __pyx_L1_error)
 
-  /* "(tree fragment)":1
- * def __pyx_unpickle_ProblemStructuralDynamic(__pyx_type, long __pyx_checksum, __pyx_state):             # <<<<<<<<<<<<<<
- *     cdef object __pyx_PickleError
- *     cdef object __pyx_result
+  /* "fempy/fem/_problems.pyx":49
+ * #    cpdef public bint change_stiffness, change_mass, change_damping
+ * #
+ *     def __init__(self, model, global_matrix_provider=GlobalMatrixProvider, damping_provider=None):             # <<<<<<<<<<<<<<
+ *         self.model = model
+ *         self.global_matrix_provider = global_matrix_provider
  */
-  __pyx_tuple__13 = PyTuple_Pack(5, __pyx_n_s_pyx_type, __pyx_n_s_pyx_checksum, __pyx_n_s_pyx_state, __pyx_n_s_pyx_PickleError, __pyx_n_s_pyx_result); if (unlikely(!__pyx_tuple__13)) __PYX_ERR(1, 1, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__13);
-  __Pyx_GIVEREF(__pyx_tuple__13);
-  __pyx_codeobj__14 = (PyObject*)__Pyx_PyCode_New(3, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__13, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_pyx_unpickle_ProblemStructural, 1, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__14)) __PYX_ERR(1, 1, __pyx_L1_error)
+  __pyx_tuple__12 = PyTuple_Pack(4, __pyx_n_s_self, __pyx_n_s_model, __pyx_n_s_global_matrix_provider, __pyx_n_s_damping_provider); if (unlikely(!__pyx_tuple__12)) __PYX_ERR(0, 49, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__12);
+  __Pyx_GIVEREF(__pyx_tuple__12);
+  __pyx_codeobj__13 = (PyObject*)__Pyx_PyCode_New(4, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__12, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_problems_pyx, __pyx_n_s_init, 49, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__13)) __PYX_ERR(0, 49, __pyx_L1_error)
+
+  /* "fempy/fem/_problems.pyx":63
+ * 
+ *     @property
+ *     def stiffness_matrix(self):             # <<<<<<<<<<<<<<
+ * 
+ *         if (self._stiffness_matrix is not None) and not self.change_stiffness:
+ */
+  __pyx_tuple__14 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__14)) __PYX_ERR(0, 63, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__14);
+  __Pyx_GIVEREF(__pyx_tuple__14);
+  __pyx_codeobj__15 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__14, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_problems_pyx, __pyx_n_s_stiffness_matrix_2, 63, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__15)) __PYX_ERR(0, 63, __pyx_L1_error)
+
+  /* "fempy/fem/_problems.pyx":74
+ * 
+ *     @property
+ *     def mass_matrix(self):             # <<<<<<<<<<<<<<
+ *         if (self._mass_matrix is not None) and not self.change_mass:
+ *             pass
+ */
+  __pyx_tuple__16 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__16)) __PYX_ERR(0, 74, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__16);
+  __Pyx_GIVEREF(__pyx_tuple__16);
+  __pyx_codeobj__17 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__16, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_problems_pyx, __pyx_n_s_mass_matrix_2, 74, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__17)) __PYX_ERR(0, 74, __pyx_L1_error)
+
+  /* "fempy/fem/_problems.pyx":84
+ * 
+ *     @property
+ *     def damping_matrix(self):             # <<<<<<<<<<<<<<
+ *         if (self._damping_matrix is not None) and not self.change_damping:
+ *             pass
+ */
+  __pyx_tuple__18 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__18)) __PYX_ERR(0, 84, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__18);
+  __Pyx_GIVEREF(__pyx_tuple__18);
+  __pyx_codeobj__19 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__18, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_problems_pyx, __pyx_n_s_damping_matrix_2, 84, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__19)) __PYX_ERR(0, 84, __pyx_L1_error)
+
+  /* "fempy/fem/_problems.pyx":94
+ * 
+ *     @stiffness_matrix.setter
+ *     def stiffness_matrix(self, value):             # <<<<<<<<<<<<<<
+ *         self._stiffness_matrix = value
+ * 
+ */
+  __pyx_tuple__20 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_value); if (unlikely(!__pyx_tuple__20)) __PYX_ERR(0, 94, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__20);
+  __Pyx_GIVEREF(__pyx_tuple__20);
+  __pyx_codeobj__21 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__20, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_problems_pyx, __pyx_n_s_stiffness_matrix_2, 94, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__21)) __PYX_ERR(0, 94, __pyx_L1_error)
+
+  /* "fempy/fem/_problems.pyx":98
+ * 
+ *     @mass_matrix.setter
+ *     def mass_matrix(self, value):             # <<<<<<<<<<<<<<
+ *         self._mass_matrix = value
+ * 
+ */
+  __pyx_tuple__22 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_value); if (unlikely(!__pyx_tuple__22)) __PYX_ERR(0, 98, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__22);
+  __Pyx_GIVEREF(__pyx_tuple__22);
+  __pyx_codeobj__23 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__22, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_problems_pyx, __pyx_n_s_mass_matrix_2, 98, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__23)) __PYX_ERR(0, 98, __pyx_L1_error)
+
+  /* "fempy/fem/_problems.pyx":102
+ * 
+ *     @damping_matrix.setter
+ *     def damping_matrix(self, value):             # <<<<<<<<<<<<<<
+ *         self._damping_matrix = value
+ * 
+ */
+  __pyx_tuple__24 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_value); if (unlikely(!__pyx_tuple__24)) __PYX_ERR(0, 102, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__24);
+  __Pyx_GIVEREF(__pyx_tuple__24);
+  __pyx_codeobj__25 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__24, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_problems_pyx, __pyx_n_s_damping_matrix_2, 102, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__25)) __PYX_ERR(0, 102, __pyx_L1_error)
+
+  /* "fempy/fem/_problems.pyx":105
+ *         self._damping_matrix = value
+ * 
+ *     def build_stiffness_matrix(self):             # <<<<<<<<<<<<<<
+ *         """ Builds the global Stiffness Matrix"""
+ *         provider = ElementStiffnessProvider()
+ */
+  __pyx_tuple__26 = PyTuple_Pack(3, __pyx_n_s_self, __pyx_n_s_provider, __pyx_n_s_global_provider); if (unlikely(!__pyx_tuple__26)) __PYX_ERR(0, 105, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__26);
+  __Pyx_GIVEREF(__pyx_tuple__26);
+  __pyx_codeobj__27 = (PyObject*)__Pyx_PyCode_New(1, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__26, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_problems_pyx, __pyx_n_s_build_stiffness_matrix, 105, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__27)) __PYX_ERR(0, 105, __pyx_L1_error)
+
+  /* "fempy/fem/_problems.pyx":111
+ *         self.stiffness_matrix = global_provider.get_stiffness_matrix(self.model, provider)
+ * 
+ *     def build_mass_matrix(self):             # <<<<<<<<<<<<<<
+ *         """ Builds the global Mass Matrix"""
+ *         provider = ElementMassProvider()
+ */
+  __pyx_tuple__28 = PyTuple_Pack(3, __pyx_n_s_self, __pyx_n_s_provider, __pyx_n_s_global_provider); if (unlikely(!__pyx_tuple__28)) __PYX_ERR(0, 111, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__28);
+  __Pyx_GIVEREF(__pyx_tuple__28);
+  __pyx_codeobj__29 = (PyObject*)__Pyx_PyCode_New(1, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__28, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_problems_pyx, __pyx_n_s_build_mass_matrix, 111, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__29)) __PYX_ERR(0, 111, __pyx_L1_error)
+
+  /* "fempy/fem/_problems.pyx":118
+ * 
+ * 
+ *     def build_damping_matrix(self):             # <<<<<<<<<<<<<<
+ *         """ Builds the global Mass Matrix"""
+ *         global_provider = self.global_matrix_provider
+ */
+  __pyx_tuple__30 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_global_provider); if (unlikely(!__pyx_tuple__30)) __PYX_ERR(0, 118, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__30);
+  __Pyx_GIVEREF(__pyx_tuple__30);
+  __pyx_codeobj__31 = (PyObject*)__Pyx_PyCode_New(1, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__30, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_problems_pyx, __pyx_n_s_build_damping_matrix, 118, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__31)) __PYX_ERR(0, 118, __pyx_L1_error)
+
+  /* "fempy/fem/_problems.pyx":126
+ * 
+ * 
+ *     def rebuild_stiffness_matrix(self):             # <<<<<<<<<<<<<<
+ *         """ Rebuilds the global Stiffness Matrix"""
+ *         global_provider = self.global_matrix_provider
+ */
+  __pyx_tuple__32 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_global_provider); if (unlikely(!__pyx_tuple__32)) __PYX_ERR(0, 126, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__32);
+  __Pyx_GIVEREF(__pyx_tuple__32);
+  __pyx_codeobj__33 = (PyObject*)__Pyx_PyCode_New(1, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__32, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_problems_pyx, __pyx_n_s_rebuild_stiffness_matrix, 126, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__33)) __PYX_ERR(0, 126, __pyx_L1_error)
+
+  /* "fempy/fem/_problems.pyx":131
+ *         self.stiffness_matrix = global_provider.get_stiffness_matrix(self.model, self.stiffness_provider)
+ * 
+ *     def rebuild_mass_matrix(self):             # <<<<<<<<<<<<<<
+ *         """ Rebuilds the global Mass Matrix"""
+ *         global_provider = self.global_matrix_provider
+ */
+  __pyx_tuple__34 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_global_provider); if (unlikely(!__pyx_tuple__34)) __PYX_ERR(0, 131, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__34);
+  __Pyx_GIVEREF(__pyx_tuple__34);
+  __pyx_codeobj__35 = (PyObject*)__Pyx_PyCode_New(1, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__34, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_problems_pyx, __pyx_n_s_rebuild_mass_matrix, 131, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__35)) __PYX_ERR(0, 131, __pyx_L1_error)
+
+  /* "fempy/fem/_problems.pyx":136
+ *         self.mass_matrix = global_provider.get_mass_matrix(self.model, self.mass_provider)
+ * 
+ *     def rebuild_damping_matrix(self):             # <<<<<<<<<<<<<<
+ *         """ Rebuilds the global Mass Matrix"""
+ *         global_provider = self.global_matrix_provider
+ */
+  __pyx_tuple__36 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_global_provider); if (unlikely(!__pyx_tuple__36)) __PYX_ERR(0, 136, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__36);
+  __Pyx_GIVEREF(__pyx_tuple__36);
+  __pyx_codeobj__37 = (PyObject*)__Pyx_PyCode_New(1, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__36, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_problems_pyx, __pyx_n_s_rebuild_damping_matrix, 136, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__37)) __PYX_ERR(0, 136, __pyx_L1_error)
+
+  /* "fempy/fem/_problems.pyx":143
+ *                                                                self.damping_provider)
+ * 
+ *     def get_rhs_from_history_load(self, timestep):             # <<<<<<<<<<<<<<
+ *         model = self.model
+ *         provider = self.global_matrix_provider
+ */
+  __pyx_tuple__38 = PyTuple_Pack(8, __pyx_n_s_self, __pyx_n_s_timestep, __pyx_n_s_model, __pyx_n_s_provider, __pyx_n_s_stforces, __pyx_n_s_dyforces, __pyx_n_s_inloads, __pyx_n_s_in_dir_vectors); if (unlikely(!__pyx_tuple__38)) __PYX_ERR(0, 143, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__38);
+  __Pyx_GIVEREF(__pyx_tuple__38);
+  __pyx_codeobj__39 = (PyObject*)__Pyx_PyCode_New(2, 0, 8, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__38, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_problems_pyx, __pyx_n_s_get_rhs_from_history_load, 143, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__39)) __PYX_ERR(0, 143, __pyx_L1_error)
+
+  /* "fempy/fem/_problems.pyx":153
+ *                                                    inloads, in_dir_vectors, self._mass_matrix)
+ * 
+ *     def mass_matrix_vector_product(self, vector):             # <<<<<<<<<<<<<<
+ *         return self._mass_matrix @ vector
+ * 
+ */
+  __pyx_tuple__40 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_vector); if (unlikely(!__pyx_tuple__40)) __PYX_ERR(0, 153, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__40);
+  __Pyx_GIVEREF(__pyx_tuple__40);
+  __pyx_codeobj__41 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__40, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_problems_pyx, __pyx_n_s_mass_matrix_vector_product, 153, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__41)) __PYX_ERR(0, 153, __pyx_L1_error)
+
+  /* "fempy/fem/_problems.pyx":156
+ *         return self._mass_matrix @ vector
+ * 
+ *     def stiffness_matrix_vector_product(self, vector):             # <<<<<<<<<<<<<<
+ *         return self._stiffness_matrix @ vector
+ * 
+ */
+  __pyx_tuple__42 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_vector); if (unlikely(!__pyx_tuple__42)) __PYX_ERR(0, 156, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__42);
+  __Pyx_GIVEREF(__pyx_tuple__42);
+  __pyx_codeobj__43 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__42, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_problems_pyx, __pyx_n_s_stiffness_matrix_vector_product, 156, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__43)) __PYX_ERR(0, 156, __pyx_L1_error)
+
+  /* "fempy/fem/_problems.pyx":159
+ *         return self._stiffness_matrix @ vector
+ * 
+ *     def damping_matrix_vector_product(self, vector):             # <<<<<<<<<<<<<<
+ *         return self._damping_matrix @ vector
+ * 
+ */
+  __pyx_tuple__44 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_vector); if (unlikely(!__pyx_tuple__44)) __PYX_ERR(0, 159, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__44);
+  __Pyx_GIVEREF(__pyx_tuple__44);
+  __pyx_codeobj__45 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__44, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_problems_pyx, __pyx_n_s_damping_matrix_vector_product, 159, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__45)) __PYX_ERR(0, 159, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -6032,7 +5491,6 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
 
 static CYTHON_SMALL_CODE int __Pyx_InitGlobals(void) {
   if (__Pyx_InitStrings(__pyx_string_tab) < 0) __PYX_ERR(0, 2, __pyx_L1_error);
-  __pyx_int_222419149 = PyInt_FromLong(222419149L); if (unlikely(!__pyx_int_222419149)) __PYX_ERR(0, 2, __pyx_L1_error)
   return 0;
   __pyx_L1_error:;
   return -1;
@@ -6074,27 +5532,8 @@ static int __Pyx_modinit_type_init_code(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_modinit_type_init_code", 0);
   /*--- Type init code ---*/
-  __pyx_vtabptr_5fempy_3fem_8problems_ProblemStructuralDynamic = &__pyx_vtable_5fempy_3fem_8problems_ProblemStructuralDynamic;
-  __pyx_vtable_5fempy_3fem_8problems_ProblemStructuralDynamic.get_rhs_from_history_load = (PyObject *(*)(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *, PyObject *, int __pyx_skip_dispatch))__pyx_f_5fempy_3fem_8problems_24ProblemStructuralDynamic_get_rhs_from_history_load;
-  __pyx_vtable_5fempy_3fem_8problems_ProblemStructuralDynamic.mass_matrix_vector_product = (PyObject *(*)(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *, PyObject *, int __pyx_skip_dispatch))__pyx_f_5fempy_3fem_8problems_24ProblemStructuralDynamic_mass_matrix_vector_product;
-  __pyx_vtable_5fempy_3fem_8problems_ProblemStructuralDynamic.stiffness_matrix_vector_product = (PyObject *(*)(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *, PyObject *, int __pyx_skip_dispatch))__pyx_f_5fempy_3fem_8problems_24ProblemStructuralDynamic_stiffness_matrix_vector_product;
-  __pyx_vtable_5fempy_3fem_8problems_ProblemStructuralDynamic.damping_matrix_vector_product = (PyObject *(*)(struct __pyx_obj_5fempy_3fem_8problems_ProblemStructuralDynamic *, PyObject *, int __pyx_skip_dispatch))__pyx_f_5fempy_3fem_8problems_24ProblemStructuralDynamic_damping_matrix_vector_product;
-  if (PyType_Ready(&__pyx_type_5fempy_3fem_8problems_ProblemStructuralDynamic) < 0) __PYX_ERR(0, 42, __pyx_L1_error)
-  #if PY_VERSION_HEX < 0x030800B1
-  __pyx_type_5fempy_3fem_8problems_ProblemStructuralDynamic.tp_print = 0;
-  #endif
-  if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_type_5fempy_3fem_8problems_ProblemStructuralDynamic.tp_dictoffset && __pyx_type_5fempy_3fem_8problems_ProblemStructuralDynamic.tp_getattro == PyObject_GenericGetAttr)) {
-    __pyx_type_5fempy_3fem_8problems_ProblemStructuralDynamic.tp_getattro = __Pyx_PyObject_GenericGetAttr;
-  }
-  if (__Pyx_SetVtable(__pyx_type_5fempy_3fem_8problems_ProblemStructuralDynamic.tp_dict, __pyx_vtabptr_5fempy_3fem_8problems_ProblemStructuralDynamic) < 0) __PYX_ERR(0, 42, __pyx_L1_error)
-  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_ProblemStructuralDynamic, (PyObject *)&__pyx_type_5fempy_3fem_8problems_ProblemStructuralDynamic) < 0) __PYX_ERR(0, 42, __pyx_L1_error)
-  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_5fempy_3fem_8problems_ProblemStructuralDynamic) < 0) __PYX_ERR(0, 42, __pyx_L1_error)
-  __pyx_ptype_5fempy_3fem_8problems_ProblemStructuralDynamic = &__pyx_type_5fempy_3fem_8problems_ProblemStructuralDynamic;
   __Pyx_RefNannyFinishContext();
   return 0;
-  __pyx_L1_error:;
-  __Pyx_RefNannyFinishContext();
-  return -1;
 }
 
 static int __Pyx_modinit_type_import_code(void) {
@@ -6138,11 +5577,11 @@ static int __Pyx_modinit_function_import_code(void) {
 
 
 #if PY_MAJOR_VERSION < 3
-__Pyx_PyMODINIT_FUNC initproblems(void) CYTHON_SMALL_CODE; /*proto*/
-__Pyx_PyMODINIT_FUNC initproblems(void)
+__Pyx_PyMODINIT_FUNC init_problems(void) CYTHON_SMALL_CODE; /*proto*/
+__Pyx_PyMODINIT_FUNC init_problems(void)
 #else
-__Pyx_PyMODINIT_FUNC PyInit_problems(void) CYTHON_SMALL_CODE; /*proto*/
-__Pyx_PyMODINIT_FUNC PyInit_problems(void)
+__Pyx_PyMODINIT_FUNC PyInit__problems(void) CYTHON_SMALL_CODE; /*proto*/
+__Pyx_PyMODINIT_FUNC PyInit__problems(void)
 #if CYTHON_PEP489_MULTI_PHASE_INIT
 {
   return PyModuleDef_Init(&__pyx_moduledef);
@@ -6209,18 +5648,20 @@ bad:
 }
 
 
-static CYTHON_SMALL_CODE int __pyx_pymod_exec_problems(PyObject *__pyx_pyinit_module)
+static CYTHON_SMALL_CODE int __pyx_pymod_exec__problems(PyObject *__pyx_pyinit_module)
 #endif
 #endif
 {
   PyObject *__pyx_t_1 = NULL;
   PyObject *__pyx_t_2 = NULL;
   PyObject *__pyx_t_3 = NULL;
+  PyObject *__pyx_t_4 = NULL;
+  PyObject *__pyx_t_5 = NULL;
   __Pyx_RefNannyDeclarations
   #if CYTHON_PEP489_MULTI_PHASE_INIT
   if (__pyx_m) {
     if (__pyx_m == __pyx_pyinit_module) return 0;
-    PyErr_SetString(PyExc_RuntimeError, "Module 'problems' has already been imported. Re-initialisation is not supported.");
+    PyErr_SetString(PyExc_RuntimeError, "Module '_problems' has already been imported. Re-initialisation is not supported.");
     return -1;
   }
   #elif PY_MAJOR_VERSION >= 3
@@ -6235,7 +5676,7 @@ if (!__Pyx_RefNanny) {
       Py_FatalError("failed to import 'refnanny' module");
 }
 #endif
-  __Pyx_RefNannySetupContext("__Pyx_PyMODINIT_FUNC PyInit_problems(void)", 0);
+  __Pyx_RefNannySetupContext("__Pyx_PyMODINIT_FUNC PyInit__problems(void)", 0);
   if (__Pyx_check_binary_version() < 0) __PYX_ERR(0, 2, __pyx_L1_error)
   #ifdef __Pxy_PyFrame_Initialize_Offsets
   __Pxy_PyFrame_Initialize_Offsets();
@@ -6274,7 +5715,7 @@ if (!__Pyx_RefNanny) {
   Py_INCREF(__pyx_m);
   #else
   #if PY_MAJOR_VERSION < 3
-  __pyx_m = Py_InitModule4("problems", __pyx_methods, 0, 0, PYTHON_API_VERSION); Py_XINCREF(__pyx_m);
+  __pyx_m = Py_InitModule4("_problems", __pyx_methods, 0, 0, PYTHON_API_VERSION); Py_XINCREF(__pyx_m);
   #else
   __pyx_m = PyModule_Create(&__pyx_moduledef);
   #endif
@@ -6292,14 +5733,14 @@ if (!__Pyx_RefNanny) {
   #if PY_MAJOR_VERSION < 3 && (__PYX_DEFAULT_STRING_ENCODING_IS_ASCII || __PYX_DEFAULT_STRING_ENCODING_IS_DEFAULT)
   if (__Pyx_init_sys_getdefaultencoding_params() < 0) __PYX_ERR(0, 2, __pyx_L1_error)
   #endif
-  if (__pyx_module_is_main_fempy__fem__problems) {
+  if (__pyx_module_is_main_fempy__fem___problems) {
     if (PyObject_SetAttr(__pyx_m, __pyx_n_s_name, __pyx_n_s_main) < 0) __PYX_ERR(0, 2, __pyx_L1_error)
   }
   #if PY_MAJOR_VERSION >= 3
   {
     PyObject *modules = PyImport_GetModuleDict(); if (unlikely(!modules)) __PYX_ERR(0, 2, __pyx_L1_error)
-    if (!PyDict_GetItemString(modules, "fempy.fem.problems")) {
-      if (unlikely(PyDict_SetItemString(modules, "fempy.fem.problems", __pyx_m) < 0)) __PYX_ERR(0, 2, __pyx_L1_error)
+    if (!PyDict_GetItemString(modules, "fempy.fem._problems")) {
+      if (unlikely(PyDict_SetItemString(modules, "fempy.fem._problems", __pyx_m) < 0)) __PYX_ERR(0, 2, __pyx_L1_error)
     }
   }
   #endif
@@ -6311,7 +5752,7 @@ if (!__Pyx_RefNanny) {
   (void)__Pyx_modinit_global_init_code();
   (void)__Pyx_modinit_variable_export_code();
   (void)__Pyx_modinit_function_export_code();
-  if (unlikely(__Pyx_modinit_type_init_code() != 0)) goto __pyx_L1_error;
+  (void)__Pyx_modinit_type_init_code();
   (void)__Pyx_modinit_type_import_code();
   (void)__Pyx_modinit_variable_import_code();
   (void)__Pyx_modinit_function_import_code();
@@ -6320,7 +5761,7 @@ if (!__Pyx_RefNanny) {
   if (__Pyx_patch_abc() < 0) __PYX_ERR(0, 2, __pyx_L1_error)
   #endif
 
-  /* "fempy/fem/problems.pyx":2
+  /* "fempy/fem/_problems.pyx":2
  * 
  * from fem.core.providers import ElementMassProvider, ElementStiffnessProvider, RayleighDampingMatrixProvider             # <<<<<<<<<<<<<<
  * from fem.core.providers import GlobalMatrixProvider
@@ -6354,7 +5795,7 @@ if (!__Pyx_RefNanny) {
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "fempy/fem/problems.pyx":3
+  /* "fempy/fem/_problems.pyx":3
  * 
  * from fem.core.providers import ElementMassProvider, ElementStiffnessProvider, RayleighDampingMatrixProvider
  * from fem.core.providers import GlobalMatrixProvider             # <<<<<<<<<<<<<<
@@ -6375,40 +5816,40 @@ if (!__Pyx_RefNanny) {
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "fempy/fem/problems.pyx":6
+  /* "fempy/fem/_problems.pyx":6
  * 
  * 
  * class ProblemStructural:             # <<<<<<<<<<<<<<
  *     """Responsible for the assembly of the global stiffness matrix."""
  * 
  */
-  __pyx_t_1 = __Pyx_Py3MetaclassPrepare((PyObject *) NULL, __pyx_empty_tuple, __pyx_n_s_ProblemStructural, __pyx_n_s_ProblemStructural, (PyObject *) NULL, __pyx_n_s_fempy_fem_problems, __pyx_kp_s_Responsible_for_the_assembly_of); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 6, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_Py3MetaclassPrepare((PyObject *) NULL, __pyx_empty_tuple, __pyx_n_s_ProblemStructural, __pyx_n_s_ProblemStructural, (PyObject *) NULL, __pyx_n_s_fempy_fem__problems, __pyx_kp_s_Responsible_for_the_assembly_of); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 6, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
 
-  /* "fempy/fem/problems.pyx":9
+  /* "fempy/fem/_problems.pyx":9
  *     """Responsible for the assembly of the global stiffness matrix."""
  * 
  *     def __init__(self, model, global_matrix_provider=None):             # <<<<<<<<<<<<<<
  *         self.model = model
  *         self._matrix = None
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_5fempy_3fem_8problems_17ProblemStructural_1__init__, 0, __pyx_n_s_ProblemStructural___init, NULL, __pyx_n_s_fempy_fem_problems, __pyx_d, ((PyObject *)__pyx_codeobj__3)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 9, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_5fempy_3fem_9_problems_17ProblemStructural_1__init__, 0, __pyx_n_s_ProblemStructural___init, NULL, __pyx_n_s_fempy_fem__problems, __pyx_d, ((PyObject *)__pyx_codeobj__2)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 9, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_2, __pyx_tuple__4);
+  __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_2, __pyx_tuple__3);
   if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_init, __pyx_t_2) < 0) __PYX_ERR(0, 9, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "fempy/fem/problems.pyx":20
+  /* "fempy/fem/_problems.pyx":20
  * 
  *     @property
  *     def matrix(self):             # <<<<<<<<<<<<<<
  *         if self._matrix is None:
  *             self.build_matrix()
  */
-  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_5fempy_3fem_8problems_17ProblemStructural_3matrix, 0, __pyx_n_s_ProblemStructural_matrix, NULL, __pyx_n_s_fempy_fem_problems, __pyx_d, ((PyObject *)__pyx_codeobj__6)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 20, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_5fempy_3fem_9_problems_17ProblemStructural_3matrix, 0, __pyx_n_s_ProblemStructural_matrix, NULL, __pyx_n_s_fempy_fem__problems, __pyx_d, ((PyObject *)__pyx_codeobj__5)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 20, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
 
-  /* "fempy/fem/problems.pyx":19
+  /* "fempy/fem/_problems.pyx":19
  *             self.global_matrix_provider = global_matrix_provider
  * 
  *     @property             # <<<<<<<<<<<<<<
@@ -6421,43 +5862,43 @@ if (!__Pyx_RefNanny) {
   if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_matrix_2, __pyx_t_3) < 0) __PYX_ERR(0, 20, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "fempy/fem/problems.pyx":27
+  /* "fempy/fem/_problems.pyx":27
  *         return self._matrix
  * 
  *     def build_matrix(self):             # <<<<<<<<<<<<<<
  *         """ Builds the global Stiffness Matrix"""
  *         provider = ElementStiffnessProvider()
  */
-  __pyx_t_3 = __Pyx_CyFunction_NewEx(&__pyx_mdef_5fempy_3fem_8problems_17ProblemStructural_5build_matrix, 0, __pyx_n_s_ProblemStructural_build_matrix, NULL, __pyx_n_s_fempy_fem_problems, __pyx_d, ((PyObject *)__pyx_codeobj__8)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 27, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_CyFunction_NewEx(&__pyx_mdef_5fempy_3fem_9_problems_17ProblemStructural_5build_matrix, 0, __pyx_n_s_ProblemStructural_build_matrix, NULL, __pyx_n_s_fempy_fem__problems, __pyx_d, ((PyObject *)__pyx_codeobj__7)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 27, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_build_matrix, __pyx_t_3) < 0) __PYX_ERR(0, 27, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "fempy/fem/problems.pyx":33
+  /* "fempy/fem/_problems.pyx":33
  *         self._matrix = global_provider.get_stiffness_matrix(self.model, provider)
  * 
  *     def rebuild_matrix(self):             # <<<<<<<<<<<<<<
  *         """ Rebuilds the global Stiffness Matrix"""
  *         global_provider = self.global_matrix_provider
  */
-  __pyx_t_3 = __Pyx_CyFunction_NewEx(&__pyx_mdef_5fempy_3fem_8problems_17ProblemStructural_7rebuild_matrix, 0, __pyx_n_s_ProblemStructural_rebuild_matrix, NULL, __pyx_n_s_fempy_fem_problems, __pyx_d, ((PyObject *)__pyx_codeobj__10)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 33, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_CyFunction_NewEx(&__pyx_mdef_5fempy_3fem_9_problems_17ProblemStructural_7rebuild_matrix, 0, __pyx_n_s_ProblemStructural_rebuild_matrix, NULL, __pyx_n_s_fempy_fem__problems, __pyx_d, ((PyObject *)__pyx_codeobj__9)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 33, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_rebuild_matrix, __pyx_t_3) < 0) __PYX_ERR(0, 33, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "fempy/fem/problems.pyx":38
+  /* "fempy/fem/_problems.pyx":38
  *         self._matrix = global_provider.get_stiffness_matrix(self.model, self.provider)
  * 
  *     def calculate_matrix(self, linear_system):             # <<<<<<<<<<<<<<
  *         linear_system.matrix = self.matrix
  * 
  */
-  __pyx_t_3 = __Pyx_CyFunction_NewEx(&__pyx_mdef_5fempy_3fem_8problems_17ProblemStructural_9calculate_matrix, 0, __pyx_n_s_ProblemStructural_calculate_matr, NULL, __pyx_n_s_fempy_fem_problems, __pyx_d, ((PyObject *)__pyx_codeobj__12)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 38, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_CyFunction_NewEx(&__pyx_mdef_5fempy_3fem_9_problems_17ProblemStructural_9calculate_matrix, 0, __pyx_n_s_ProblemStructural_calculate_matr, NULL, __pyx_n_s_fempy_fem__problems, __pyx_d, ((PyObject *)__pyx_codeobj__11)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 38, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_calculate_matrix, __pyx_t_3) < 0) __PYX_ERR(0, 38, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "fempy/fem/problems.pyx":6
+  /* "fempy/fem/_problems.pyx":6
  * 
  * 
  * class ProblemStructural:             # <<<<<<<<<<<<<<
@@ -6470,30 +5911,376 @@ if (!__Pyx_RefNanny) {
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "fempy/fem/problems.pyx":45
- *     """Provider responsible for the assembly of the global matrices."""
+  /* "fempy/fem/_problems.pyx":42
  * 
+ * 
+ * class ProblemStructuralDynamic:             # <<<<<<<<<<<<<<
+ *     """Provider responsible for the assembly of the global matrices."""
+ * #    cpdef public object model, global_matrix_provider
+ */
+  __pyx_t_1 = __Pyx_Py3MetaclassPrepare((PyObject *) NULL, __pyx_empty_tuple, __pyx_n_s_ProblemStructuralDynamic, __pyx_n_s_ProblemStructuralDynamic, (PyObject *) NULL, __pyx_n_s_fempy_fem__problems, __pyx_kp_s_Provider_responsible_for_the_ass); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 42, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+
+  /* "fempy/fem/_problems.pyx":49
+ * #    cpdef public bint change_stiffness, change_mass, change_damping
+ * #
  *     def __init__(self, model, global_matrix_provider=GlobalMatrixProvider, damping_provider=None):             # <<<<<<<<<<<<<<
  *         self.model = model
  *         self.global_matrix_provider = global_matrix_provider
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_GlobalMatrixProvider); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 45, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_k_ = __pyx_t_1;
-  __Pyx_GIVEREF(__pyx_t_1);
-  __pyx_t_1 = 0;
+  __pyx_t_3 = __Pyx_CyFunction_NewEx(&__pyx_mdef_5fempy_3fem_9_problems_24ProblemStructuralDynamic_1__init__, 0, __pyx_n_s_ProblemStructuralDynamic___init, NULL, __pyx_n_s_fempy_fem__problems, __pyx_d, ((PyObject *)__pyx_codeobj__13)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 49, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  if (!__Pyx_CyFunction_InitDefaults(__pyx_t_3, sizeof(__pyx_defaults), 1)) __PYX_ERR(0, 49, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_GlobalMatrixProvider); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 49, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_CyFunction_Defaults(__pyx_defaults, __pyx_t_3)->__pyx_arg_global_matrix_provider = __pyx_t_2;
+  __Pyx_GIVEREF(__pyx_t_2);
+  __pyx_t_2 = 0;
+  __Pyx_CyFunction_SetDefaultsGetter(__pyx_t_3, __pyx_pf_5fempy_3fem_9_problems___defaults__);
+  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_init, __pyx_t_3) < 0) __PYX_ERR(0, 49, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "(tree fragment)":1
- * def __pyx_unpickle_ProblemStructuralDynamic(__pyx_type, long __pyx_checksum, __pyx_state):             # <<<<<<<<<<<<<<
- *     cdef object __pyx_PickleError
- *     cdef object __pyx_result
+  /* "fempy/fem/_problems.pyx":63
+ * 
+ *     @property
+ *     def stiffness_matrix(self):             # <<<<<<<<<<<<<<
+ * 
+ *         if (self._stiffness_matrix is not None) and not self.change_stiffness:
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_5fempy_3fem_8problems_1__pyx_unpickle_ProblemStructuralDynamic, NULL, __pyx_n_s_fempy_fem_problems); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 1, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_pyx_unpickle_ProblemStructural, __pyx_t_1) < 0) __PYX_ERR(1, 1, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_CyFunction_NewEx(&__pyx_mdef_5fempy_3fem_9_problems_24ProblemStructuralDynamic_3stiffness_matrix, 0, __pyx_n_s_ProblemStructuralDynamic_stiffne, NULL, __pyx_n_s_fempy_fem__problems, __pyx_d, ((PyObject *)__pyx_codeobj__15)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 63, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+
+  /* "fempy/fem/_problems.pyx":62
+ *         self.change_damping = True
+ * 
+ *     @property             # <<<<<<<<<<<<<<
+ *     def stiffness_matrix(self):
+ * 
+ */
+  __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_builtin_property, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 62, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_stiffness_matrix_2, __pyx_t_2) < 0) __PYX_ERR(0, 63, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "fempy/fem/_problems.pyx":74
+ * 
+ *     @property
+ *     def mass_matrix(self):             # <<<<<<<<<<<<<<
+ *         if (self._mass_matrix is not None) and not self.change_mass:
+ *             pass
+ */
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_5fempy_3fem_9_problems_24ProblemStructuralDynamic_5mass_matrix, 0, __pyx_n_s_ProblemStructuralDynamic_mass_ma, NULL, __pyx_n_s_fempy_fem__problems, __pyx_d, ((PyObject *)__pyx_codeobj__17)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 74, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+
+  /* "fempy/fem/_problems.pyx":73
+ *         return self._stiffness_matrix
+ * 
+ *     @property             # <<<<<<<<<<<<<<
+ *     def mass_matrix(self):
+ *         if (self._mass_matrix is not None) and not self.change_mass:
+ */
+  __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_builtin_property, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 73, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_mass_matrix_2, __pyx_t_3) < 0) __PYX_ERR(0, 74, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+
+  /* "fempy/fem/_problems.pyx":84
+ * 
+ *     @property
+ *     def damping_matrix(self):             # <<<<<<<<<<<<<<
+ *         if (self._damping_matrix is not None) and not self.change_damping:
+ *             pass
+ */
+  __pyx_t_3 = __Pyx_CyFunction_NewEx(&__pyx_mdef_5fempy_3fem_9_problems_24ProblemStructuralDynamic_7damping_matrix, 0, __pyx_n_s_ProblemStructuralDynamic_damping, NULL, __pyx_n_s_fempy_fem__problems, __pyx_d, ((PyObject *)__pyx_codeobj__19)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 84, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+
+  /* "fempy/fem/_problems.pyx":83
+ *         return self._mass_matrix
+ * 
+ *     @property             # <<<<<<<<<<<<<<
+ *     def damping_matrix(self):
+ *         if (self._damping_matrix is not None) and not self.change_damping:
+ */
+  __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_builtin_property, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 83, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_damping_matrix_2, __pyx_t_2) < 0) __PYX_ERR(0, 84, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "fempy/fem/_problems.pyx":93
+ *         return self._damping_matrix
+ * 
+ *     @stiffness_matrix.setter             # <<<<<<<<<<<<<<
+ *     def stiffness_matrix(self, value):
+ *         self._stiffness_matrix = value
+ */
+  __pyx_t_3 = PyObject_GetItem(__pyx_t_1, __pyx_n_s_stiffness_matrix_2);
+  if (unlikely(!__pyx_t_3)) {
+    PyErr_Clear();
+    __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_stiffness_matrix_2);
+  }
+  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 93, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_setter); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 93, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+
+  /* "fempy/fem/_problems.pyx":94
+ * 
+ *     @stiffness_matrix.setter
+ *     def stiffness_matrix(self, value):             # <<<<<<<<<<<<<<
+ *         self._stiffness_matrix = value
+ * 
+ */
+  __pyx_t_3 = __Pyx_CyFunction_NewEx(&__pyx_mdef_5fempy_3fem_9_problems_24ProblemStructuralDynamic_9stiffness_matrix, 0, __pyx_n_s_ProblemStructuralDynamic_stiffne, NULL, __pyx_n_s_fempy_fem__problems, __pyx_d, ((PyObject *)__pyx_codeobj__21)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 94, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_5 = NULL;
+  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
+    __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_4);
+    if (likely(__pyx_t_5)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
+      __Pyx_INCREF(__pyx_t_5);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_4, function);
+    }
+  }
+  __pyx_t_2 = (__pyx_t_5) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_5, __pyx_t_3) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_3);
+  __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 93, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_stiffness_matrix_2, __pyx_t_2) < 0) __PYX_ERR(0, 94, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "fempy/fem/_problems.pyx":97
+ *         self._stiffness_matrix = value
+ * 
+ *     @mass_matrix.setter             # <<<<<<<<<<<<<<
+ *     def mass_matrix(self, value):
+ *         self._mass_matrix = value
+ */
+  __pyx_t_4 = PyObject_GetItem(__pyx_t_1, __pyx_n_s_mass_matrix_2);
+  if (unlikely(!__pyx_t_4)) {
+    PyErr_Clear();
+    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_mass_matrix_2);
+  }
+  if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 97, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_setter); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 97, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+
+  /* "fempy/fem/_problems.pyx":98
+ * 
+ *     @mass_matrix.setter
+ *     def mass_matrix(self, value):             # <<<<<<<<<<<<<<
+ *         self._mass_matrix = value
+ * 
+ */
+  __pyx_t_4 = __Pyx_CyFunction_NewEx(&__pyx_mdef_5fempy_3fem_9_problems_24ProblemStructuralDynamic_11mass_matrix, 0, __pyx_n_s_ProblemStructuralDynamic_mass_ma, NULL, __pyx_n_s_fempy_fem__problems, __pyx_d, ((PyObject *)__pyx_codeobj__23)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 98, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __pyx_t_5 = NULL;
+  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
+    __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_3);
+    if (likely(__pyx_t_5)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
+      __Pyx_INCREF(__pyx_t_5);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_3, function);
+    }
+  }
+  __pyx_t_2 = (__pyx_t_5) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_5, __pyx_t_4) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4);
+  __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 97, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_mass_matrix_2, __pyx_t_2) < 0) __PYX_ERR(0, 98, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "fempy/fem/_problems.pyx":101
+ *         self._mass_matrix = value
+ * 
+ *     @damping_matrix.setter             # <<<<<<<<<<<<<<
+ *     def damping_matrix(self, value):
+ *         self._damping_matrix = value
+ */
+  __pyx_t_3 = PyObject_GetItem(__pyx_t_1, __pyx_n_s_damping_matrix_2);
+  if (unlikely(!__pyx_t_3)) {
+    PyErr_Clear();
+    __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_damping_matrix_2);
+  }
+  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 101, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_setter); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 101, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+
+  /* "fempy/fem/_problems.pyx":102
+ * 
+ *     @damping_matrix.setter
+ *     def damping_matrix(self, value):             # <<<<<<<<<<<<<<
+ *         self._damping_matrix = value
+ * 
+ */
+  __pyx_t_3 = __Pyx_CyFunction_NewEx(&__pyx_mdef_5fempy_3fem_9_problems_24ProblemStructuralDynamic_13damping_matrix, 0, __pyx_n_s_ProblemStructuralDynamic_damping, NULL, __pyx_n_s_fempy_fem__problems, __pyx_d, ((PyObject *)__pyx_codeobj__25)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 102, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_5 = NULL;
+  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
+    __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_4);
+    if (likely(__pyx_t_5)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
+      __Pyx_INCREF(__pyx_t_5);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_4, function);
+    }
+  }
+  __pyx_t_2 = (__pyx_t_5) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_5, __pyx_t_3) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_3);
+  __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 101, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_damping_matrix_2, __pyx_t_2) < 0) __PYX_ERR(0, 102, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "fempy/fem/_problems.pyx":105
+ *         self._damping_matrix = value
+ * 
+ *     def build_stiffness_matrix(self):             # <<<<<<<<<<<<<<
+ *         """ Builds the global Stiffness Matrix"""
+ *         provider = ElementStiffnessProvider()
+ */
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_5fempy_3fem_9_problems_24ProblemStructuralDynamic_15build_stiffness_matrix, 0, __pyx_n_s_ProblemStructuralDynamic_build_s, NULL, __pyx_n_s_fempy_fem__problems, __pyx_d, ((PyObject *)__pyx_codeobj__27)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 105, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_build_stiffness_matrix, __pyx_t_2) < 0) __PYX_ERR(0, 105, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "fempy/fem/_problems.pyx":111
+ *         self.stiffness_matrix = global_provider.get_stiffness_matrix(self.model, provider)
+ * 
+ *     def build_mass_matrix(self):             # <<<<<<<<<<<<<<
+ *         """ Builds the global Mass Matrix"""
+ *         provider = ElementMassProvider()
+ */
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_5fempy_3fem_9_problems_24ProblemStructuralDynamic_17build_mass_matrix, 0, __pyx_n_s_ProblemStructuralDynamic_build_m, NULL, __pyx_n_s_fempy_fem__problems, __pyx_d, ((PyObject *)__pyx_codeobj__29)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 111, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_build_mass_matrix, __pyx_t_2) < 0) __PYX_ERR(0, 111, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "fempy/fem/_problems.pyx":118
+ * 
+ * 
+ *     def build_damping_matrix(self):             # <<<<<<<<<<<<<<
+ *         """ Builds the global Mass Matrix"""
+ *         global_provider = self.global_matrix_provider
+ */
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_5fempy_3fem_9_problems_24ProblemStructuralDynamic_19build_damping_matrix, 0, __pyx_n_s_ProblemStructuralDynamic_build_d, NULL, __pyx_n_s_fempy_fem__problems, __pyx_d, ((PyObject *)__pyx_codeobj__31)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 118, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_build_damping_matrix, __pyx_t_2) < 0) __PYX_ERR(0, 118, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "fempy/fem/_problems.pyx":126
+ * 
+ * 
+ *     def rebuild_stiffness_matrix(self):             # <<<<<<<<<<<<<<
+ *         """ Rebuilds the global Stiffness Matrix"""
+ *         global_provider = self.global_matrix_provider
+ */
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_5fempy_3fem_9_problems_24ProblemStructuralDynamic_21rebuild_stiffness_matrix, 0, __pyx_n_s_ProblemStructuralDynamic_rebuild, NULL, __pyx_n_s_fempy_fem__problems, __pyx_d, ((PyObject *)__pyx_codeobj__33)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 126, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_rebuild_stiffness_matrix, __pyx_t_2) < 0) __PYX_ERR(0, 126, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "fempy/fem/_problems.pyx":131
+ *         self.stiffness_matrix = global_provider.get_stiffness_matrix(self.model, self.stiffness_provider)
+ * 
+ *     def rebuild_mass_matrix(self):             # <<<<<<<<<<<<<<
+ *         """ Rebuilds the global Mass Matrix"""
+ *         global_provider = self.global_matrix_provider
+ */
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_5fempy_3fem_9_problems_24ProblemStructuralDynamic_23rebuild_mass_matrix, 0, __pyx_n_s_ProblemStructuralDynamic_rebuild_2, NULL, __pyx_n_s_fempy_fem__problems, __pyx_d, ((PyObject *)__pyx_codeobj__35)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 131, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_rebuild_mass_matrix, __pyx_t_2) < 0) __PYX_ERR(0, 131, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "fempy/fem/_problems.pyx":136
+ *         self.mass_matrix = global_provider.get_mass_matrix(self.model, self.mass_provider)
+ * 
+ *     def rebuild_damping_matrix(self):             # <<<<<<<<<<<<<<
+ *         """ Rebuilds the global Mass Matrix"""
+ *         global_provider = self.global_matrix_provider
+ */
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_5fempy_3fem_9_problems_24ProblemStructuralDynamic_25rebuild_damping_matrix, 0, __pyx_n_s_ProblemStructuralDynamic_rebuild_3, NULL, __pyx_n_s_fempy_fem__problems, __pyx_d, ((PyObject *)__pyx_codeobj__37)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 136, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_rebuild_damping_matrix, __pyx_t_2) < 0) __PYX_ERR(0, 136, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "fempy/fem/_problems.pyx":143
+ *                                                                self.damping_provider)
+ * 
+ *     def get_rhs_from_history_load(self, timestep):             # <<<<<<<<<<<<<<
+ *         model = self.model
+ *         provider = self.global_matrix_provider
+ */
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_5fempy_3fem_9_problems_24ProblemStructuralDynamic_27get_rhs_from_history_load, 0, __pyx_n_s_ProblemStructuralDynamic_get_rhs, NULL, __pyx_n_s_fempy_fem__problems, __pyx_d, ((PyObject *)__pyx_codeobj__39)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 143, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_get_rhs_from_history_load, __pyx_t_2) < 0) __PYX_ERR(0, 143, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "fempy/fem/_problems.pyx":153
+ *                                                    inloads, in_dir_vectors, self._mass_matrix)
+ * 
+ *     def mass_matrix_vector_product(self, vector):             # <<<<<<<<<<<<<<
+ *         return self._mass_matrix @ vector
+ * 
+ */
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_5fempy_3fem_9_problems_24ProblemStructuralDynamic_29mass_matrix_vector_product, 0, __pyx_n_s_ProblemStructuralDynamic_mass_ma_2, NULL, __pyx_n_s_fempy_fem__problems, __pyx_d, ((PyObject *)__pyx_codeobj__41)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 153, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_mass_matrix_vector_product, __pyx_t_2) < 0) __PYX_ERR(0, 153, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "fempy/fem/_problems.pyx":156
+ *         return self._mass_matrix @ vector
+ * 
+ *     def stiffness_matrix_vector_product(self, vector):             # <<<<<<<<<<<<<<
+ *         return self._stiffness_matrix @ vector
+ * 
+ */
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_5fempy_3fem_9_problems_24ProblemStructuralDynamic_31stiffness_matrix_vector_product, 0, __pyx_n_s_ProblemStructuralDynamic_stiffne_2, NULL, __pyx_n_s_fempy_fem__problems, __pyx_d, ((PyObject *)__pyx_codeobj__43)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 156, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_stiffness_matrix_vector_product, __pyx_t_2) < 0) __PYX_ERR(0, 156, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "fempy/fem/_problems.pyx":159
+ *         return self._stiffness_matrix @ vector
+ * 
+ *     def damping_matrix_vector_product(self, vector):             # <<<<<<<<<<<<<<
+ *         return self._damping_matrix @ vector
+ * 
+ */
+  __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_5fempy_3fem_9_problems_24ProblemStructuralDynamic_33damping_matrix_vector_product, 0, __pyx_n_s_ProblemStructuralDynamic_damping_2, NULL, __pyx_n_s_fempy_fem__problems, __pyx_d, ((PyObject *)__pyx_codeobj__45)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 159, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_damping_matrix_vector_product, __pyx_t_2) < 0) __PYX_ERR(0, 159, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "fempy/fem/_problems.pyx":42
+ * 
+ * 
+ * class ProblemStructuralDynamic:             # <<<<<<<<<<<<<<
+ *     """Provider responsible for the assembly of the global matrices."""
+ * #    cpdef public object model, global_matrix_provider
+ */
+  __pyx_t_2 = __Pyx_Py3ClassCreate(((PyObject*)&__Pyx_DefaultClassType), __pyx_n_s_ProblemStructuralDynamic, __pyx_empty_tuple, __pyx_t_1, NULL, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 42, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_ProblemStructuralDynamic, __pyx_t_2) < 0) __PYX_ERR(0, 42, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "fempy/fem/problems.pyx":2
+  /* "fempy/fem/_problems.pyx":2
  * 
  * from fem.core.providers import ElementMassProvider, ElementStiffnessProvider, RayleighDampingMatrixProvider             # <<<<<<<<<<<<<<
  * from fem.core.providers import GlobalMatrixProvider
@@ -6511,13 +6298,15 @@ if (!__Pyx_RefNanny) {
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_XDECREF(__pyx_t_4);
+  __Pyx_XDECREF(__pyx_t_5);
   if (__pyx_m) {
     if (__pyx_d) {
-      __Pyx_AddTraceback("init fempy.fem.problems", __pyx_clineno, __pyx_lineno, __pyx_filename);
+      __Pyx_AddTraceback("init fempy.fem._problems", __pyx_clineno, __pyx_lineno, __pyx_filename);
     }
     Py_CLEAR(__pyx_m);
   } else if (!PyErr_Occurred()) {
-    PyErr_SetString(PyExc_ImportError, "init fempy.fem.problems");
+    PyErr_SetString(PyExc_ImportError, "init fempy.fem._problems");
   }
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
@@ -7037,35 +6826,6 @@ static CYTHON_INLINE PyObject* __Pyx_PyObject_CallOneArg(PyObject *func, PyObjec
 }
 #endif
 
-/* PyObjectCall2Args */
-static CYTHON_UNUSED PyObject* __Pyx_PyObject_Call2Args(PyObject* function, PyObject* arg1, PyObject* arg2) {
-    PyObject *args, *result = NULL;
-    #if CYTHON_FAST_PYCALL
-    if (PyFunction_Check(function)) {
-        PyObject *args[2] = {arg1, arg2};
-        return __Pyx_PyFunction_FastCall(function, args, 2);
-    }
-    #endif
-    #if CYTHON_FAST_PYCCALL
-    if (__Pyx_PyFastCFunction_Check(function)) {
-        PyObject *args[2] = {arg1, arg2};
-        return __Pyx_PyCFunction_FastCall(function, args, 2);
-    }
-    #endif
-    args = PyTuple_New(2);
-    if (unlikely(!args)) goto done;
-    Py_INCREF(arg1);
-    PyTuple_SET_ITEM(args, 0, arg1);
-    Py_INCREF(arg2);
-    PyTuple_SET_ITEM(args, 1, arg2);
-    Py_INCREF(function);
-    result = __Pyx_PyObject_Call(function, args, NULL);
-    Py_DECREF(args);
-    Py_DECREF(function);
-done:
-    return result;
-}
-
 /* MatrixMultiply */
 #if PY_VERSION_HEX < 0x03050000
 static PyObject* __Pyx_PyObject_CallMatrixMethod(PyObject* method, PyObject* arg) {
@@ -7148,83 +6908,6 @@ static PyObject* __Pyx_PyNumber_InPlaceMatrixMultiply(PyObject* x, PyObject* y) 
 #undef __Pyx_TryMatrixMethod
 #endif
 
-/* PyErrExceptionMatches */
-#if CYTHON_FAST_THREAD_STATE
-static int __Pyx_PyErr_ExceptionMatchesTuple(PyObject *exc_type, PyObject *tuple) {
-    Py_ssize_t i, n;
-    n = PyTuple_GET_SIZE(tuple);
-#if PY_MAJOR_VERSION >= 3
-    for (i=0; i<n; i++) {
-        if (exc_type == PyTuple_GET_ITEM(tuple, i)) return 1;
-    }
-#endif
-    for (i=0; i<n; i++) {
-        if (__Pyx_PyErr_GivenExceptionMatches(exc_type, PyTuple_GET_ITEM(tuple, i))) return 1;
-    }
-    return 0;
-}
-static CYTHON_INLINE int __Pyx_PyErr_ExceptionMatchesInState(PyThreadState* tstate, PyObject* err) {
-    PyObject *exc_type = tstate->curexc_type;
-    if (exc_type == err) return 1;
-    if (unlikely(!exc_type)) return 0;
-    if (unlikely(PyTuple_Check(err)))
-        return __Pyx_PyErr_ExceptionMatchesTuple(exc_type, err);
-    return __Pyx_PyErr_GivenExceptionMatches(exc_type, err);
-}
-#endif
-
-/* PyErrFetchRestore */
-#if CYTHON_FAST_THREAD_STATE
-static CYTHON_INLINE void __Pyx_ErrRestoreInState(PyThreadState *tstate, PyObject *type, PyObject *value, PyObject *tb) {
-    PyObject *tmp_type, *tmp_value, *tmp_tb;
-    tmp_type = tstate->curexc_type;
-    tmp_value = tstate->curexc_value;
-    tmp_tb = tstate->curexc_traceback;
-    tstate->curexc_type = type;
-    tstate->curexc_value = value;
-    tstate->curexc_traceback = tb;
-    Py_XDECREF(tmp_type);
-    Py_XDECREF(tmp_value);
-    Py_XDECREF(tmp_tb);
-}
-static CYTHON_INLINE void __Pyx_ErrFetchInState(PyThreadState *tstate, PyObject **type, PyObject **value, PyObject **tb) {
-    *type = tstate->curexc_type;
-    *value = tstate->curexc_value;
-    *tb = tstate->curexc_traceback;
-    tstate->curexc_type = 0;
-    tstate->curexc_value = 0;
-    tstate->curexc_traceback = 0;
-}
-#endif
-
-/* GetAttr */
-static CYTHON_INLINE PyObject *__Pyx_GetAttr(PyObject *o, PyObject *n) {
-#if CYTHON_USE_TYPE_SLOTS
-#if PY_MAJOR_VERSION >= 3
-    if (likely(PyUnicode_Check(n)))
-#else
-    if (likely(PyString_Check(n)))
-#endif
-        return __Pyx_PyObject_GetAttrStr(o, n);
-#endif
-    return PyObject_GetAttr(o, n);
-}
-
-/* GetAttr3 */
-static PyObject *__Pyx_GetAttr3Default(PyObject *d) {
-    __Pyx_PyThreadState_declare
-    __Pyx_PyThreadState_assign
-    if (unlikely(!__Pyx_PyErr_ExceptionMatches(PyExc_AttributeError)))
-        return NULL;
-    __Pyx_PyErr_Clear();
-    Py_INCREF(d);
-    return d;
-}
-static CYTHON_INLINE PyObject *__Pyx_GetAttr3(PyObject *o, PyObject *n, PyObject *d) {
-    PyObject *r = __Pyx_GetAttr(o, n);
-    return (likely(r)) ? r : __Pyx_GetAttr3Default(d);
-}
-
 /* Import */
 static PyObject *__Pyx_Import(PyObject *name, PyObject *from_list, int level) {
     PyObject *empty_list = 0;
@@ -7302,414 +6985,6 @@ static PyObject* __Pyx_ImportFrom(PyObject* module, PyObject* name) {
         #endif
     }
     return value;
-}
-
-/* RaiseException */
-#if PY_MAJOR_VERSION < 3
-static void __Pyx_Raise(PyObject *type, PyObject *value, PyObject *tb,
-                        CYTHON_UNUSED PyObject *cause) {
-    __Pyx_PyThreadState_declare
-    Py_XINCREF(type);
-    if (!value || value == Py_None)
-        value = NULL;
-    else
-        Py_INCREF(value);
-    if (!tb || tb == Py_None)
-        tb = NULL;
-    else {
-        Py_INCREF(tb);
-        if (!PyTraceBack_Check(tb)) {
-            PyErr_SetString(PyExc_TypeError,
-                "raise: arg 3 must be a traceback or None");
-            goto raise_error;
-        }
-    }
-    if (PyType_Check(type)) {
-#if CYTHON_COMPILING_IN_PYPY
-        if (!value) {
-            Py_INCREF(Py_None);
-            value = Py_None;
-        }
-#endif
-        PyErr_NormalizeException(&type, &value, &tb);
-    } else {
-        if (value) {
-            PyErr_SetString(PyExc_TypeError,
-                "instance exception may not have a separate value");
-            goto raise_error;
-        }
-        value = type;
-        type = (PyObject*) Py_TYPE(type);
-        Py_INCREF(type);
-        if (!PyType_IsSubtype((PyTypeObject *)type, (PyTypeObject *)PyExc_BaseException)) {
-            PyErr_SetString(PyExc_TypeError,
-                "raise: exception class must be a subclass of BaseException");
-            goto raise_error;
-        }
-    }
-    __Pyx_PyThreadState_assign
-    __Pyx_ErrRestore(type, value, tb);
-    return;
-raise_error:
-    Py_XDECREF(value);
-    Py_XDECREF(type);
-    Py_XDECREF(tb);
-    return;
-}
-#else
-static void __Pyx_Raise(PyObject *type, PyObject *value, PyObject *tb, PyObject *cause) {
-    PyObject* owned_instance = NULL;
-    if (tb == Py_None) {
-        tb = 0;
-    } else if (tb && !PyTraceBack_Check(tb)) {
-        PyErr_SetString(PyExc_TypeError,
-            "raise: arg 3 must be a traceback or None");
-        goto bad;
-    }
-    if (value == Py_None)
-        value = 0;
-    if (PyExceptionInstance_Check(type)) {
-        if (value) {
-            PyErr_SetString(PyExc_TypeError,
-                "instance exception may not have a separate value");
-            goto bad;
-        }
-        value = type;
-        type = (PyObject*) Py_TYPE(value);
-    } else if (PyExceptionClass_Check(type)) {
-        PyObject *instance_class = NULL;
-        if (value && PyExceptionInstance_Check(value)) {
-            instance_class = (PyObject*) Py_TYPE(value);
-            if (instance_class != type) {
-                int is_subclass = PyObject_IsSubclass(instance_class, type);
-                if (!is_subclass) {
-                    instance_class = NULL;
-                } else if (unlikely(is_subclass == -1)) {
-                    goto bad;
-                } else {
-                    type = instance_class;
-                }
-            }
-        }
-        if (!instance_class) {
-            PyObject *args;
-            if (!value)
-                args = PyTuple_New(0);
-            else if (PyTuple_Check(value)) {
-                Py_INCREF(value);
-                args = value;
-            } else
-                args = PyTuple_Pack(1, value);
-            if (!args)
-                goto bad;
-            owned_instance = PyObject_Call(type, args, NULL);
-            Py_DECREF(args);
-            if (!owned_instance)
-                goto bad;
-            value = owned_instance;
-            if (!PyExceptionInstance_Check(value)) {
-                PyErr_Format(PyExc_TypeError,
-                             "calling %R should have returned an instance of "
-                             "BaseException, not %R",
-                             type, Py_TYPE(value));
-                goto bad;
-            }
-        }
-    } else {
-        PyErr_SetString(PyExc_TypeError,
-            "raise: exception class must be a subclass of BaseException");
-        goto bad;
-    }
-    if (cause) {
-        PyObject *fixed_cause;
-        if (cause == Py_None) {
-            fixed_cause = NULL;
-        } else if (PyExceptionClass_Check(cause)) {
-            fixed_cause = PyObject_CallObject(cause, NULL);
-            if (fixed_cause == NULL)
-                goto bad;
-        } else if (PyExceptionInstance_Check(cause)) {
-            fixed_cause = cause;
-            Py_INCREF(fixed_cause);
-        } else {
-            PyErr_SetString(PyExc_TypeError,
-                            "exception causes must derive from "
-                            "BaseException");
-            goto bad;
-        }
-        PyException_SetCause(value, fixed_cause);
-    }
-    PyErr_SetObject(type, value);
-    if (tb) {
-#if CYTHON_COMPILING_IN_PYPY
-        PyObject *tmp_type, *tmp_value, *tmp_tb;
-        PyErr_Fetch(&tmp_type, &tmp_value, &tmp_tb);
-        Py_INCREF(tb);
-        PyErr_Restore(tmp_type, tmp_value, tb);
-        Py_XDECREF(tmp_tb);
-#else
-        PyThreadState *tstate = __Pyx_PyThreadState_Current;
-        PyObject* tmp_tb = tstate->curexc_traceback;
-        if (tb != tmp_tb) {
-            Py_INCREF(tb);
-            tstate->curexc_traceback = tb;
-            Py_XDECREF(tmp_tb);
-        }
-#endif
-    }
-bad:
-    Py_XDECREF(owned_instance);
-    return;
-}
-#endif
-
-/* HasAttr */
-static CYTHON_INLINE int __Pyx_HasAttr(PyObject *o, PyObject *n) {
-    PyObject *r;
-    if (unlikely(!__Pyx_PyBaseString_Check(n))) {
-        PyErr_SetString(PyExc_TypeError,
-                        "hasattr(): attribute name must be string");
-        return -1;
-    }
-    r = __Pyx_GetAttr(o, n);
-    if (unlikely(!r)) {
-        PyErr_Clear();
-        return 0;
-    } else {
-        Py_DECREF(r);
-        return 1;
-    }
-}
-
-/* GetItemInt */
-static PyObject *__Pyx_GetItemInt_Generic(PyObject *o, PyObject* j) {
-    PyObject *r;
-    if (!j) return NULL;
-    r = PyObject_GetItem(o, j);
-    Py_DECREF(j);
-    return r;
-}
-static CYTHON_INLINE PyObject *__Pyx_GetItemInt_List_Fast(PyObject *o, Py_ssize_t i,
-                                                              CYTHON_NCP_UNUSED int wraparound,
-                                                              CYTHON_NCP_UNUSED int boundscheck) {
-#if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-    Py_ssize_t wrapped_i = i;
-    if (wraparound & unlikely(i < 0)) {
-        wrapped_i += PyList_GET_SIZE(o);
-    }
-    if ((!boundscheck) || likely(__Pyx_is_valid_index(wrapped_i, PyList_GET_SIZE(o)))) {
-        PyObject *r = PyList_GET_ITEM(o, wrapped_i);
-        Py_INCREF(r);
-        return r;
-    }
-    return __Pyx_GetItemInt_Generic(o, PyInt_FromSsize_t(i));
-#else
-    return PySequence_GetItem(o, i);
-#endif
-}
-static CYTHON_INLINE PyObject *__Pyx_GetItemInt_Tuple_Fast(PyObject *o, Py_ssize_t i,
-                                                              CYTHON_NCP_UNUSED int wraparound,
-                                                              CYTHON_NCP_UNUSED int boundscheck) {
-#if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-    Py_ssize_t wrapped_i = i;
-    if (wraparound & unlikely(i < 0)) {
-        wrapped_i += PyTuple_GET_SIZE(o);
-    }
-    if ((!boundscheck) || likely(__Pyx_is_valid_index(wrapped_i, PyTuple_GET_SIZE(o)))) {
-        PyObject *r = PyTuple_GET_ITEM(o, wrapped_i);
-        Py_INCREF(r);
-        return r;
-    }
-    return __Pyx_GetItemInt_Generic(o, PyInt_FromSsize_t(i));
-#else
-    return PySequence_GetItem(o, i);
-#endif
-}
-static CYTHON_INLINE PyObject *__Pyx_GetItemInt_Fast(PyObject *o, Py_ssize_t i, int is_list,
-                                                     CYTHON_NCP_UNUSED int wraparound,
-                                                     CYTHON_NCP_UNUSED int boundscheck) {
-#if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS && CYTHON_USE_TYPE_SLOTS
-    if (is_list || PyList_CheckExact(o)) {
-        Py_ssize_t n = ((!wraparound) | likely(i >= 0)) ? i : i + PyList_GET_SIZE(o);
-        if ((!boundscheck) || (likely(__Pyx_is_valid_index(n, PyList_GET_SIZE(o))))) {
-            PyObject *r = PyList_GET_ITEM(o, n);
-            Py_INCREF(r);
-            return r;
-        }
-    }
-    else if (PyTuple_CheckExact(o)) {
-        Py_ssize_t n = ((!wraparound) | likely(i >= 0)) ? i : i + PyTuple_GET_SIZE(o);
-        if ((!boundscheck) || likely(__Pyx_is_valid_index(n, PyTuple_GET_SIZE(o)))) {
-            PyObject *r = PyTuple_GET_ITEM(o, n);
-            Py_INCREF(r);
-            return r;
-        }
-    } else {
-        PySequenceMethods *m = Py_TYPE(o)->tp_as_sequence;
-        if (likely(m && m->sq_item)) {
-            if (wraparound && unlikely(i < 0) && likely(m->sq_length)) {
-                Py_ssize_t l = m->sq_length(o);
-                if (likely(l >= 0)) {
-                    i += l;
-                } else {
-                    if (!PyErr_ExceptionMatches(PyExc_OverflowError))
-                        return NULL;
-                    PyErr_Clear();
-                }
-            }
-            return m->sq_item(o, i);
-        }
-    }
-#else
-    if (is_list || PySequence_Check(o)) {
-        return PySequence_GetItem(o, i);
-    }
-#endif
-    return __Pyx_GetItemInt_Generic(o, PyInt_FromSsize_t(i));
-}
-
-/* PyObject_GenericGetAttrNoDict */
-#if CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP && PY_VERSION_HEX < 0x03070000
-static PyObject *__Pyx_RaiseGenericGetAttributeError(PyTypeObject *tp, PyObject *attr_name) {
-    PyErr_Format(PyExc_AttributeError,
-#if PY_MAJOR_VERSION >= 3
-                 "'%.50s' object has no attribute '%U'",
-                 tp->tp_name, attr_name);
-#else
-                 "'%.50s' object has no attribute '%.400s'",
-                 tp->tp_name, PyString_AS_STRING(attr_name));
-#endif
-    return NULL;
-}
-static CYTHON_INLINE PyObject* __Pyx_PyObject_GenericGetAttrNoDict(PyObject* obj, PyObject* attr_name) {
-    PyObject *descr;
-    PyTypeObject *tp = Py_TYPE(obj);
-    if (unlikely(!PyString_Check(attr_name))) {
-        return PyObject_GenericGetAttr(obj, attr_name);
-    }
-    assert(!tp->tp_dictoffset);
-    descr = _PyType_Lookup(tp, attr_name);
-    if (unlikely(!descr)) {
-        return __Pyx_RaiseGenericGetAttributeError(tp, attr_name);
-    }
-    Py_INCREF(descr);
-    #if PY_MAJOR_VERSION < 3
-    if (likely(PyType_HasFeature(Py_TYPE(descr), Py_TPFLAGS_HAVE_CLASS)))
-    #endif
-    {
-        descrgetfunc f = Py_TYPE(descr)->tp_descr_get;
-        if (unlikely(f)) {
-            PyObject *res = f(descr, obj, (PyObject *)tp);
-            Py_DECREF(descr);
-            return res;
-        }
-    }
-    return descr;
-}
-#endif
-
-/* PyObject_GenericGetAttr */
-#if CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP && PY_VERSION_HEX < 0x03070000
-static PyObject* __Pyx_PyObject_GenericGetAttr(PyObject* obj, PyObject* attr_name) {
-    if (unlikely(Py_TYPE(obj)->tp_dictoffset)) {
-        return PyObject_GenericGetAttr(obj, attr_name);
-    }
-    return __Pyx_PyObject_GenericGetAttrNoDict(obj, attr_name);
-}
-#endif
-
-/* SetVTable */
-static int __Pyx_SetVtable(PyObject *dict, void *vtable) {
-#if PY_VERSION_HEX >= 0x02070000
-    PyObject *ob = PyCapsule_New(vtable, 0, 0);
-#else
-    PyObject *ob = PyCObject_FromVoidPtr(vtable, 0);
-#endif
-    if (!ob)
-        goto bad;
-    if (PyDict_SetItem(dict, __pyx_n_s_pyx_vtable, ob) < 0)
-        goto bad;
-    Py_DECREF(ob);
-    return 0;
-bad:
-    Py_XDECREF(ob);
-    return -1;
-}
-
-/* SetupReduce */
-static int __Pyx_setup_reduce_is_named(PyObject* meth, PyObject* name) {
-  int ret;
-  PyObject *name_attr;
-  name_attr = __Pyx_PyObject_GetAttrStr(meth, __pyx_n_s_name);
-  if (likely(name_attr)) {
-      ret = PyObject_RichCompareBool(name_attr, name, Py_EQ);
-  } else {
-      ret = -1;
-  }
-  if (unlikely(ret < 0)) {
-      PyErr_Clear();
-      ret = 0;
-  }
-  Py_XDECREF(name_attr);
-  return ret;
-}
-static int __Pyx_setup_reduce(PyObject* type_obj) {
-    int ret = 0;
-    PyObject *object_reduce = NULL;
-    PyObject *object_reduce_ex = NULL;
-    PyObject *reduce = NULL;
-    PyObject *reduce_ex = NULL;
-    PyObject *reduce_cython = NULL;
-    PyObject *setstate = NULL;
-    PyObject *setstate_cython = NULL;
-#if CYTHON_USE_PYTYPE_LOOKUP
-    if (_PyType_Lookup((PyTypeObject*)type_obj, __pyx_n_s_getstate)) goto GOOD;
-#else
-    if (PyObject_HasAttr(type_obj, __pyx_n_s_getstate)) goto GOOD;
-#endif
-#if CYTHON_USE_PYTYPE_LOOKUP
-    object_reduce_ex = _PyType_Lookup(&PyBaseObject_Type, __pyx_n_s_reduce_ex); if (!object_reduce_ex) goto BAD;
-#else
-    object_reduce_ex = __Pyx_PyObject_GetAttrStr((PyObject*)&PyBaseObject_Type, __pyx_n_s_reduce_ex); if (!object_reduce_ex) goto BAD;
-#endif
-    reduce_ex = __Pyx_PyObject_GetAttrStr(type_obj, __pyx_n_s_reduce_ex); if (unlikely(!reduce_ex)) goto BAD;
-    if (reduce_ex == object_reduce_ex) {
-#if CYTHON_USE_PYTYPE_LOOKUP
-        object_reduce = _PyType_Lookup(&PyBaseObject_Type, __pyx_n_s_reduce); if (!object_reduce) goto BAD;
-#else
-        object_reduce = __Pyx_PyObject_GetAttrStr((PyObject*)&PyBaseObject_Type, __pyx_n_s_reduce); if (!object_reduce) goto BAD;
-#endif
-        reduce = __Pyx_PyObject_GetAttrStr(type_obj, __pyx_n_s_reduce); if (unlikely(!reduce)) goto BAD;
-        if (reduce == object_reduce || __Pyx_setup_reduce_is_named(reduce, __pyx_n_s_reduce_cython)) {
-            reduce_cython = __Pyx_PyObject_GetAttrStr(type_obj, __pyx_n_s_reduce_cython); if (unlikely(!reduce_cython)) goto BAD;
-            ret = PyDict_SetItem(((PyTypeObject*)type_obj)->tp_dict, __pyx_n_s_reduce, reduce_cython); if (unlikely(ret < 0)) goto BAD;
-            ret = PyDict_DelItem(((PyTypeObject*)type_obj)->tp_dict, __pyx_n_s_reduce_cython); if (unlikely(ret < 0)) goto BAD;
-            setstate = __Pyx_PyObject_GetAttrStr(type_obj, __pyx_n_s_setstate);
-            if (!setstate) PyErr_Clear();
-            if (!setstate || __Pyx_setup_reduce_is_named(setstate, __pyx_n_s_setstate_cython)) {
-                setstate_cython = __Pyx_PyObject_GetAttrStr(type_obj, __pyx_n_s_setstate_cython); if (unlikely(!setstate_cython)) goto BAD;
-                ret = PyDict_SetItem(((PyTypeObject*)type_obj)->tp_dict, __pyx_n_s_setstate, setstate_cython); if (unlikely(ret < 0)) goto BAD;
-                ret = PyDict_DelItem(((PyTypeObject*)type_obj)->tp_dict, __pyx_n_s_setstate_cython); if (unlikely(ret < 0)) goto BAD;
-            }
-            PyType_Modified((PyTypeObject*)type_obj);
-        }
-    }
-    goto GOOD;
-BAD:
-    if (!PyErr_Occurred())
-        PyErr_Format(PyExc_RuntimeError, "Unable to initialize pickling for %s", ((PyTypeObject*)type_obj)->tp_name);
-    ret = -1;
-GOOD:
-#if !CYTHON_USE_PYTYPE_LOOKUP
-    Py_XDECREF(object_reduce);
-    Py_XDECREF(object_reduce_ex);
-#endif
-    Py_XDECREF(reduce);
-    Py_XDECREF(reduce_ex);
-    Py_XDECREF(reduce_cython);
-    Py_XDECREF(setstate);
-    Py_XDECREF(setstate_cython);
-    return ret;
 }
 
 /* FetchCommonType */
@@ -8456,6 +7731,59 @@ static PyObject *__Pyx_Py3ClassCreate(PyObject *metaclass, PyObject *name, PyObj
     return result;
 }
 
+/* PyObjectCall2Args */
+static CYTHON_UNUSED PyObject* __Pyx_PyObject_Call2Args(PyObject* function, PyObject* arg1, PyObject* arg2) {
+    PyObject *args, *result = NULL;
+    #if CYTHON_FAST_PYCALL
+    if (PyFunction_Check(function)) {
+        PyObject *args[2] = {arg1, arg2};
+        return __Pyx_PyFunction_FastCall(function, args, 2);
+    }
+    #endif
+    #if CYTHON_FAST_PYCCALL
+    if (__Pyx_PyFastCFunction_Check(function)) {
+        PyObject *args[2] = {arg1, arg2};
+        return __Pyx_PyCFunction_FastCall(function, args, 2);
+    }
+    #endif
+    args = PyTuple_New(2);
+    if (unlikely(!args)) goto done;
+    Py_INCREF(arg1);
+    PyTuple_SET_ITEM(args, 0, arg1);
+    Py_INCREF(arg2);
+    PyTuple_SET_ITEM(args, 1, arg2);
+    Py_INCREF(function);
+    result = __Pyx_PyObject_Call(function, args, NULL);
+    Py_DECREF(args);
+    Py_DECREF(function);
+done:
+    return result;
+}
+
+/* PyErrFetchRestore */
+#if CYTHON_FAST_THREAD_STATE
+static CYTHON_INLINE void __Pyx_ErrRestoreInState(PyThreadState *tstate, PyObject *type, PyObject *value, PyObject *tb) {
+    PyObject *tmp_type, *tmp_value, *tmp_tb;
+    tmp_type = tstate->curexc_type;
+    tmp_value = tstate->curexc_value;
+    tmp_tb = tstate->curexc_traceback;
+    tstate->curexc_type = type;
+    tstate->curexc_value = value;
+    tstate->curexc_traceback = tb;
+    Py_XDECREF(tmp_type);
+    Py_XDECREF(tmp_value);
+    Py_XDECREF(tmp_tb);
+}
+static CYTHON_INLINE void __Pyx_ErrFetchInState(PyThreadState *tstate, PyObject **type, PyObject **value, PyObject **tb) {
+    *type = tstate->curexc_type;
+    *value = tstate->curexc_value;
+    *tb = tstate->curexc_traceback;
+    tstate->curexc_type = 0;
+    tstate->curexc_value = 0;
+    tstate->curexc_traceback = 0;
+}
+#endif
+
 /* CLineInTraceback */
 #ifndef CYTHON_CLINE_IN_TRACEBACK
 static int __Pyx_CLineForTraceback(PyThreadState *tstate, int c_line) {
@@ -8663,28 +7991,6 @@ bad:
     Py_XDECREF(py_frame);
 }
 
-/* CIntFromPyVerify */
-#define __PYX_VERIFY_RETURN_INT(target_type, func_type, func_value)\
-    __PYX__VERIFY_RETURN_INT(target_type, func_type, func_value, 0)
-#define __PYX_VERIFY_RETURN_INT_EXC(target_type, func_type, func_value)\
-    __PYX__VERIFY_RETURN_INT(target_type, func_type, func_value, 1)
-#define __PYX__VERIFY_RETURN_INT(target_type, func_type, func_value, exc)\
-    {\
-        func_type value = func_value;\
-        if (sizeof(target_type) < sizeof(func_type)) {\
-            if (unlikely(value != (func_type) (target_type) value)) {\
-                func_type zero = 0;\
-                if (exc && unlikely(value == (func_type)-1 && PyErr_Occurred()))\
-                    return (target_type) -1;\
-                if (is_unsigned && unlikely(value < zero))\
-                    goto raise_neg_overflow;\
-                else\
-                    goto raise_overflow;\
-            }\
-        }\
-        return (target_type) value;\
-    }
-
 /* CIntToPy */
 static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value) {
     const long neg_one = (long) ((long) 0 - (long) 1), const_zero = (long) 0;
@@ -8715,6 +8021,28 @@ static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value) {
                                      little, !is_unsigned);
     }
 }
+
+/* CIntFromPyVerify */
+#define __PYX_VERIFY_RETURN_INT(target_type, func_type, func_value)\
+    __PYX__VERIFY_RETURN_INT(target_type, func_type, func_value, 0)
+#define __PYX_VERIFY_RETURN_INT_EXC(target_type, func_type, func_value)\
+    __PYX__VERIFY_RETURN_INT(target_type, func_type, func_value, 1)
+#define __PYX__VERIFY_RETURN_INT(target_type, func_type, func_value, exc)\
+    {\
+        func_type value = func_value;\
+        if (sizeof(target_type) < sizeof(func_type)) {\
+            if (unlikely(value != (func_type) (target_type) value)) {\
+                func_type zero = 0;\
+                if (exc && unlikely(value == (func_type)-1 && PyErr_Occurred()))\
+                    return (target_type) -1;\
+                if (is_unsigned && unlikely(value < zero))\
+                    goto raise_neg_overflow;\
+                else\
+                    goto raise_overflow;\
+            }\
+        }\
+        return (target_type) value;\
+    }
 
 /* CIntFromPy */
 static CYTHON_INLINE long __Pyx_PyInt_As_long(PyObject *x) {
