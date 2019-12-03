@@ -10,12 +10,32 @@ import matplotlib.pyplot as plt
 #analyzer = depickle ...
 #displacements = load...
 #u_train = subset of dis...
+plt.close('all')
+epsilon = 3
+alpha = 0
+numeigs = 10
+u_train = np.random.randn(2100, 2100)
 
-epsilon = 1
-u_train = np.random.randn(2100, 200)
-dmaps = ml.DiffusionMap(u_train, epsilon=epsilon, alpha=0)
+# =============================================================================
+# DMAPS
+# =============================================================================
+dmaps = ml.DiffusionMap(u_train, epsilon=epsilon, alpha=alpha)
+dmaps.fit(numeigs=numeigs, t=1) 
+linear_dmaps = ml.LinearMap(domain=dmaps.reduced_coordinates, codomain=u_train)
+u_dm = linear_dmaps.direct_transform_vector(dmaps.reduced_coordinates) 
 
+# =============================================================================
+# PCA
+# =============================================================================
+pca = ml.PCA(u_train)
+pca.fit(numeigs=numeigs)
+pca_map = ml.LinearMap(domain= pca.reduced_coordinates, codomain=u_train)
+u_pca = pca_map.direct_transform_vector(pca.reduced_coordinates)
+
+# =============================================================================
+# PLOTS
+# =============================================================================
 fig = plt.figure()
 ax = fig.add_subplot(111)
-e = np.logspace(-3, 3, num=20)
+e = np.logspace(-0, 2, num=20)
 plt.loglog(e, dmaps.kernel_sums_per_epsilon(u_train, e))
