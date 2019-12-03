@@ -265,7 +265,7 @@ cdef class NewmarkDynamicAnalyzer(Analyzer):
         if self.linear_system.solution is not None:
             self.linear_system.reset()
             
-        total_DOFs = self.model.total_DOFs
+        cdef size_t total_DOFs = self.model.total_DOFs
         
         if u0 is None:
             u0 = np.zeros((total_DOFs, 1))            
