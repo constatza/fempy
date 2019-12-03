@@ -6,8 +6,8 @@ Created on Fri Nov 15 11:19:22 2019
 @author: constatza
 """
 import numpy as np
-#import pyximport
-#pyximport.install(setup_args={'include_dirs': np.get_include()})
+import pyximport
+pyximport.install(setup_args={'include_dirs': np.get_include()})
 from time import time
 
 import matplotlib.pyplot as plt
@@ -34,14 +34,14 @@ Nsim = 10
 
 # DYNAMIC LOAD
 
-t = np.linspace(0, .5, 200)
+t = np.linspace(0, 2, 100)
 timestep = t[1]-t[0]
 total_time = 2*t[-1] 
 f0 = 100
 T0 = .5
 T1 = .2
-F = f0 * np.cos(2*np.pi*t/T1)
-
+F = f0 * np.exp(-(t-t[-1]/2)**2/T0/T0)*np.sin(2*np.pi*t/T1)
+#F = f0 *np.ones(t.shape)
 # MATERIAL PROPERTIES
 Emean = 30
 poisson_ratio = .3
@@ -74,10 +74,10 @@ model = rectangular_mesh_model(boundX, boundY,
 # ASSIGN TIME DEPENDENT LOADS
 #num_last_node = (numelX + 1) * (numelY + 1)
 #last_node=model.nodes_dictionary[last_node-1],
-Iload1 = InertiaLoad(time_history=F, 
-                          DOF=DOFtype.X)
-
+Iload1 = InertiaLoad(time_history=F, DOF=DOFtype.X)
+#Iload2 = InertiaLoad(time_history=F,DOF=DOFtype.Y)
 model.inertia_loads.append(Iload1)
+#model.inertia_loads.append(Iload2)
 
 # CONSTRAIN BASE DOFS
 for node in model.nodes[:numelX+1]:
@@ -105,7 +105,7 @@ parent_analyzer = NewmarkDynamicAnalyzer(model=model,
 
 start = time()
 
-for case in range(1):
+for case in range(2):
     counter = -1
     
     for width in range(numelX):
@@ -113,20 +113,21 @@ for case in range(1):
             #slicing through elements list the geometry rectangle grid is columnwise
             counter += 1
             element = model.elements[counter] 
-            element.material.young_modulus = Estochastic[-1-case, height]
+            element.material.young_modulus = Estochastic[case, height]
     print(element.material.young_modulus)        
     parent_analyzer.initialize()
     parent_analyzer.solve()
+
+
     
-    node = 850
-    
-    ux = parent_analyzer.displacements[:, 2*node-2]
-    uy = parent_analyzer.displacements[:, 2*node-1]
-    vx = parent_analyzer.velocities[:, 2*node-2]
-    vy = parent_analyzer.velocities[:, 2*node-1]
-    ax = parent_analyzer.accelerations[:, 2*node-2]
-    ay = parent_analyzer.accelerations[:, 2*node-1]
-    timeline = range(len(ux))*timestep
+node = 1020
+ux = parent_analyzer.displacements[:, 2*node-2]
+uy = parent_analyzer.displacements[:, 2*node-1]
+vx = parent_analyzer.velocities[:, 2*node-2]
+vy = parent_analyzer.velocities[:, 2*node-1]
+ax = parent_analyzer.accelerations[:, 2*node-2]
+ay = parent_analyzer.accelerations[:, 2*node-1]
+timeline = range(len(ux))*timestep
 end = time()
 
 print("Finished in {:.2f}".format(end - start) )
@@ -136,7 +137,7 @@ print("Finished in {:.2f}".format(end - start) )
 
 fig = plt.figure()
 ax1 = fig.add_subplot(111)
-splt.plot23d(ux, vx, ax=ax1, title='Phase Space')
+splt.plot23d(ux, uy, ax=ax1, title='Phase Space')
 
 fig, axes = plt.subplots(4, 1, sharex=True )
 

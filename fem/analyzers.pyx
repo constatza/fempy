@@ -3,6 +3,7 @@
 
 
 import numpy as np
+cimport numpy as np
 cimport cython
 
 
@@ -128,15 +129,17 @@ class Static(Analyzer):
             raise ValueError("Static analyzer must contain a child analyzer.")
         self.child.solve()
 
-
+@cython.final
 cdef class NewmarkDynamicAnalyzer(Analyzer):
     """Implements the Newmark method for dynamic analysis."""
-    cdef public:
-        object model, solver, linear_system
+    cdef:
+        object model, solver, linear_system, mass_matrix, stiffness_matrix, damping_matrix
         double timestep, total_time, alpha, delta
-        object rhs, u, ud, udd, displacements, velocities, accelerations
+        object rhs, u, ud, udd
+        double[:] alphas
         int total_steps
-    cpdef double[:] alphas 
+    cdef public:    
+        object displacements, velocities, accelerations  
     
     def __init__(self, model=None, solver=None, provider=None, child_analyzer=None, timestep=None, total_time=None, alpha=None, delta=None):
         
@@ -154,11 +157,11 @@ cdef class NewmarkDynamicAnalyzer(Analyzer):
         self.u = None
         self.ud = None
         self.udd = None
-        self.displacements = np.empty((self.total_steps, self.model.total_DOFs))
-        self.velocities = np.empty((self.total_steps, self.model.total_DOFs))
-        self.accelerations = np.empty((self.total_steps, self.model.total_DOFs))
+        self.displacements = np.empty((self.total_steps, self.model.total_DOFs), dtype=np.float32)
+        self.velocities = np.empty((self.total_steps, self.model.total_DOFs), dtype=np.float32)
+        self.accelerations = np.empty((self.total_steps, self.model.total_DOFs), dtype=np.float32)
     
-    cpdef void calculate_coefficients(self):
+    cdef void calculate_coefficients(self):
         cdef double alpha = self.alpha
         cdef double delta = self.delta
         cdef double timestep = self.timestep
@@ -173,7 +176,7 @@ cdef class NewmarkDynamicAnalyzer(Analyzer):
         alphas[7] = delta * timestep
         self.alphas = alphas
     
-    def build_matrices(self):
+    cdef void build_matrices(self):
         """
         Makes the proper solver-specific initializations before the 
         solution of the linear system of equations. This method MUST be called 
@@ -183,30 +186,27 @@ cdef class NewmarkDynamicAnalyzer(Analyzer):
         cdef double a0 = self.alphas[0]
         cdef double a1 = self.alphas[1]
         
-        self.linear_system.matrix = (provider._stiffness_matrix 
-                                    + a0 * provider._mass_matrix
-                                    + a1 * provider._damping_matrix)
+        self.linear_system.matrix = (self.stiffness_matrix 
+                                    + a0 * self.mass_matrix
+                                    + a1 * self.damping_matrix)
    
-    cpdef initialize(self, bint is_first_analysis=True):
+    cpdef void initialize(self):
         """
         Initializes the models, the solvers, child analyzers, builds
         the matrices, assigns loads and initializes right-hand-side vectors.
         """
         linear_system = self.linear_system
         model = self.model
-        if is_first_analysis:
-            model.connect_data_structures()
+        
+        model.connect_data_structures()
 
         linear_system.reset()
 
-        
         model.assign_loads()
-        
         
         self.initialize_internal_vectors() # call BEFORE build_matrices & initialize_rhs
         self.build_matrices()
-
-        
+     
         self.initialize_rhs()
         
         self.child.initialize()
@@ -214,7 +214,7 @@ cdef class NewmarkDynamicAnalyzer(Analyzer):
         
     @cython.boundscheck(False)  
     @cython.wraparound(False)     
-    cpdef solve(self):
+    cpdef void solve(self):
         """
         Solves the linear system of equations by calling the corresponding 
         method of the specific solver attached during construction of the
@@ -231,41 +231,37 @@ cdef class NewmarkDynamicAnalyzer(Analyzer):
             
             self.rhs = get_rhs_from_history_load(i)
             
-            self.linear_system.rhs = calculate_rhs_implicit(add_rhs=True)            
+            self.linear_system.rhs = calculate_rhs_implicit(self)            
             child_solve()
             
-            update_velocity_and_acceleration()
-            store_results(i)
+            update_velocity_and_acceleration(self)
+            store_results(self,i)
 
     @cython.boundscheck(False)  
     @cython.wraparound(False)     
-    cpdef calculate_rhs_implicit(self, add_rhs=True):
+    cdef calculate_rhs_implicit(self):
         """
         Calculates the right-hand-side of the implicit dynamic method. 
         This will be used for the solution of the linear dynamic system.
         """
         alphas = self.alphas
         provider = self.provider
-        u = self.u
-        ud = self.ud
-        udd = self.udd
+        cdef np.ndarray[np.float64_t, ndim=2] u = self.u
+        cdef np.ndarray[np.float64_t, ndim=2] ud = self.ud
+        cdef np.ndarray[np.float64_t, ndim=2] udd = self.udd
 
-        udd_eff = alphas[0] * u + alphas[2] * ud + alphas[3] * udd
-        ud_eff = alphas[1] * u + alphas[4] * ud + alphas[5] * udd
+        cdef np.ndarray[np.float64_t, ndim=2] udd_eff = alphas[0] * u + alphas[2] * ud + alphas[3] * udd
+        cdef np.ndarray[np.float64_t, ndim=2] ud_eff = alphas[1] * u + alphas[4] * ud + alphas[5] * udd
         
-        inertia_forces = provider.mass_matrix_vector_product(udd_eff)
-        damping_forces = provider.damping_matrix_vector_product(ud_eff)
-        rhs_effective = inertia_forces + damping_forces
-
-        if add_rhs:
-             #rhs_effective = uum + ucc
-            rhs_effective += self.rhs     
+        cdef np.ndarray[np.float64_t, ndim=2] inertia_forces = self.mass_matrix @ udd_eff
+        cdef np.ndarray[np.float64_t, ndim=2] damping_forces = self.damping_matrix @ ud_eff
+        cdef np.ndarray[np.float64_t, ndim=2] rhs_effective = inertia_forces + damping_forces + self.rhs   
 
         return rhs_effective
     
     @cython.boundscheck(False)  
     @cython.wraparound(False) 
-    cpdef initialize_internal_vectors(self, u0=None, ud0=None):
+    cdef void initialize_internal_vectors(self, u0=None, ud0=None):
         if self.linear_system.solution is not None:
             self.linear_system.reset()
             
@@ -276,9 +272,9 @@ cdef class NewmarkDynamicAnalyzer(Analyzer):
         if ud0 is None:
             ud0 = np.zeros((total_DOFs, 1))
         provider = self.provider
-        stiffness = provider.stiffness_matrix
-        mass = provider.mass_matrix
-        damping = provider.damping_matrix #after M and K !
+        cdef np.ndarray[np.float64_t, ndim=2] stiffness = np.ascontiguousarray(provider.stiffness_matrix.astype(float))
+        cdef np.ndarray[np.float64_t, ndim=2] mass = np.ascontiguousarray(provider.mass_matrix.astype(float))
+        cdef np.ndarray[np.float64_t, ndim=2] damping = np.ascontiguousarray(provider.damping_matrix.astype(float)) #after M and K !
         provider.calculate_inertia_vectors() # before first call of get_rhs...
         rhs0 = self.provider.get_rhs_from_history_load(0)
         self.linear_system.rhs = rhs0 - stiffness @ u0 - damping @ ud0
@@ -289,27 +285,28 @@ cdef class NewmarkDynamicAnalyzer(Analyzer):
         self.ud = ud0
         self.u = u0
         self.store_results(0)
+        self.mass_matrix = mass
+        self.stiffness_matrix = stiffness
+        self.damping_matrix = damping
         self.linear_system.reset()
         
 
-    cpdef initialize_rhs(self):
+    cdef void initialize_rhs(self):
         
         self.linear_system.rhs = self.provider.get_rhs_from_history_load(1)
 
     @cython.boundscheck(False)  
     @cython.wraparound(False)   
-    cpdef update_velocity_and_accelaration(self):
+    cdef void update_velocity_and_accelaration(self):
         
+        cdef np.ndarray[np.float64_t, ndim=2] udd = self.udd
+        cdef np.ndarray[np.float64_t, ndim=2] ud = self.ud 
+        cdef np.ndarray[np.float64_t, ndim=2] u = self.u
         
-        udd = self.udd
-        ud = self.ud 
-        u = self.u
-        
-        u_next = self.linear_system.solution
+        cdef np.ndarray[np.float64_t, ndim=2] u_next = self.linear_system.solution
 
-        udd_next = self.alphas[0] * (u_next - u) - self.alphas[2] * ud - self.alphas[3] * udd 
-        ud_next = ud + self.alphas[6] * udd +  self.alphas[7] * udd_next
-        
+        cdef np.ndarray[np.float64_t, ndim=2] udd_next = self.alphas[0] * (u_next - u) - self.alphas[2] * ud - self.alphas[3] * udd 
+        cdef np.ndarray[np.float64_t, ndim=2] ud_next = ud + self.alphas[6] * udd +  self.alphas[7] * udd_next
 
         self.u = u_next
         self.ud = ud_next
@@ -317,11 +314,11 @@ cdef class NewmarkDynamicAnalyzer(Analyzer):
     
     @cython.boundscheck(False)  
     @cython.wraparound(False) 
-    cpdef void store_results(self, size_t timestep):
+    cdef void store_results(self, size_t timestep):
         
-        self.displacements[timestep, :] = self.u.ravel()
-        self.velocities[timestep, :] = self.ud.ravel()
-        self.accelerations[timestep, :] = self.udd.ravel()
+        self.displacements[timestep, :] = self.u.ravel().astype(float)
+        self.velocities[timestep, :] = self.ud.ravel().astype(float)
+        self.accelerations[timestep, :] = self.udd.ravel().astype(float)
         
         
 

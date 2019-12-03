@@ -6,9 +6,9 @@ Created on Tue Jul 30 13:49:31 2019
 """
 
 from fem.assemblers import GlobalMatrixAssembler
-from numpy import array, zeros, newaxis, arange, empty, sqrt
+from numpy import array, zeros, sqrt
 import scipy.linalg as linalg
-from numba import njit, prange, parfor
+
 
 
 class ElementStiffnessProvider:
@@ -159,6 +159,7 @@ class RayleighDampingMatrixProvider:
                                  check_finite=False,
                                  overwrite_a=True,
                                  overwrite_b=True)
+
 
         wmegas = sqrt(eigvals)
         self.frequencies = wmegas

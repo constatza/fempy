@@ -7,9 +7,9 @@ Created on Sun Jul 14 18:03:35 2019
 
 import matplotlib.pyplot as plt
 import numpy as np
-import fempy.mathematics.manilearn as ml
-import fempy.mathematics.statistics as stat
-import fempy.smartplot as smartplot
+import mathematics.manilearn as ml
+import mathematics.statistics as stat
+import smartplot as smartplot
 
 from mpl_toolkits.mplot3d import Axes3D
 from sklearn import manifold

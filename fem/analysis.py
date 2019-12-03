@@ -8,30 +8,27 @@ import numpy as np
 
 class MonteCarloMaterialAnalysis:
     
-    def __init__(self, analyzer, E, nsims=1):
+    def __init__(self, analyzer):
         self.analyzer = analyzer
-        self.nsims = nsims
     
-    def run(self, numelX, numelY):
-        E = self.E
-        nsims = self.nsims
+    def run(self, E, numelX, numelY):
+        analyzer = self.analyzer
         u = []
         ud = []
         udd = []
-#       K = np.empty((self.analyzer.model.total_dofs, nsims))
         total_simulations = E.shape[0]
-        for i in range(nsims):
+        for case in range(1):
+            counter = -1
                    
         
-            counter = -1
-            for i in range(numelX): 
-                for j in range(numelY):
+            for width in range(numelX):
+                for height in range(numelY):
+                    #slicing through elements list the geometry rectangle grid is columnwise
                     counter += 1
-                    # access elements bottom to top, ascending Y
-                    element = model.elements[counter] 
-                    element.material.young_modulus = E[i, j]
-            
-            parent_analyzer.build_matrices()
+                    element = analyzer.model.elements[counter] 
+                    element.material.young_modulus = E[case, height]
+                    print(element.material.young_modulus)        
+
             parent_analyzer.initialize()
             parent_analyzer.solve()
             
