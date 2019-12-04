@@ -12,9 +12,14 @@ import matplotlib.pyplot as plt
 #u_train = subset of dis...
 plt.close('all')
 epsilon = 3
-alpha = 0
+alpha = 1
 numeigs = 10
-u_train = np.random.randn(2100, 2100)
+displacements = np.random.randn(200, 100, 200)
+
+# =============================================================================
+# SAMPLING
+# =============================================================================
+u_train = displacements[::4, :, :].reshape(200,-1)
 
 # =============================================================================
 # DMAPS
@@ -35,7 +40,7 @@ u_pca = pca_map.direct_transform_vector(pca.reduced_coordinates)
 # =============================================================================
 # PLOTS
 # =============================================================================
-fig = plt.figure()
-ax = fig.add_subplot(111)
-e = np.logspace(-0, 2, num=20)
-plt.loglog(e, dmaps.kernel_sums_per_epsilon(u_train, e))
+#fig = plt.figure()
+#ax = fig.add_subplot(111)
+#e = np.logspace(-0, 2, num=20)
+#plt.loglog(e, dmaps.kernel_sums_per_epsilon(u_train, e))

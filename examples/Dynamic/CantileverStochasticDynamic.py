@@ -34,7 +34,7 @@ Nsim = 10
 
 # DYNAMIC LOAD
 
-t = np.linspace(0, 2, 100)
+t = np.linspace(0, 2, 400)
 timestep = t[1]-t[0]
 total_time = 2*t[-1] 
 f0 = 100
@@ -105,29 +105,34 @@ parent_analyzer = NewmarkDynamicAnalyzer(model=model,
 
 start = time()
 
-for case in range(2):
-    counter = -1
-    
-    for width in range(numelX):
-        for height in range(numelY):
-            #slicing through elements list the geometry rectangle grid is columnwise
-            counter += 1
-            element = model.elements[counter] 
-            element.material.young_modulus = Estochastic[case, height]
-    print(element.material.young_modulus)        
-    parent_analyzer.initialize()
-    parent_analyzer.solve()
+#for case in range(2):
+#    counter = -1
+#    
+#    for width in range(numelX):
+#        for height in range(numelY):
+#            #slicing through elements list the geometry rectangle grid is columnwise
+#            counter += 1
+#            element = model.elements[counter] 
+#            element.material.young_modulus = Estochastic[case, height]
+#    print(element.material.young_modulus)        
+#    parent_analyzer.initialize()
+#    parent_analyzer.solve()
 
+import fem.analysis as analysis
+analysis.material_monte_carlo(parent_analyzer, Estochastic[:2,:], numelX, numelY)
 
-    
+displacements = parent_analyzer.displacements
+timeline = range(displacements.shape[0])*timestep
+velocities = np.gradient(displacements, timestep, axis=0)
+accelerations = np.gradient(velocities, timestep, axis=0)
 node = 1020
-ux = parent_analyzer.displacements[:, 2*node-2]
-uy = parent_analyzer.displacements[:, 2*node-1]
-vx = parent_analyzer.velocities[:, 2*node-2]
-vy = parent_analyzer.velocities[:, 2*node-1]
-ax = parent_analyzer.accelerations[:, 2*node-2]
-ay = parent_analyzer.accelerations[:, 2*node-1]
-timeline = range(len(ux))*timestep
+ux = displacements[:, 2*node-2]
+uy = displacements[:, 2*node-1]
+vx = velocities[:, 2*node-2]
+vy = velocities[:, 2*node-1]
+ax = accelerations[:, 2*node-2]
+ay = accelerations[:, 2*node-1]
+
 end = time()
 
 print("Finished in {:.2f}".format(end - start) )

@@ -133,13 +133,13 @@ class Static(Analyzer):
 cdef class NewmarkDynamicAnalyzer(Analyzer):
     """Implements the Newmark method for dynamic analysis."""
     cdef:
-        object model, solver, linear_system, mass_matrix, stiffness_matrix, damping_matrix
+        object solver, linear_system, mass_matrix, stiffness_matrix, damping_matrix
         double timestep, total_time, alpha, delta
         object rhs, u, ud, udd
         double[:] alphas
         int total_steps
     cdef public:    
-        object displacements, velocities, accelerations  
+        object displacements, model #, velocities, accelerations
     
     def __init__(self, model=None, solver=None, provider=None, child_analyzer=None, timestep=None, total_time=None, alpha=None, delta=None):
         
@@ -158,8 +158,8 @@ cdef class NewmarkDynamicAnalyzer(Analyzer):
         self.ud = None
         self.udd = None
         self.displacements = np.empty((self.total_steps, self.model.total_DOFs), dtype=np.float32)
-        self.velocities = np.empty((self.total_steps, self.model.total_DOFs), dtype=np.float32)
-        self.accelerations = np.empty((self.total_steps, self.model.total_DOFs), dtype=np.float32)
+#        self.velocities = np.empty((self.total_steps, self.model.total_DOFs), dtype=np.float32)
+#        self.accelerations = np.empty((self.total_steps, self.model.total_DOFs), dtype=np.float32)
     
     cdef void calculate_coefficients(self):
         cdef double alpha = self.alpha
@@ -315,10 +315,9 @@ cdef class NewmarkDynamicAnalyzer(Analyzer):
     @cython.boundscheck(False)  
     @cython.wraparound(False) 
     cdef void store_results(self, size_t timestep):
-        
         self.displacements[timestep, :] = self.u.ravel().astype(float)
-        self.velocities[timestep, :] = self.ud.ravel().astype(float)
-        self.accelerations[timestep, :] = self.udd.ravel().astype(float)
+#        self.velocities[timestep, :] = self.ud.ravel().astype(float)
+#        self.accelerations[timestep, :] = self.udd.ravel().astype(float)
         
         
 

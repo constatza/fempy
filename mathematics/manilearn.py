@@ -84,7 +84,7 @@ class DiffusionMap(Reducer):
         symmetric_markov = laplacian_matrix / Droot / Droot.T 
     
         if t>1:
-            symmetric_markov = np.linalg.matrix_power(symmetric_markov,t)
+            symmetric_markov = linalg.matrix_power(symmetric_markov,t)
         
         reltol = 1e-4
         relmarkov = symmetric_markov/np.max(symmetric_markov)
