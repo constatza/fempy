@@ -83,8 +83,7 @@ class DiffusionMap(Reducer):
         # symmetric analog just to use symmetric algorithm
         symmetric_markov = laplacian_matrix / Droot / Droot.T 
     
-        if t>1:
-            symmetric_markov = linalg.matrix_power(symmetric_markov,t)
+        
         
         reltol = 1e-4
         relmarkov = symmetric_markov/np.max(symmetric_markov)
@@ -95,6 +94,8 @@ class DiffusionMap(Reducer):
         eigenvalues = eigenvalues[::-1]  
         eigenvectors =  eigenvectors[:, ::-1] 
         eigenvectors = eigenvectors / Droot # real eigenvectors of markov matrix
+        if t>1:
+            eigenvalues = np.power(eigenvalues, t)
         Psi = eigenvalues[np.newaxis, :] * eigenvectors[:, :]
         
         return eigenvalues, Psi.T
