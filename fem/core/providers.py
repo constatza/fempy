@@ -6,9 +6,10 @@ Created on Tue Jul 30 13:49:31 2019
 """
 
 from fem.assemblers import GlobalMatrixAssembler
-from numpy import array, zeros, sqrt
+from numpy import array, zeros, sqrt, eye, abs, max
 import scipy.linalg as linalg
-
+import scipy.sparse.linalg as splinalg
+from scipy.sparse import csc_matrix
 
 
 class ElementStiffnessProvider:
@@ -152,14 +153,23 @@ class RayleighDampingMatrixProvider:
     
     def calculate_global_matrix(self, stiffness_matrix, mass_matrix):
         damping_coeffs = self.coeffs
+        
+        
+        
         eigvals = linalg.eigh(stiffness_matrix, b=mass_matrix,
-                                 eigvals=(0,1),
-                                 type=1,
-                                 eigvals_only=True, 
-                                 check_finite=False,
-                                 overwrite_a=True,
-                                 overwrite_b=True)
-
+                                  eigvals=(0,1),
+                                  type=1,
+                                  eigvals_only=True, 
+                                  check_finite=False,
+                                  overwrite_a=True,
+                                  overwrite_b=True)
+        # M = make_sparse(mass_matrix)
+        # K = make_sparse(stiffness_matrix)
+        # eigvals = splinalg.eigsh(K, M=M, k=2, 
+        #                          which='SA',
+        #                          return_eigenvectors=False,
+        #                          maxiter=5000,
+        #                          tol=1e-2)
 
         wmegas = sqrt(eigvals)
         self.frequencies = wmegas
@@ -168,4 +178,12 @@ class RayleighDampingMatrixProvider:
         
         return a[0]*mass_matrix + a[1]*stiffness_matrix
     
-     
+# import scipy
+def make_sparse(M):
+    m = abs(M)
+    maks = max(m)
+    is_zero = (m/maks) < 1e-3
+    M[is_zero] = 0
+    return csc_matrix(M)
+    
+    

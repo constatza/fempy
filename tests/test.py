@@ -5,32 +5,28 @@ Spyder Editor
 This is a temporary script file.
 """
 
-import pyximport
-pyximport.install()
-
-
-import numpy as np
 import matplotlib.pyplot as plt
-import smartplot as splt
-
-from fem.preprocessor import rectangular_mesh_model
-from fem.problems import ProblemStructuralDynamic
-from fem.analyzers import Linear, NewmarkDynamicAnalyzer
-from fem.solvers import CholeskySolver
-from fem.systems import LinearSystem
-
-from fem.core.loads import TimeDependentLoad
-from fem.core.entities import DOFtype
-from fem.core.providers import ElementMaterialOnlyStiffnessProvider, RayleighDampingMatrixProvider
-from fem.core.materials import ElasticMaterial2D, StressState2D
-from fem.core.elements import Quad4
-import mathematics.linalg as linalg
-from fem.problems import ProblemStructuralDynamic
+import numpy as np
+import mathematics.manilearn as ml
+# plt.close('all')
+np.random.seed(10)
+t = np.random.randn(2100)*np.pi/3 + np.pi/2
 
 
+x = np.cos(t)
+y = np.sin(t)    
 
-a = np.ones(10)
-dot = linalg.dot(a,a)
 
-import sys
-print(sys.path)
+dmap = ml.DiffusionMap(np.array([x,y]), epsilon=.5, alpha=0)
+
+dmap.fit(numeigs=2, t=10)
+
+U = dmap.reduced_coordinates
+u, v = U[1,:], U[2,:]
+
+
+fig, ax = plt.subplots()
+mag = np.max([u,v])
+plt.scatter(u/mag,v/mag, c=t)
+ax.set_aspect('equal', 'box')
+plt.show()

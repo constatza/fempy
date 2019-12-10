@@ -6,8 +6,8 @@ Created on Fri Nov 15 11:19:22 2019
 @author: constatza
 """
 import numpy as np
-import pyximport
-pyximport.install(setup_args={'include_dirs': np.get_include()})
+# import pyximport
+# pyximport.install(setup_args={'include_dirs': np.get_include()})
 from time import time
 
 import matplotlib.pyplot as plt
@@ -34,13 +34,13 @@ Nsim = 10
 
 # DYNAMIC LOAD
 
-t = np.linspace(0, 2, 400)
+t = np.linspace(0, 2, 1000)
 timestep = t[1]-t[0]
-total_time = 2*t[-1] 
+total_time = t[-1] 
 f0 = 100
-T0 = .5
-T1 = .2
-F = f0 * np.exp(-(t-t[-1]/2)**2/T0/T0)*np.sin(2*np.pi*t/T1)
+T1 = .1
+phase = 1.5
+F = f0 * np.sin(2*np.pi*t/T1 + phase)
 #F = f0 *np.ones(t.shape)
 # MATERIAL PROPERTIES
 Emean = 30

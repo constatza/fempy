@@ -173,14 +173,14 @@ class LinearMap(Map):
         return self.inverse_matrix @ matrix @ self.inverse_matrix.T
             
 
-def nearest_neighbour_mapping(vectors, natural_coordinates, transformed_coordinates, k=3):
-     coordinates_tree = spatial.cKDTree(natural_coordinates)
+# def nearest_neighbour_mapping(vectors, natural_coordinates, transformed_coordinates, k=3):
+#      coordinates_tree = spatial.cKDTree(natural_coordinates)
      
-     distances, neighbours_id  = coordinates_tree.query(vectors, k=k)
+#      distances, neighbours_id  = coordinates_tree.query(vectors, k=k)
      
-     d_inv = 1/distances
-     weights = d_inv/np.sum(d_inv, axis=1, keepdims=True)
-     weights[np.isnan(weights)] = 1
-     transformed_vectors = weights[:, :, None] * transformed_coordinates[neighbours_id, :]
-     transformed_vectors = np.sum(transformed_vectors, axis=1)
-     return transformed_vectors
+#      d_inv = 1/distances
+#      weights = d_inv/np.sum(d_inv, axis=1, keepdims=True)
+#      weights[np.isnan(weights)] = 1
+#      transformed_vectors = weights[:, :, None] * transformed_coordinates[neighbours_id, :]
+#      transformed_vectors = np.sum(transformed_vectors, axis=1)
+#      return transformed_vectors
