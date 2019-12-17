@@ -1,5 +1,5 @@
 # cython: language_level=3
-
+# define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
 
 
 import numpy as np
@@ -139,7 +139,7 @@ cdef class NewmarkDynamicAnalyzer(Analyzer):
         double[:] alphas
         int total_steps
     cdef public:    
-        object displacements, model #, velocities, accelerations
+        object displacements, model , velocities, accelerations
     
     def __init__(self, model=None, solver=None, provider=None, child_analyzer=None, timestep=None, total_time=None, alpha=None, delta=None):
         
@@ -157,9 +157,9 @@ cdef class NewmarkDynamicAnalyzer(Analyzer):
         self.u = None
         self.ud = None
         self.udd = None
-        self.displacements = np.empty((self.total_steps, self.model.total_DOFs), dtype=np.float32)
-#        self.velocities = np.empty((self.total_steps, self.model.total_DOFs), dtype=np.float32)
-#        self.accelerations = np.empty((self.total_steps, self.model.total_DOFs), dtype=np.float32)
+        self.displacements = np.empty((self.model.total_DOFs, self.total_steps), dtype=np.float32)
+        self.velocities = np.empty((self.model.total_DOFs, self.total_steps), dtype=np.float32)
+        self.accelerations = np.empty((self.model.total_DOFs, self.total_steps), dtype=np.float32)
     
     cdef void calculate_coefficients(self):
         cdef double alpha = self.alpha
@@ -315,9 +315,9 @@ cdef class NewmarkDynamicAnalyzer(Analyzer):
     @cython.boundscheck(False)  
     @cython.wraparound(False) 
     cdef void store_results(self, size_t timestep):
-        self.displacements[timestep, :] = self.u.ravel().astype(float)
-#        self.velocities[timestep, :] = self.ud.ravel().astype(float)
-#        self.accelerations[timestep, :] = self.udd.ravel().astype(float)
+        self.displacements[:, timestep] = self.u.ravel().astype(float)
+        self.velocities[:, timestep] = self.ud.ravel().astype(float)
+        self.accelerations[:, timestep] = self.udd.ravel().astype(float)
         
         
 

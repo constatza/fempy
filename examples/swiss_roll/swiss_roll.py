@@ -8,7 +8,7 @@ Created on Sun Jul 14 18:03:35 2019
 import matplotlib.pyplot as plt
 import numpy as np
 import mathematics.manilearn as ml
-import mathematics.statistics as stat
+import mathematics.stochastic as stat
 import smartplot as smartplot
 
 from mpl_toolkits.mplot3d import Axes3D
@@ -17,26 +17,26 @@ from scipy.stats import zscore
 
 
 
-
+np.random.seed(10)
 plt.close('all')
 
-epsilon = 1
-alpha = 0
+epsilon = 2
+alpha = 1
 timesteps = 1
 numeigs = 2
 
 # set parameters
 length_phi = 10 #length of swiss roll in angular direction
-length_Z = 10#length of swiss roll in z direction
+length_Z = 5#length of swiss roll in z direction
 sigma = 2 #noise strength
-m = 2000 #number of samples
+m = 100 #number of samples
 # create dataset
 phi = length_phi/6 *np.random.randn(m) + length_phi*.6 # normal distribution phi
 #phi = length_phi *np.random.rand(m) #+ length_phi*.6
 
-X = length_Z*np.random.randn(m)
+X = length_Z*np.random.randn(m) 
 Y = (phi )*np.sin(phi)
-Z = (phi )*np.cos(phi)
+Z = (phi )*np.cos(phi) + 100
 swiss_roll = np.array([X, Y, Z])
 U = np.concatenate([[X],[Y],[Z]])
 U = zscore(U, axis=1)
@@ -47,12 +47,12 @@ color = phi#np.arange(swiss_roll.shape[1])
 X_r, err = manifold.locally_linear_embedding(U.T, n_neighbors=20,
                                              n_components=numeigs)
 Xr = X_r.T
-#----------------------------------------------------------------------
-# Plot result
 
 
 
-"""Diffusion Maps"""   
+# =============================================================================
+# Diffusion Maps 
+# =============================================================================
 
 dmaps = ml.DiffusionMap(U, epsilon=epsilon, alpha=alpha)
 dmaps.fit(numeigs=numeigs, t=1) 
@@ -67,7 +67,9 @@ x_dm = U_dm[0,:]
 y_dm = U_dm[1,:]
 z_dm = U_dm[2,:]
    
-"""PCA"""
+# =============================================================================
+# PCA
+# =============================================================================
 pca = ml.PCA(U)
 pca.fit(numeigs=numeigs)
 
@@ -79,18 +81,20 @@ x_pca = U_pca[0, :]
 y_pca = U_pca[1, :]
 z_pca = U_pca[2, :]
 
-"""Plots"""
-x = zscore(X)
-y = zscore(Y)
-z = zscore(Z)
+# =============================================================================
+# Plots
+# =============================================================================
+X = zscore(X)
+Y= zscore(Y)
+Z = zscore(Z)
 
 fig0 = plt.figure()
 ax0 = fig0.add_subplot(111, projection='3d')
-ax0.scatter(x, y, z, alpha=0.5, label='Original Data', c=phi, marker='.')
+ax0.scatter(X, Y, Z, alpha=0.5, label='Original Data', c=phi, marker='.')
 
 fig1 = plt.figure()
 ax1 = fig1.add_subplot(111, projection='3d')
-ax1.scatter(x, y, z, alpha=0.5, label='Original Data', color='b', marker='.')
+ax1.scatter(X, Y, Z, alpha=0.5, label='Original Data', color='b', marker='.')
 ax1.scatter(x_dm,y_dm,z_dm, color='r', label='Diffusion Maps', marker='.')  
 ax1.scatter(x_pca,y_pca,z_pca, color='g', label='PCA',  marker='.')
 ax1.legend()
@@ -112,7 +116,7 @@ plt.grid()
  
 fig4, axes4 = plt.subplots(1, 3)
 fig4.suptitle('Normalized Eigenvectors')
-smartplot.plot_eigenvectors(dmaps.reduced_coordinates[1:,:], ax=axes4[0], title='DMAPS', c=color, marker='.')
+smartplot.plot_eigenvectors(dmaps.eigenvectors, ax=axes4[0], title='DMAPS', c=color, marker='.')
 smartplot.plot_eigenvectors(Xr, ax=axes4[1], title='LLE', c=color, marker='.')
 smartplot.plot_eigenvectors(pca.reduced_coordinates, ax=axes4[2], title='PCA', c=color, marker='.')
 
@@ -120,7 +124,7 @@ smartplot.plot_eigenvectors(pca.reduced_coordinates, ax=axes4[2], title='PCA', c
 fig5, axes5 = plt.subplots(1, 3)
 fig5.suptitle('Correlation')
 
-axes5[0].plot(phi, dmaps.reduced_coordinates.T, marker='.', linestyle='')
+axes5[0].plot(phi, dmaps.eigenvectors.T, marker='.', linestyle='')
 axes5[1].plot(phi, Xr.T, marker='.', linestyle='')
 axes5[2].plot(phi, pca.reduced_coordinates.T, marker='.', linestyle='')
 

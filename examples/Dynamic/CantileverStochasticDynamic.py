@@ -19,7 +19,7 @@ from fem.analyzers import Linear, NewmarkDynamicAnalyzer
 from fem.solvers import CholeskySolver
 from fem.systems import LinearSystem
 
-from fem.core.loads import TimeDependentLoad, InertiaLoad
+from fem.core.loads import InertiaLoad
 from fem.core.entities import DOFtype
 from fem.core.providers import ElementMaterialOnlyStiffnessProvider, RayleighDampingMatrixProvider
 from fem.core.materials import ElasticMaterial2D, StressState2D
@@ -30,29 +30,30 @@ plt.close('all')
 # INPUT
 # =============================================================================
 
-Nsim = 10
-
+Nsim = 2500
+np.random.seed(1)
 # DYNAMIC LOAD
-
-t = np.linspace(0, 2, 1000)
+total_time = 5
+total_steps = 1000
+reduced_step = 10
+reduced_steps= np.arange(total_steps, step=reduced_step)
+t = np.linspace(0, total_time, total_steps+1)
 timestep = t[1]-t[0]
-total_time = t[-1] 
+
 f0 = 100
-T1 = .1
-phase = 1.5
-F = f0 * np.sin(2*np.pi*t/T1 + phase)
+period = np.random.rand(Nsim,)*2 + .05
+w = np.random.rand(Nsim,)*100
+phase = np.random.rand(Nsim,)*2*np.pi
+F = f0 * np.sin(w[:, None]*t + phase[:, None])
+
 #F = f0 *np.ones(t.shape)
 # MATERIAL PROPERTIES
 Emean = 30
-poisson_ratio = .3
+poisson_ratio = .2
 thickness = 100
 mass_density = 2.5e-9
 
-# CANTILEVER SIZES
-numelX = 20
-numelY = 50
-boundX = [0, 2000]
-boundY = [0, 5000]
+
 
 # STOCHASTIC E FILES
 stochastic_path = r"C:\Users\constatza\Documents\thesis\fempy\examples\stochastic_Young_Modulus\stochastic_E.npy"
@@ -69,15 +70,19 @@ material = ElasticMaterial2D(stress_state=StressState2D.plain_stress,
 # CREATE ELEMENT TYPE
 quad = Quad4(material=material, thickness=thickness)
 
+# CANTILEVER SIZES
+numelX = 20
+numelY = 50
+boundX = [0, 2000]
+boundY = [0, 5000]
+
 model = rectangular_mesh_model(boundX, boundY, 
                                numelX, numelY, quad)
+
 # ASSIGN TIME DEPENDENT LOADS
-#num_last_node = (numelX + 1) * (numelY + 1)
-#last_node=model.nodes_dictionary[last_node-1],
-Iload1 = InertiaLoad(time_history=F, DOF=DOFtype.X)
-#Iload2 = InertiaLoad(time_history=F,DOF=DOFtype.Y)
+Iload1 = InertiaLoad(time_history=F[0,:], DOF=DOFtype.X)
 model.inertia_loads.append(Iload1)
-#model.inertia_loads.append(Iload2)
+
 
 # CONSTRAIN BASE DOFS
 for node in model.nodes[:numelX+1]:
@@ -94,7 +99,7 @@ solver = CholeskySolver(linear_system)
 provider = ProblemStructuralDynamic(model, damping_provider=damping_provider)
 provider.stiffness_provider = ElementMaterialOnlyStiffnessProvider()
 child_analyzer = Linear(solver)
-parent_analyzer = NewmarkDynamicAnalyzer(model=model, 
+newmark = NewmarkDynamicAnalyzer(model=model, 
                                          solver=solver, 
                                          provider=provider, 
                                          child_analyzer=child_analyzer, 
@@ -102,54 +107,68 @@ parent_analyzer = NewmarkDynamicAnalyzer(model=model,
                                          total_time=total_time, 
                                          delta=1/2,
                                          alpha=1/4)
-
+displacements = np.empty((model.total_DOFs, total_steps//reduced_step, Nsim))
 start = time()
 
-#for case in range(2):
-#    counter = -1
-#    
-#    for width in range(numelX):
-#        for height in range(numelY):
-#            #slicing through elements list the geometry rectangle grid is columnwise
-#            counter += 1
-#            element = model.elements[counter] 
-#            element.material.young_modulus = Estochastic[case, height]
-#    print(element.material.young_modulus)        
-#    parent_analyzer.initialize()
-#    parent_analyzer.solve()
+for case in range(Nsim):
+    print("Case {:d}".format(case))
+    counter = -1
+    seismic_load = InertiaLoad(time_history=F[case, :], DOF=DOFtype.X)
+    model.inertia_loads[0] = seismic_load
+    for width in range(numelX):
+        for height in range(numelY):
+            #slicing through elements list the geometry rectangle grid is columnwise
+            counter += 1
+            element = model.elements[counter] 
+            element.material.young_modulus = Estochastic[case, height]
+            
+    newmark.initialize()
+    newmark.solve()
+    
 
-import fem.analysis as analysis
-analysis.material_monte_carlo(parent_analyzer, Estochastic[:2,:], numelX, numelY)
 
-displacements = parent_analyzer.displacements
-timeline = range(displacements.shape[0])*timestep
-velocities = np.gradient(displacements, timestep, axis=0)
-accelerations = np.gradient(velocities, timestep, axis=0)
-node = 1020
-ux = displacements[:, 2*node-2]
-uy = displacements[:, 2*node-1]
-vx = velocities[:, 2*node-2]
-vy = velocities[:, 2*node-1]
-ax = accelerations[:, 2*node-2]
-ay = accelerations[:, 2*node-1]
+    displacements[:,:, case] = newmark.displacements[:, ::reduced_step]
 
 end = time()
+print("Finished in {:.2f} min".format(end/60 - start/60) )
+# =============================================================================
+# SAVE
+# =============================================================================
+np.savez("Dynamic1_N2500", 
+         U=displacements,
+         F=F)
 
-print("Finished in {:.2f}".format(end - start) )
+
+
+
+
+
+
 # =============================================================================
 # PLOTS
 # =============================================================================
+# displacements = displacements[:,:,-1]
+# timeline = range(displacements.shape[0])*timestep
+# timeline = timeline[reduced_steps]
+# velocities = np.gradient(displacements, timestep, axis=0)
+# accelerations = np.gradient(velocities, timestep, axis=0)
+# node = 1020
+# ux = displacements[2*node-2, :]
+# uy = displacements[2*node-1, :]
+# vx = velocities[2*node-2, :]
+# vy = velocities[2*node-1, :]
+# ax = accelerations[2*node-2, :]
+# ay = accelerations[2*node-1, :]
+# fig = plt.figure()
+# ax1 = fig.add_subplot(111)
+# splt.plot23d(ux, uy, ax=ax1, title='Phase Space')
 
-fig = plt.figure()
-ax1 = fig.add_subplot(111)
-splt.plot23d(ux, uy, ax=ax1, title='Phase Space')
+# fig, axes = plt.subplots(4, 1, sharex=True )
 
-fig, axes = plt.subplots(4, 1, sharex=True )
-
-data = ((t, F),
-        (timeline, ux, uy),
-        (timeline, vx, vy),
-        (timeline, ax, ay))
+# data = ((t, F[case, :]),
+#         (timeline, ux, uy),
+#         (timeline, vx, vy),
+#         (timeline, ax, ay))
 
 
-splt.gridplot(axes.ravel(), data)
+# splt.gridplot(axes.ravel(), data)

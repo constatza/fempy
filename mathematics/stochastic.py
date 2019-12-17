@@ -14,7 +14,7 @@ from dataclasses import dataclass
 @dataclass
 class StochasticField:
     """
-    axis : axis along the field varies (not the dimension of the field)
+    axis : axis along which the field varies (not the dimension of the field)
     """
     data : np.ndarray
     axis : int = -1
@@ -22,9 +22,12 @@ class StochasticField:
     def __post_init__(self):
         mean = np.mean(self.data, axis=self.axis, keepdims=True)
         std = np.std(self.data, axis=self.axis, keepdims=True)
+        maximum = np.max(np.abs(self.data), axis=self.axis, keepdims=True)
         self.zscore = (self.data - mean)/std
         self.mean = mean
         self.std = std
+        self.max = maximum
+        self.normalized = (self.data - mean)/maximum
 
 
 

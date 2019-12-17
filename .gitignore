@@ -116,11 +116,13 @@ dmypy.json
 
 # numpy data
 *.npy
+*.npz
 
 # large data
 *.txt
 *.csv
 *.pkl
+*.Result
 
 #
 *.vscode

@@ -36,7 +36,7 @@ class DiffusionMap(Reducer):
     
     def fit(self, numeigs=1, t=1, inplace=True):
 
-        eigenvalues, eigenvectors = DiffusionMap.to_diffusion_coordinates(self.dataset,
+        eigenvalues, eigenvectors, coordinates = DiffusionMap.to_diffusion_coordinates(self.dataset,
                                                                numeigs=numeigs,
                                                                t=t,
                                                                epsilon=self.epsilon,
@@ -44,9 +44,9 @@ class DiffusionMap(Reducer):
         if inplace: 
             self.eigenvalues = eigenvalues
             self.eigenvectors = eigenvectors
-            self.reduced_coordinates = eigenvectors
+            self.reduced_coordinates = coordinates
         else:
-            return eigenvalues, eigenvectors
+            return eigenvalues, eigenvectors, coordinates
     
     
     def kernel_sums_per_epsilon(self, dataset=None, epsilon=None, ax=None):
@@ -71,17 +71,16 @@ class DiffusionMap(Reducer):
     def to_diffusion_coordinates(data_set, numeigs=1, t=1, epsilon=1, alpha=0):
         
         K = DiffusionMap.calculate_kernel_matrix(data_set, epsilon=epsilon)
-        
         rowsums = np.sum(K, axis=1)
         D_a = np.power(rowsums, alpha)[:, np.newaxis]
-        laplacian_matrix = K / D_a / D_a.T
+        W = K / D_a / D_a.T
         
-        D = np.sum(laplacian_matrix, axis=1, keepdims=True)
+        D = np.sum(W, axis=1, keepdims=True)
         Droot = np.sqrt(D)
-        #P = laplacian_matrix/D
+        #P = W/D
         # not the real markov transition matrix! 
         # symmetric analog just to use symmetric algorithm
-        symmetric_markov = laplacian_matrix / Droot / Droot.T 
+        symmetric_markov = W / Droot / Droot.T 
     
         
         
@@ -91,14 +90,14 @@ class DiffusionMap(Reducer):
     
         B = csr_matrix(symmetric_markov)
         eigenvalues, eigenvectors = splinalg.eigsh(B, k=numeigs+1, which='LM')
-        eigenvalues = eigenvalues[::-1]  
-        eigenvectors =  eigenvectors[:, ::-1] 
+        eigenvalues = np.flip(eigenvalues)  
+        eigenvectors =  np.flip(eigenvectors, axis=1)
         eigenvectors = eigenvectors / Droot # real eigenvectors of markov matrix
         if t>1:
             eigenvalues = np.power(eigenvalues, t)
-        Psi = eigenvalues[np.newaxis, :] * eigenvectors[:, :]
+        Psi = eigenvalues[np.newaxis,:] * eigenvectors[:, :]
         
-        return eigenvalues, Psi.T
+        return eigenvalues, eigenvectors[:, 1:].T, Psi.T
 
 
 @dataclass
@@ -138,16 +137,16 @@ class LinearMap(Map):
     
     def __post_init__(self):
         
-         p, res = LinearMap.transform(self.domain, self.codomain)
-         pinv, resinv = LinearMap.transform(self.codomain, self.domain)
+        p, res = LinearMap.transform(self.domain, self.codomain)
+        try:
+            pinv, resinv = LinearMap.transform(self.codomain, self.domain)
+            self.inverse_matrix = pinv
+            self.inverse_res = resinv
+        except linalg.LinAlgError:
+            print("LinAlgError: inverse trasformation couldn't realized")
          
-         self.matrix = p
-         self.res = res
-
-         
-         self.inverse_matrix = pinv
-         self.inverse_res = resinv
-
+        self.matrix = p
+        self.res = res
     
     @staticmethod
     def transform(domain, codomain):

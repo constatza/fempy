@@ -84,7 +84,7 @@ def plot_eigenvalues(V, ax=None, *args, **kwargs):
 
 
 
-def plot_eigenvectors(F, ax=None, title='Normalized Eigenvectors', *args, **kwargs):
+def plot_eigenvectors(F, ax=None, title='Normalized Eigenvectors', c=None, *args, **kwargs):
     
     F = zscore(F.T, axis=0)
     try:
@@ -97,7 +97,7 @@ def plot_eigenvectors(F, ax=None, title='Normalized Eigenvectors', *args, **kwar
         if ax is None:
             fig = plt.figure()
             ax = fig.add_subplot(111)
-        lines = ax.scatter(F[:, 0], F[:, 1], *args, **kwargs)
+        lines = ax.scatter(F[:, 0], F[:, 1], c=c, *args, **kwargs)
         ax.set_xlabel('$\psi_1$')
         ax.set_ylabel('$\psi_2$')
 
@@ -105,7 +105,7 @@ def plot_eigenvectors(F, ax=None, title='Normalized Eigenvectors', *args, **kwar
         if ax is None:
             fig = plt.figure()
             ax = fig.add_subplot(111, projection='3d')
-        lines = ax.scatter(F[:,0], F[:, 1], F[:, 2], *args, **kwargs)
+        lines = ax.scatter(F[:,0], F[:, 1], F[:, 2], c=c, *args, **kwargs)
         ax.set_xlabel('$\psi_1$')
         ax.set_ylabel('$\psi_2$')
         ax.set_zlabel('$\psi_3$')
@@ -114,7 +114,7 @@ def plot_eigenvectors(F, ax=None, title='Normalized Eigenvectors', *args, **kwar
         if ax is None:
             fig = plt.figure()
             ax = fig.add_subplot(111)
-        lines = ax.plot(F, linestyle='', *args, **kwargs)
+        lines = ax.plot(F, linestyle='-', *args, **kwargs)
         ax.legend(lines, list(np.arange(numeigs)+1))
 
     ax.set_title(title)
