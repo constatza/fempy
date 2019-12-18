@@ -9,17 +9,19 @@ import numpy as np
 from time import time
 
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 import smartplot
+import fem.core.providers as providers
 
 from fem.preprocessor import rectangular_mesh_model
 from fem.problems import ProblemStructuralDynamic
 from fem.analyzers import Linear, NewmarkDynamicAnalyzer
-from fem.solvers import CholeskySolver
+from fem.solvers import CholeskySolver, SparseSolver
 from fem.systems import LinearSystem
 
 from fem.core.loads import InertiaLoad
 from fem.core.entities import DOFtype
-from fem.core.providers import ElementMaterialOnlyStiffnessProvider, RayleighDampingMatrixProvider
+
 from fem.core.materials import ElasticMaterial2D, StressState2D
 from fem.core.elements import Quad4
 
@@ -29,10 +31,11 @@ import seaborn as sns
 import pandas as pd 
 plt.close('all')
 
-Nsim = 50
-epsilon = 8
+Ntrain = 60
+Ntest = 1
+epsilon = 10
 alpha = 0
-numeigs = 10
+numeigs = 4
 diff_time = 1
 
 
@@ -44,12 +47,32 @@ U = np.load('U1_N2500.npy', mmap_mode='r')
 F = np.load('F1_N2500.npy')
 freq = np.load('Freq1.npy')
 phase = np.load('Phase1.npy')
-Ntrain = Nsim * U.shape[1]
-Utrain = U[:, :, :Nsim]
-Utrain1 = Utrain.transpose(2, 1, 0).reshape(Ntrain, -1).T
+Ntrain_total = Ntrain * U.shape[1]
+Utrain = U[:, :, :Ntrain]
+Utrain1 = Utrain.transpose(2, 1, 0).reshape(Ntrain_total, -1).T
 field = st.StochasticField(data=Utrain1, axis=1)
-Utrain = Utrain1
-color = F[:Nsim, :1000:10].reshape(-1)
+Utrain = st.zscore(Utrain1)
+
+stochastic_path = r"C:\Users\constatza\Documents\thesis\fempy\examples\stochastic_Young_Modulus\stochastic_E.npy"
+E = np.load(stochastic_path, mmap_mode='r')
+Estochastic = E[Ntrain:Ntrain + Ntest, :]
+color = F[:Ntrain, :1000:10].reshape(-1)
+# =============================================================================
+# DMAPS
+# =============================================================================
+dmaps = ml.DiffusionMap(Utrain, epsilon=epsilon, alpha=alpha)
+dmaps.fit(numeigs=numeigs, t=diff_time) 
+linear_dmaps = ml.LinearMap(domain=dmaps.reduced_coordinates, codomain=Utrain)
+u_dm = linear_dmaps.direct_transform_vector(dmaps.reduced_coordinates) 
+
+# =============================================================================
+# PCA
+# =============================================================================
+pca = ml.PCA(Utrain)
+pca.fit(numeigs=numeigs)
+pca_map = ml.LinearMap(domain= pca.reduced_coordinates, codomain=Utrain)
+u_pca = pca_map.direct_transform_vector(pca.reduced_coordinates)
+
 # =============================================================================
 # MODEL CREATION
 # =============================================================================
@@ -86,7 +109,7 @@ model = rectangular_mesh_model(boundX, boundY,
                                numelX, numelY, quad)
 # ASSIGN TIME DEPENDENT LOADS
 
-Iload1 = InertiaLoad(time_history=F[0,:], DOF=DOFtype.X)
+Iload1 = InertiaLoad(time_history=F[0, :], DOF=DOFtype.X)
 model.inertia_loads.append(Iload1)
 
 
@@ -95,91 +118,125 @@ for node in model.nodes[:numelX+1]:
     node.constraints = [DOFtype.X, DOFtype.Y]
     
 model.connect_data_structures()
-damping_provider = RayleighDampingMatrixProvider(coeffs=[0.1, 0.1])
+damping_provider = providers.RayleighDampingMatrixProvider(coeffs=[0.1, 0.1])
 # =============================================================================
 # BUILD ANALYZER
 # =============================================================================
 linear_system = LinearSystem(model.forces)
-solver = CholeskySolver(linear_system)
+solver = SparseSolver(linear_system)
 
-provider = ProblemStructuralDynamic(model, damping_provider=damping_provider)
-provider.stiffness_provider = ElementMaterialOnlyStiffnessProvider()
+dynamic = ProblemStructuralDynamic(model, damping_provider=damping_provider)
+dynamic.stiffness_provider = providers.ElementMaterialOnlyStiffnessProvider()
+dynamic.global_matrix_provider = providers.ReducedGlobalMatrixProvider(pca_map)
 child_analyzer = Linear(solver)
 newmark = NewmarkDynamicAnalyzer(model=model, 
-                                         solver=solver, 
-                                         provider=provider, 
-                                         child_analyzer=child_analyzer, 
-                                         timestep=timestep, 
-                                         total_time=total_time, 
-                                         delta=1/2,
-                                         alpha=1/4)
+                                solver=solver, 
+                                provider= dynamic, 
+                                child_analyzer=child_analyzer, 
+                                timestep=timestep, 
+                                total_time=total_time, 
+                                delta=1/2,
+                                alpha=1/4)
 
-
+# =============================================================================
+# ANALYSES
+# =============================================================================
+for case in range(Ntest):
+    print("Case {:d}".format(case))
+    counter = -1
+    seismic_load = InertiaLoad(time_history=F[case, :], DOF=DOFtype.X)
+    model.inertia_loads[0] = seismic_load
+    for width in range(numelX):
+        for height in range(numelY):
+            #slicing through elements list the geometry rectangle grid is columnwise
+            counter += 1
+            element = model.elements[counter] 
+            element.material.young_modulus = Estochastic[case, height]
+            
+    newmark.initialize()
+    newmark.solve()
 # =============================================================================
 # SAMPLING
 # =============================================================================
+plt.figure()
+plt.plot(newmark.displacements[-2,:])
 
-
-# =============================================================================
-# DMAPS
-# =============================================================================
-dmaps = ml.DiffusionMap(Utrain, epsilon=epsilon, alpha=alpha)
-dmaps.fit(numeigs=numeigs, t=diff_time) 
-linear_dmaps = ml.LinearMap(domain=dmaps.reduced_coordinates, codomain=Utrain)
-u_dm = linear_dmaps.direct_transform_vector(dmaps.reduced_coordinates) 
-
-# =============================================================================
-# PCA
-# =============================================================================
-pca = ml.PCA(Utrain)
-pca.fit(numeigs=numeigs)
-pca_map = ml.LinearMap(domain= pca.reduced_coordinates, codomain=Utrain)
-u_pca = pca_map.direct_transform_vector(pca.reduced_coordinates)
 
 # =============================================================================
 # PLOTS
 # =============================================================================
 
+# smartplot.paper_style()
+
 # fig = plt.figure()
 # ax = fig.add_subplot(111)
-# e = np.logspace(-2, 2, num=20)
+# e = np.logspace(-2, 2, num=10)
 # plt.loglog(e, dmaps.kernel_sums_per_epsilon(Utrain, e))
 
-ax1 = smartplot.plot_eigenvalues(dmaps.eigenvalues, marker='+', label='DMAPS')
-smartplot.plot_eigenvalues(pca.eigenvalues/np.max(pca.eigenvalues),ax=ax1, marker='x', label='PCA')
-ax1.legend()
-plt.grid()
+# fig, ax1 = plt.subplots()
+# smartplot.plot_eigenvalues(dmaps.eigenvalues,
+#                            ax=ax1,
+#                            marker='+',
+#                            label='DMAPS')
+# smartplot.plot_eigenvalues(pca.eigenvalues/np.max(pca.eigenvalues),
+#                            ax=ax1, 
+#                            marker='x', 
+#                            label='PCA')
+# ax1.legend()
 
 
-howmany = 4
-length = 5*100
+# howmany = 4 
+# howmany = howmany * (numeigs > howmany) + (numeigs<= howmany) * numeigs
+# length = 100
 
-bw = 0.1
-dmaps_frame = pd.DataFrame(st.zscore(dmaps.eigenvectors[:howmany, :].T))
-g = sns.PairGrid(dmaps_frame)
-g.map_upper(plt.scatter, marker='.', s=1)
-g.map_diag(sns.kdeplot, bw=bw)
-g.map_lower(sns.kdeplot, bw=bw)
-fig2 = g.fig
-fig2.suptitle('DMAPS Normalized Eigenvectors')
-
-
-pca_frame = pd.DataFrame(st.zscore(pca.eigenvectors[:howmany, :].T))
-g = sns.PairGrid(pca_frame)
-g.map_upper(plt.scatter, marker='.', s=1)
-g.map_diag(sns.kdeplot, bw=bw)
-g.map_lower(sns.kdeplot, bw=bw)
-fig3 = g.fig
-fig3.suptitle('PCA Normalized Eigenvectors')
+# bw = 0.1
+# size = 3
+# dmaps_frame = pd.DataFrame(st.zscore(dmaps.eigenvectors[:howmany, :].T))
+# g = sns.PairGrid(dmaps_frame)
+# g.map_upper(plt.scatter, marker='.', s=size)
+# g.map_diag(sns.kdeplot, bw=bw)
+# g.map_lower(sns.kdeplot, bw=1.5*bw)
+# fig2 = g.fig
+# fig2.suptitle('DMAPS Normalized Eigenvectors')
 
 
-fig4, axes4 = plt.subplots(1, 2)
-fig4.suptitle('Normalized Eigenvectors')
-smartplot.plot_eigenvectors(dmaps.eigenvectors[:howmany,length-100:length], ax=axes4[0], title='DMAPS', c=color[length-100:length], marker='.')
-smartplot.plot_eigenvectors(pca.eigenvectors[:howmany,length-100:length], ax=axes4[1], title='PCA', c=color[length-100:length], marker='.')
+# pca_frame = pd.DataFrame(st.zscore(pca.eigenvectors[:howmany, :].T))
+# g = sns.PairGrid(pca_frame)
+# g.map_upper(plt.scatter, marker='.', s=size)
+# g.map_diag(sns.kdeplot, bw=bw)
+# g.map_lower(sns.kdeplot, bw=1.5*bw)
+# fig3 = g.fig
+# fig3.suptitle('PCA Normalized Eigenvectors')
+
+# psi = [0,1,2]
+# # set up a figure twice as wide as it is tall
+# fig4 = plt.figure(figsize=plt.figaspect(0.3))
+# ax41 = fig4.add_subplot(1, 3, 1, projection='3d')
+# ax42 = fig4.add_subplot(1, 3, 2, projection='3d')
+# ax43 = fig4.add_subplot(1, 3, 3, projection='3d')
+# fig4.suptitle('Normalized Eigenvectors')
+# smartplot.plot_eigenvectors(dmaps.eigenvectors[psi,:length],
+#                             ax=ax42,
+#                             title='DMAPS',
+#                             psi=psi,
+#                             c=color[:length],
+#                             marker='.')
+# smartplot.plot_eigenvectors(pca.eigenvectors[psi,:length],
+#                             ax=ax43,
+#                             title='PCA',
+#                             psi=psi,
+#                             c=color[:length],
+#                             marker='.')
+
+# smartplot.plot_eigenvectors(Utrain[psi,:length],
+#                             ax=ax41, 
+#                             title='Data',
+#                             psi=psi,
+#                             c=color[:length],
+#                             marker='.')
 
 
-fig5, axes5 = plt.subplots(1, 2)
-fig5.suptitle('Correlation')
-axes5[0].plot(color[length-100:length], dmaps.eigenvectors[1,length-100:length].T, marker='.', linestyle='')
-axes5[1].plot(color[length-100:length], pca.reduced_coordinates[1,length-100:length].T, marker='.', linestyle='')
+# fig5, axes5 = plt.subplots(1, 2)
+# fig5.suptitle('Correlation')
+# axes5[0].plot(color[:length], dmaps.eigenvectors[1,:length].T, marker='.', linestyle='')
+# axes5[1].plot(color[:length], pca.reduced_coordinates[1,:length].T, marker='.', linestyle='')

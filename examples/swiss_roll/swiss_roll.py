@@ -23,13 +23,13 @@ plt.close('all')
 epsilon = 2
 alpha = 1
 timesteps = 1
-numeigs = 2
+numeigs = 3
 
 # set parameters
 length_phi = 10 #length of swiss roll in angular direction
 length_Z = 5#length of swiss roll in z direction
 sigma = 2 #noise strength
-m = 100 #number of samples
+m = 1000 #number of samples
 # create dataset
 phi = length_phi/6 *np.random.randn(m) + length_phi*.6 # normal distribution phi
 #phi = length_phi *np.random.rand(m) #+ length_phi*.6

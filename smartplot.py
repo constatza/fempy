@@ -4,10 +4,20 @@ Created on Tue Sep 24 17:56:44 2019
 
 @author: constatza
 """
+import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
 from scipy.stats import zscore 
+
+
+def paper_style():
+    plt.style.use(['seaborn-whitegrid', 'seaborn-paper'])
+    font = {'family' : 'Times New Roman',
+            'weight' : 'bold',
+            'size'   : 15}
+    matplotlib.rc('image', cmap='viridis')
+    matplotlib.rc('font', **font)
 
 
 def gridplot(axes, iterable, titles=None, only2d=True, *args, **kwargs):

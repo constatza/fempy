@@ -30,7 +30,7 @@ plt.close('all')
 # INPUT
 # =============================================================================
 
-Nsim = 3
+Nsim = 1
 np.random.seed(1)
 # DYNAMIC LOAD
 total_time = 5
@@ -96,7 +96,9 @@ damping_provider = RayleighDampingMatrixProvider(coeffs=[0.1, 0.1])
 linear_system = LinearSystem(model.forces)
 solver = CholeskySolver(linear_system)
 
-provider = ProblemStructuralDynamic(model, damping_provider=damping_provider)
+provider = ProblemStructuralDynamic(model, 
+                                    damping_provider=damping_provider)
+provider.change_mass = False
 provider.stiffness_provider = ElementMaterialOnlyStiffnessProvider()
 child_analyzer = Linear(solver)
 newmark = NewmarkDynamicAnalyzer(model=model, 
@@ -147,28 +149,28 @@ print("Finished in {:.2f} min".format(end/60 - start/60) )
 # =============================================================================
 # PLOTS
 # =============================================================================
-# displacements = displacements[:,:,-1]
-# timeline = range(displacements.shape[0])*timestep
+displacements = newmark.displacements
+timeline = range(displacements.shape[1])*timestep
 # timeline = timeline[reduced_steps]
-# velocities = np.gradient(displacements, timestep, axis=0)
-# accelerations = np.gradient(velocities, timestep, axis=0)
-# node = 1020
-# ux = displacements[2*node-2, :]
-# uy = displacements[2*node-1, :]
-# vx = velocities[2*node-2, :]
-# vy = velocities[2*node-1, :]
-# ax = accelerations[2*node-2, :]
-# ay = accelerations[2*node-1, :]
-# fig = plt.figure()
-# ax1 = fig.add_subplot(111)
-# splt.plot23d(ux, uy, ax=ax1, title='Phase Space')
+velocities = np.gradient(displacements, timestep, axis=0)
+accelerations = np.gradient(velocities, timestep, axis=0)
+node = 1020
+ux = displacements[2*node-2, :]
+uy = displacements[2*node-1, :]
+vx = velocities[2*node-2, :]
+vy = velocities[2*node-1, :]
+ax = accelerations[2*node-2, :]
+ay = accelerations[2*node-1, :]
+fig = plt.figure()
+ax1 = fig.add_subplot(111)
+splt.plot23d(ux, uy, ax=ax1, title='Phase Space')
 
-# fig, axes = plt.subplots(4, 1, sharex=True )
+fig, axes = plt.subplots(4, 1, sharex=True )
 
-# data = ((t, F[case, :]),
-#         (timeline, ux, uy),
-#         (timeline, vx, vy),
-#         (timeline, ax, ay))
+data = ((t, F[case, :]),
+        (timeline, ux, uy),
+        (timeline, vx, vy),
+        (timeline, ax, ay))
 
 
-# splt.gridplot(axes.ravel(), data)
+splt.gridplot(axes.ravel(), data)

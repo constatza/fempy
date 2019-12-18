@@ -13,26 +13,35 @@ import scipy.linalg as linalg
 from dataclasses import dataclass, field
 from sklearn.metrics.pairwise import pairwise_distances
 from scipy.sparse import csr_matrix
-
+from mathematics.stochastic import zscore
 
 """Dimensionality reduction classes"""
 
+
 @dataclass
-class Reducer:
+class Eigendecomposer:
     dataset : np.ndarray = field(default_factory=np.ndarray)
-    
-    def __post_init__(self):
-        self.reduced_coordinates = None
-
-
-@dataclass
-class DiffusionMap(Reducer):
-    epsilon : float = 1
-    alpha : float = 1
     
     def __post_init__(self):
         self.eigenvalues = None
         self.eigenvectors = None
+        self.reduced_coordinates = None
+    
+    @staticmethod
+    def znormed_eigenvalues(eigenvalues):
+        return zscore(eigenvalues)
+    
+    @staticmethod
+    def znormed_eigenvectors(eigenvectors):
+        return zscore(eigenvectors)
+        
+
+@dataclass
+class DiffusionMap(Eigendecomposer):
+    
+    epsilon : float = 1
+    alpha : float = 1
+
     
     def fit(self, numeigs=1, t=1, inplace=True):
 
@@ -41,6 +50,8 @@ class DiffusionMap(Reducer):
                                                                t=t,
                                                                epsilon=self.epsilon,
                                                                alpha=self.alpha)
+        eigenvectors = self.znormed_eigenvectors(eigenvectors)
+        coordinates = self.znormed_eigenvectors(coordinates)
         if inplace: 
             self.eigenvalues = eigenvalues
             self.eigenvectors = eigenvectors
@@ -101,13 +112,14 @@ class DiffusionMap(Reducer):
 
 
 @dataclass
-class PCA(Reducer):
+class PCA(Eigendecomposer):
     
     def __post_init__(self):
         self.eigenvectors = None
     
     def fit(self, numeigs=1, inplace=True):
         eigenvalues, eigenvectors = PCA.eigendecomposition(self.dataset, numeigs=numeigs)
+        eigenvectors = self.znormed_eigenvectors(eigenvectors)
         if inplace: 
             self.eigenvectors = eigenvectors
             self.eigenvalues = eigenvalues
@@ -143,7 +155,7 @@ class LinearMap(Map):
             self.inverse_matrix = pinv
             self.inverse_res = resinv
         except linalg.LinAlgError:
-            print("LinAlgError: inverse trasformation couldn't realized")
+            print("LinAlgError: inverse trasformation couldn't be realized")
          
         self.matrix = p
         self.res = res
@@ -160,16 +172,16 @@ class LinearMap(Map):
         return linear_map, res
     
     def direct_transform_vector(self, vector: np.ndarray):
-        return self.matrix @ vector
+        return self.matrix.T @ vector
     
-    def inverse_transform_vector(self, vector: np.ndarray, *args, **kwargs) -> np.ndarray:
-        return self.inverse_matrix @ vector
+    def inverse_transform_vector(self, vector: np.ndarray, *args, **kwargs):
+        return self.inverse_matrix.T @ vector
     
     def direct_transform_matrix(self, matrix):
-        return self.matrix @ matrix @ self.matrix.T
+        return self.matrix.T @ matrix @ self.matrix
     
     def inverse_transform_matrix(self, matrix):
-        return self.inverse_matrix @ matrix @ self.inverse_matrix.T
+        return self.inverse_matrix.T @ matrix @ self.inverse_matrix
             
 
 # def nearest_neighbour_mapping(vectors, natural_coordinates, transformed_coordinates, k=3):

@@ -52,8 +52,7 @@ class SparseLUSolver(Solver):
     
     def initialize(self):
         """ Factorizes linear system's matrix once for many different rhs."""
-        self.L = linalg.cho_factor(self.linear_system.matrix)
-        sparseM = sparse.csc_matrix(self.linear_system.matrix)
+        sparseM = sparse.csr_matrix(self.linear_system.matrix)
         self.sparse_solveLU = splinalg.factorized(sparseM)
         
     

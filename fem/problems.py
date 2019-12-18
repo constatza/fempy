@@ -28,12 +28,12 @@ class ProblemStructural:
         """ Builds the global Stiffness Matrix"""
         provider = ElementStiffnessProvider()
         global_provider = self.global_matrix_provider
-        self._matrix = global_provider.get_stiffness_matrix(self.model, provider)
+        self._matrix = global_provider.build_stiffness_matrix(self.model, provider)
  
     def rebuild_matrix(self):
         """ Rebuilds the global Stiffness Matrix"""
         global_provider = self.global_matrix_provider
-        self._matrix = global_provider.get_stiffness_matrix(self.model, self.provider)
+        self._matrix = global_provider.build_stiffness_matrix(self.model, self.provider)
     
     def calculate_matrix(self, linear_system):
         linear_system.matrix = self.matrix
@@ -66,9 +66,12 @@ class ProblemStructuralDynamic:
             pass
         elif (self._stiffness_matrix is not None) and self.change_stiffness:
             self.rebuild_stiffness_matrix()
+            self.damping_provider.stiffness_matrix = self._stiffness_matrix
         else:
             self.build_stiffness_matrix()
-        return self._stiffness_matrix
+            self.damping_provider.stiffness_matrix = self._stiffness_matrix
+        stiff = self.global_matrix_provider.get_stiffness_matrix(self._stiffness_matrix)
+        return stiff
     
     @property
     def mass_matrix(self):
@@ -76,10 +79,12 @@ class ProblemStructuralDynamic:
             pass
         elif (self._mass_matrix is not None) and self.change_mass:
             self.rebuild_mass_matrix()
+            self.damping_provider.mass_matrix = self._mass_matrix
         else:
             self.build_mass_matrix()
-        return self._mass_matrix
-    
+            self.damping_provider.mass_matrix = self._mass_matrix
+        mass = self.global_matrix_provider.get_mass_matrix(self._mass_matrix)
+        return mass
     @property
     def damping_matrix(self):
         if (self._damping_matrix is not None) and not self.change_damping:
@@ -88,7 +93,8 @@ class ProblemStructuralDynamic:
             self.rebuild_damping_matrix()
         else:
             self.build_damping_matrix()
-        return self._damping_matrix
+        damp = self.global_matrix_provider.get_damping_matrix(self._damping_matrix)
+        return damp
 
     @stiffness_matrix.setter
     def stiffness_matrix(self, value):
@@ -106,51 +112,41 @@ class ProblemStructuralDynamic:
         """ Builds the global Stiffness Matrix"""
         provider = ElementStiffnessProvider()
         global_provider = self.global_matrix_provider
-        self.stiffness_matrix = global_provider.get_stiffness_matrix(self.model, provider)
+        self.stiffness_matrix = global_provider.build_stiffness_matrix(self.model, provider)
         
     def build_mass_matrix(self):
         """ Builds the global Mass Matrix"""
         provider = ElementMassProvider()
         global_provider = self.global_matrix_provider
-        self.mass_matrix = global_provider.get_mass_matrix(self.model, provider)
+        self.mass_matrix = global_provider.build_mass_matrix(self.model, provider)
         
     
     def build_damping_matrix(self):
         """ Builds the global Mass Matrix"""
         global_provider = self.global_matrix_provider
-        self.damping_matrix = global_provider.get_damping_matrix(self._stiffness_matrix,
-                                                               self._mass_matrix, 
-                                                               self.damping_provider)
+        self.damping_matrix = global_provider.build_damping_matrix(self.damping_provider)
 
 
     def rebuild_stiffness_matrix(self):
         """ Rebuilds the global Stiffness Matrix"""
         global_provider = self.global_matrix_provider
-        self.stiffness_matrix = global_provider.get_stiffness_matrix(self.model, self.stiffness_provider)
+        self.stiffness_matrix = global_provider.build_stiffness_matrix(self.model, self.stiffness_provider)
 
     def rebuild_mass_matrix(self):
         """ Rebuilds the global Mass Matrix"""
         global_provider = self.global_matrix_provider
-        self.mass_matrix = global_provider.get_mass_matrix(self.model, self.mass_provider)
+        self.mass_matrix = global_provider.build_mass_matrix(self.model, self.mass_provider)
     
     def rebuild_damping_matrix(self):
         """ Rebuilds the global Mass Matrix"""
         global_provider = self.global_matrix_provider
-        self.damping_matrix = global_provider.get_damping_matrix(self._stiffness_matrix,
-                                                               self._mass_matrix,
-                                                               self.damping_provider)
+        self.damping_matrix = global_provider.build_damping_matrix(self.damping_provider)
         
     def get_rhs_from_history_load(self, timestep):
-        model = self.model
-        provider = self.global_matrix_provider
-        stforces = model.forces
-        dyforces = model.dynamic_forces
-        inloads = model.inertia_loads
-        in_dir_vectors = self.inertia_vectors  
-        return provider.get_rhs_from_history_loads(timestep, stforces, dyforces,
-                                                   inloads, in_dir_vectors, self._mass_matrix)
+        return self.global_matrix_provider.get_rhs_from_history_loads(timestep, self)
+       
     def calculate_inertia_vectors(self):
-        in_dir_vectors = self.model.inertia_forces_direction_vectors
+        in_dir_vectors = self.global_matrix_provider.build_inertia_direction(self.model)
         self.inertia_vectors = self._mass_matrix @ in_dir_vectors
     
     def mass_matrix_vector_product(self, vector):
