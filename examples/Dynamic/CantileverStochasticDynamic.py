@@ -30,7 +30,7 @@ plt.close('all')
 # INPUT
 # =============================================================================
 
-Nsim = 2500
+Nsim = 3
 np.random.seed(1)
 # DYNAMIC LOAD
 total_time = 5
@@ -134,9 +134,9 @@ print("Finished in {:.2f} min".format(end/60 - start/60) )
 # =============================================================================
 # SAVE
 # =============================================================================
-np.savez("Dynamic1_N2500", 
-         U=displacements,
-         F=F)
+# np.savez("Dynamic1_N2500", 
+#          U=displacements,
+#          F=F)
 
 
 

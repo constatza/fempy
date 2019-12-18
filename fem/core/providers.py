@@ -171,7 +171,7 @@ class RayleighDampingMatrixProvider:
         #                          maxiter=5000,
         #                          tol=1e-2)
 
-        wmegas = sqrt(eigvals)
+        wmegas = sqrt(eigvals[0:2])
         self.frequencies = wmegas
         Matrix = .5* array([1/wmegas,wmegas]) 
         a = linalg.solve(Matrix.T, damping_coeffs, check_finite=False)

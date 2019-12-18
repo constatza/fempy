@@ -56,11 +56,6 @@ def plot23d(x, y, z=None, ax=None, title=None, *args, **kwargs):
     return ax
                 
 
-
-def histogram(x, *args, **kwargs):
-#    sns.set()
-    return sns.distplot(x, *args, **kwargs)
-
 def formal_serif():    
     plt.rc( 'text', **{'usetex' : True})
     # Set the global font to be DejaVu Sans, size 10 (or any other sans-serif font of your choice!)
@@ -84,7 +79,7 @@ def plot_eigenvalues(V, ax=None, *args, **kwargs):
 
 
 
-def plot_eigenvectors(F, ax=None, title='Normalized Eigenvectors', c=None, *args, **kwargs):
+def plot_eigenvectors(F, ax=None, c=None, psi=(1,2), title=None, *args, **kwargs):
     
     F = zscore(F.T, axis=0)
     try:
@@ -98,17 +93,17 @@ def plot_eigenvectors(F, ax=None, title='Normalized Eigenvectors', c=None, *args
             fig = plt.figure()
             ax = fig.add_subplot(111)
         lines = ax.scatter(F[:, 0], F[:, 1], c=c, *args, **kwargs)
-        ax.set_xlabel('$\psi_1$')
-        ax.set_ylabel('$\psi_2$')
+        ax.set_xlabel('$\psi_{:d}$'.format(psi[0]))
+        ax.set_ylabel('$\psi_{:d}$'.format(psi[1]))
 
     elif numeigs==3:
         if ax is None:
             fig = plt.figure()
             ax = fig.add_subplot(111, projection='3d')
         lines = ax.scatter(F[:,0], F[:, 1], F[:, 2], c=c, *args, **kwargs)
-        ax.set_xlabel('$\psi_1$')
-        ax.set_ylabel('$\psi_2$')
-        ax.set_zlabel('$\psi_3$')
+        ax.set_xlabel('$\psi_{:d}$'.format(psi[0]))
+        ax.set_ylabel('$\psi_{:d}$'.format(psi[1]))
+        ax.set_zlabel('$\psi_{:d}$'.format(psi[2]))
         
     else:
         if ax is None:
@@ -116,8 +111,9 @@ def plot_eigenvectors(F, ax=None, title='Normalized Eigenvectors', c=None, *args
             ax = fig.add_subplot(111)
         lines = ax.plot(F, linestyle='-', *args, **kwargs)
         ax.legend(lines, list(np.arange(numeigs)+1))
+    if title is not None:
+        ax.set_title(title)
 
-    ax.set_title(title)
     ax.grid()
     return ax
 

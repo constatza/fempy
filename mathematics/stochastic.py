@@ -29,8 +29,15 @@ class StochasticField:
         self.max = maximum
         self.normalized = (self.data - mean)/maximum
 
-
-
+def zscore(data, axis=-1, zonly=True):
+    mean = np.mean(data, axis=axis, keepdims=True)
+    std = np.std(data, axis=axis, keepdims=True)
+    zscore = (data - mean)/std
+    if zonly:
+        return zscore
+    else:
+        return zscore, mean, std
+    
 
 def zscore_inverse(array, mean, std):
     return array*std + mean

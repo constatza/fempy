@@ -24,14 +24,15 @@ from fem.core.materials import ElasticMaterial2D, StressState2D
 from fem.core.elements import Quad4
 
 import mathematics.manilearn as ml
-
-
+import mathematics.stochastic as st
+import seaborn as sns
+import pandas as pd 
 plt.close('all')
 
 Nsim = 50
-epsilon = 10
-alpha = 1
-numeigs = 5
+epsilon = 8
+alpha = 0
+numeigs = 10
 diff_time = 1
 
 
@@ -45,14 +46,16 @@ freq = np.load('Freq1.npy')
 phase = np.load('Phase1.npy')
 Ntrain = Nsim * U.shape[1]
 Utrain = U[:, :, :Nsim]
-Utrain = Utrain.transpose(2, 1, 0).reshape(Ntrain, -1).T
-color = freq[:Ntrain]
+Utrain1 = Utrain.transpose(2, 1, 0).reshape(Ntrain, -1).T
+field = st.StochasticField(data=Utrain1, axis=1)
+Utrain = Utrain1
+color = F[:Nsim, :1000:10].reshape(-1)
 # =============================================================================
 # MODEL CREATION
 # =============================================================================
 
 # time data
-total_time = 5
+total_time = 10
 total_steps = 1000
 reduced_step = 10
 reduced_steps= np.arange(total_steps, step=reduced_step)
@@ -136,25 +139,47 @@ u_pca = pca_map.direct_transform_vector(pca.reduced_coordinates)
 # =============================================================================
 # PLOTS
 # =============================================================================
+
 # fig = plt.figure()
 # ax = fig.add_subplot(111)
 # e = np.logspace(-2, 2, num=20)
 # plt.loglog(e, dmaps.kernel_sums_per_epsilon(Utrain, e))
 
-ax3 = smartplot.plot_eigenvalues(dmaps.eigenvalues, marker='+', label='DMAPS')
-smartplot.plot_eigenvalues(pca.eigenvalues/np.max(pca.eigenvalues),ax=ax3, marker='x', label='PCA')
-ax3.legend()
+ax1 = smartplot.plot_eigenvalues(dmaps.eigenvalues, marker='+', label='DMAPS')
+smartplot.plot_eigenvalues(pca.eigenvalues/np.max(pca.eigenvalues),ax=ax1, marker='x', label='PCA')
+ax1.legend()
 plt.grid()
 
-howmany = 2
-length = 1000
+
+howmany = 4
+length = 5*100
+
+bw = 0.1
+dmaps_frame = pd.DataFrame(st.zscore(dmaps.eigenvectors[:howmany, :].T))
+g = sns.PairGrid(dmaps_frame)
+g.map_upper(plt.scatter, marker='.', s=1)
+g.map_diag(sns.kdeplot, bw=bw)
+g.map_lower(sns.kdeplot, bw=bw)
+fig2 = g.fig
+fig2.suptitle('DMAPS Normalized Eigenvectors')
+
+
+pca_frame = pd.DataFrame(st.zscore(pca.eigenvectors[:howmany, :].T))
+g = sns.PairGrid(pca_frame)
+g.map_upper(plt.scatter, marker='.', s=1)
+g.map_diag(sns.kdeplot, bw=bw)
+g.map_lower(sns.kdeplot, bw=bw)
+fig3 = g.fig
+fig3.suptitle('PCA Normalized Eigenvectors')
+
+
 fig4, axes4 = plt.subplots(1, 2)
 fig4.suptitle('Normalized Eigenvectors')
-smartplot.plot_eigenvectors(dmaps.eigenvectors[:howmany,:length], ax=axes4[0], title='DMAPS', c=color[:length], marker='.')
-smartplot.plot_eigenvectors(pca.eigenvectors[:howmany,:length], ax=axes4[1], title='PCA', c=color[:length], marker='.')
+smartplot.plot_eigenvectors(dmaps.eigenvectors[:howmany,length-100:length], ax=axes4[0], title='DMAPS', c=color[length-100:length], marker='.')
+smartplot.plot_eigenvectors(pca.eigenvectors[:howmany,length-100:length], ax=axes4[1], title='PCA', c=color[length-100:length], marker='.')
 
- 
+
 fig5, axes5 = plt.subplots(1, 2)
 fig5.suptitle('Correlation')
-axes5[0].plot(freq[:length], dmaps.eigenvectors[:howmany,:length].T, marker='.', linestyle='')
-axes5[1].plot(freq[:length], pca.reduced_coordinates[:howmany,:length].T, marker='.', linestyle='')
+axes5[0].plot(color[length-100:length], dmaps.eigenvectors[1,length-100:length].T, marker='.', linestyle='')
+axes5[1].plot(color[length-100:length], pca.reduced_coordinates[1,length-100:length].T, marker='.', linestyle='')
