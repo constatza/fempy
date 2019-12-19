@@ -157,9 +157,7 @@ cdef class NewmarkDynamicAnalyzer(Analyzer):
         self.u = None
         self.ud = None
         self.udd = None
-        self.displacements = np.empty((self.model.total_DOFs, self.total_steps), dtype=np.float32)
-        self.velocities = np.empty((self.model.total_DOFs, self.total_steps), dtype=np.float32)
-        self.accelerations = np.empty((self.model.total_DOFs, self.total_steps), dtype=np.float32)
+        
     
     cdef void calculate_coefficients(self):
         cdef double alpha = self.alpha
@@ -185,6 +183,7 @@ cdef class NewmarkDynamicAnalyzer(Analyzer):
         provider = self.provider
         cdef double a0 = self.alphas[0]
         cdef double a1 = self.alphas[1]
+        
         
         self.linear_system.matrix = (self.stiffness_matrix 
                                     + a0 * self.mass_matrix
@@ -265,16 +264,21 @@ cdef class NewmarkDynamicAnalyzer(Analyzer):
         if self.linear_system.solution is not None:
             self.linear_system.reset()
             
-        cdef size_t total_DOFs = self.model.total_DOFs
-        
-        if u0 is None:
-            u0 = np.zeros((total_DOFs, 1))            
-        if ud0 is None:
-            ud0 = np.zeros((total_DOFs, 1))
         provider = self.provider
         cdef np.ndarray[np.float64_t, ndim=2] stiffness = np.ascontiguousarray(provider.stiffness_matrix.astype(float))
         cdef np.ndarray[np.float64_t, ndim=2] mass = np.ascontiguousarray(provider.mass_matrix.astype(float))
         cdef np.ndarray[np.float64_t, ndim=2] damping = np.ascontiguousarray(provider.damping_matrix.astype(float)) #after M and K !
+        
+        total_dofs = stiffness.shape[0]
+        self.displacements = np.empty((total_dofs, self.total_steps), dtype=np.float32)
+        self.velocities = np.empty((total_dofs, self.total_steps), dtype=np.float32)
+        self.accelerations = np.empty((total_dofs, self.total_steps), dtype=np.float32)
+        
+        if u0 is None:
+            u0 = np.zeros((total_dofs, 1))            
+        if ud0 is None:
+            ud0 = np.zeros((total_dofs, 1))
+        
         provider.calculate_inertia_vectors() # before first call of get_rhs...
         rhs0 = self.provider.get_rhs_from_history_load(0)
         self.linear_system.rhs = rhs0 - stiffness @ u0 - damping @ ud0

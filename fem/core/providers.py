@@ -109,7 +109,7 @@ class GlobalMatrixProvider:
     @staticmethod
     def build_damping_matrix(damping_provider):
         if damping_provider is None:
-            damp = zeros(K.shape)
+            damp = zeros(damping_provider.stiffness_matrix.shape)
         else:
             damp = damping_provider.calculate_global_matrix()
         return damp
@@ -161,7 +161,7 @@ class ReducedGlobalMatrixProvider(GlobalMatrixProvider):
     def reduced_vector(self, func):
         def wrapper(*args, **kwargs):
             vector = func(*args, **kwargs)
-            return self.linear_map.direct_transform_vector(vector)
+            return self.linear_map.transpose_transform_vector(vector)
         return wrapper
     
     
@@ -176,8 +176,8 @@ class ReducedGlobalMatrixProvider(GlobalMatrixProvider):
 
     def get_rhs_from_history_loads(self, timestep, problem):
         rhs = GlobalMatrixProvider.get_rhs_from_history_loads(timestep, problem)
-        return self.linear_map.direct_transform_vector(rhs)
-    
+        rhs_r = self.linear_map.transpose_transform_vector(rhs)
+        return rhs_r
 
 class RayleighDampingMatrixProvider:
     

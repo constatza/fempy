@@ -32,7 +32,7 @@ import pandas as pd
 plt.close('all')
 
 Ntrain = 60
-Ntest = 1
+Ntest = 10
 epsilon = 10
 alpha = 0
 numeigs = 4
@@ -51,7 +51,7 @@ Ntrain_total = Ntrain * U.shape[1]
 Utrain = U[:, :, :Ntrain]
 Utrain1 = Utrain.transpose(2, 1, 0).reshape(Ntrain_total, -1).T
 field = st.StochasticField(data=Utrain1, axis=1)
-Utrain = st.zscore(Utrain1)
+Utrain = Utrain1
 
 stochastic_path = r"C:\Users\constatza\Documents\thesis\fempy\examples\stochastic_Young_Modulus\stochastic_E.npy"
 E = np.load(stochastic_path, mmap_mode='r')
@@ -62,8 +62,8 @@ color = F[:Ntrain, :1000:10].reshape(-1)
 # =============================================================================
 dmaps = ml.DiffusionMap(Utrain, epsilon=epsilon, alpha=alpha)
 dmaps.fit(numeigs=numeigs, t=diff_time) 
-linear_dmaps = ml.LinearMap(domain=dmaps.reduced_coordinates, codomain=Utrain)
-u_dm = linear_dmaps.direct_transform_vector(dmaps.reduced_coordinates) 
+diff_map = ml.LinearMap(domain=dmaps.reduced_coordinates, codomain=Utrain)
+u_dm = diff_map.direct_transform_vector(dmaps.reduced_coordinates) 
 
 # =============================================================================
 # PCA
@@ -123,11 +123,11 @@ damping_provider = providers.RayleighDampingMatrixProvider(coeffs=[0.1, 0.1])
 # BUILD ANALYZER
 # =============================================================================
 linear_system = LinearSystem(model.forces)
-solver = SparseSolver(linear_system)
+solver = CholeskySolver(linear_system)
 
 dynamic = ProblemStructuralDynamic(model, damping_provider=damping_provider)
 dynamic.stiffness_provider = providers.ElementMaterialOnlyStiffnessProvider()
-dynamic.global_matrix_provider = providers.ReducedGlobalMatrixProvider(pca_map)
+dynamic.global_matrix_provider = providers.ReducedGlobalMatrixProvider(diff_map)
 child_analyzer = Linear(solver)
 newmark = NewmarkDynamicAnalyzer(model=model, 
                                 solver=solver, 
@@ -141,6 +141,7 @@ newmark = NewmarkDynamicAnalyzer(model=model,
 # =============================================================================
 # ANALYSES
 # =============================================================================
+start = time()
 for case in range(Ntest):
     print("Case {:d}".format(case))
     counter = -1
@@ -155,11 +156,19 @@ for case in range(Ntest):
             
     newmark.initialize()
     newmark.solve()
+
+end = time()
+print("Finished in {:.2f} min".format(end/60 - start/60) )
 # =============================================================================
 # SAMPLING
 # =============================================================================
 plt.figure()
-plt.plot(newmark.displacements[-2,:])
+
+
+timeline = timestep* range(newmark.displacements.shape[1])
+Ur = diff_map.matrix @ newmark.displacements
+plt.plot(timeline, Ur[-2,:])
+plt.plot(timeline[::1], F[case, :-1])
 
 
 # =============================================================================

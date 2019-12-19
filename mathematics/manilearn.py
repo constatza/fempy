@@ -150,12 +150,7 @@ class LinearMap(Map):
     def __post_init__(self):
         
         p, res = LinearMap.transform(self.domain, self.codomain)
-        try:
-            pinv, resinv = LinearMap.transform(self.codomain, self.domain)
-            self.inverse_matrix = pinv
-            self.inverse_res = resinv
-        except linalg.LinAlgError:
-            print("LinAlgError: inverse trasformation couldn't be realized")
+
          
         self.matrix = p
         self.res = res
@@ -172,16 +167,16 @@ class LinearMap(Map):
         return linear_map, res
     
     def direct_transform_vector(self, vector: np.ndarray):
-        return self.matrix.T @ vector
+        return self.matrix @ vector
     
-    def inverse_transform_vector(self, vector: np.ndarray, *args, **kwargs):
-        return self.inverse_matrix.T @ vector
+    def transpose_transform_vector(self, vector: np.ndarray, *args, **kwargs):
+        return self.matrix.T @ vector
     
     def direct_transform_matrix(self, matrix):
         return self.matrix.T @ matrix @ self.matrix
     
-    def inverse_transform_matrix(self, matrix):
-        return self.inverse_matrix.T @ matrix @ self.inverse_matrix
+    def transpose_transform_matrix(self, matrix):
+        return self.matrix @ matrix @ self.matrix.T
             
 
 # def nearest_neighbour_mapping(vectors, natural_coordinates, transformed_coordinates, k=3):
