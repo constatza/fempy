@@ -55,7 +55,8 @@ Utrain = Utrain1
 
 stochastic_path = r"C:\Users\constatza\Documents\thesis\fempy\examples\stochastic_Young_Modulus\stochastic_E.npy"
 E = np.load(stochastic_path, mmap_mode='r')
-Estochastic = E[Ntrain:Ntrain + Ntest, :]
+Etest = E[Ntrain:Ntrain + Ntest, :]
+Ftest = F[Ntrain:Ntrain + Ntest, :]
 color = F[:Ntrain, :1000:10].reshape(-1)
 # =============================================================================
 # DMAPS
@@ -145,14 +146,14 @@ start = time()
 for case in range(Ntest):
     print("Case {:d}".format(case))
     counter = -1
-    seismic_load = InertiaLoad(time_history=F[case, :], DOF=DOFtype.X)
+    seismic_load = InertiaLoad(time_history=Ftest[case, :], DOF=DOFtype.X)
     model.inertia_loads[0] = seismic_load
     for width in range(numelX):
         for height in range(numelY):
             #slicing through elements list the geometry rectangle grid is columnwise
             counter += 1
             element = model.elements[counter] 
-            element.material.young_modulus = Estochastic[case, height]
+            element.material.young_modulus = Etest[case, height]
             
     newmark.initialize()
     newmark.solve()
@@ -168,7 +169,7 @@ plt.figure()
 timeline = timestep* range(newmark.displacements.shape[1])
 Ur = diff_map.matrix @ newmark.displacements
 plt.plot(timeline, Ur[-2,:])
-plt.plot(timeline[::1], F[case, :-1])
+plt.plot(timeline[::1], Ftest[case, :-1])
 
 
 # =============================================================================
