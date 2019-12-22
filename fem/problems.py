@@ -85,6 +85,7 @@ class ProblemStructuralDynamic:
             self.damping_provider.mass_matrix = self._mass_matrix
         mass = self.global_matrix_provider.get_mass_matrix(self._mass_matrix)
         return mass
+    
     @property
     def damping_matrix(self):
         if (self._damping_matrix is not None) and not self.change_damping:

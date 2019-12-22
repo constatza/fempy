@@ -1,8 +1,10 @@
 
-
-from scipy import linalg, sparse
-from scipy.sparse import linalg as splinalg
 import numpy as np
+from scipy import linalg 
+from scipy.sparse import csr_matrix, csc_matrix
+from scipy.sparse import linalg as splinalg
+# from sksparse.cholmod import cholesky
+
 
 class Solver:
     
@@ -17,7 +19,6 @@ class ConjugateGradientSolver(Solver):
     
     def __init__(self, linear_system):
         super().__init__(linear_system)
-
     
     def solve(self):
         solution = splinalg.cg(self.linear_system.matrix, self.linear_system.rhs)
@@ -45,6 +46,25 @@ class SparseSolver(Solver):
         sparseM = sparse.csr_matrix(self.linear_system.matrix)
         self.linear_system.solution = splinalg.spsolve(sparseM, self.linear_system.rhs)
 
+
+
+
+# class SparseCholeskySolver(Solver):
+    
+#     def __init__(self, linear_system):
+#         super().__init__(linear_system)
+    
+#     def initialize(self):
+#         """ Factorizes linear system's matrix once for many different rhs."""
+#         sparse_matrix = csc_matrix(self.linear_system.matrix)
+#         factor = cholesky(sparse_matrix)
+#         self.sparse_cho_solve = factor
+        
+    
+#     def solve(self):
+#         self.linear_system.solution = self.sparse_cho_solve(self.linear_system.rhs)
+     
+
 class SparseLUSolver(Solver):
     
     def __init__(self, linear_system):
@@ -52,13 +72,11 @@ class SparseLUSolver(Solver):
     
     def initialize(self):
         """ Factorizes linear system's matrix once for many different rhs."""
-        sparseM = sparse.csr_matrix(self.linear_system.matrix)
-        self.sparse_solveLU = splinalg.factorized(sparseM)
+        sparse_matrix = csc_matrix(self.linear_system.matrix)
+        lu = splinalg.splu(sparse_matrix)
+        self.sparse_lu = lu
         
     
     def solve(self):
-       
-        self.linear_system.solution = self.sparse_solveLU(self.linear_system.rhs)
-     
-
-
+        self.linear_system.solution = self.sparse_lu.solve(self.linear_system.rhs)
+    

@@ -16,7 +16,7 @@ import smartplot as splt
 from fem.preprocessor import rectangular_mesh_model
 from fem.problems import ProblemStructuralDynamic
 from fem.analyzers import Linear, NewmarkDynamicAnalyzer
-from fem.solvers import CholeskySolver
+from fem.solvers import CholeskySolver, SparseLUSolver#, SparseCholeskySolver
 from fem.systems import LinearSystem
 
 from fem.core.loads import InertiaLoad
@@ -57,7 +57,8 @@ mass_density = 2.5e-9
 
 # STOCHASTIC E FILES
 stochastic_path = r"C:\Users\constatza\Documents\thesis\fempy\examples\stochastic_Young_Modulus\stochastic_E.npy"
-Estochastic = np.load(stochastic_path)
+Estochastic = np.load(stochastic_path, mmap_mode='r')
+Estochastic = Estochastic[:Nsim, :]
 # =============================================================================
 # MODEL CREATION
 # =============================================================================
@@ -94,7 +95,7 @@ damping_provider = RayleighDampingMatrixProvider(coeffs=[0.1, 0.1])
 # BUILD ANALYZER
 # =============================================================================
 linear_system = LinearSystem(model.forces)
-solver = CholeskySolver(linear_system)
+solver = SparseLUSolver(linear_system)
 
 provider = ProblemStructuralDynamic(model, 
                                     damping_provider=damping_provider)
@@ -126,7 +127,7 @@ for case in range(Nsim):
             
     newmark.initialize()
     newmark.solve()
-    
+    print(model.inertia_loads[0], model.inertia_loads)
 
 
     displacements[:,:, case] = newmark.displacements[:, ::reduced_step]
@@ -172,5 +173,5 @@ data = ((t, F[case, :]),
         (timeline, vx, vy),
         (timeline, ax, ay))
 
-
+np.save('u2038.npy', ux)
 splt.gridplot(axes.ravel(), data)

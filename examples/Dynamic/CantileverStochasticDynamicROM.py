@@ -32,10 +32,10 @@ import pandas as pd
 plt.close('all')
 
 Ntrain = 60
-Ntest = 10
-epsilon = 10
+Ntest = 1
+epsilon = 8
 alpha = 0
-numeigs = 4
+numeigs = 2
 diff_time = 1
 
 
@@ -43,21 +43,31 @@ diff_time = 1
 # LOAD DATA FROM MONTE CARLO
 # =============================================================================
 # displacements
-U = np.load('U1_N2500.npy', mmap_mode='r')
-F = np.load('F1_N2500.npy')
-freq = np.load('Freq1.npy')
-phase = np.load('Phase1.npy')
-Ntrain_total = Ntrain * U.shape[1]
-Utrain = U[:, :, :Ntrain]
-Utrain1 = Utrain.transpose(2, 1, 0).reshape(Ntrain_total, -1).T
-field = st.StochasticField(data=Utrain1, axis=1)
-Utrain = Utrain1
-
 stochastic_path = r"C:\Users\constatza\Documents\thesis\fempy\examples\stochastic_Young_Modulus\stochastic_E.npy"
+U = np.load('U1_N2500.npy', mmap_mode='r')
 E = np.load(stochastic_path, mmap_mode='r')
-Etest = E[Ntrain:Ntrain + Ntest, :]
-Ftest = F[Ntrain:Ntrain + Ntest, :]
+F = np.load('F1_N2500.npy')
+# freq = np.load('Freq1.npy')
+# phase = np.load('Phase1.npy')
+
+Utrain = U[:, ::, :Ntrain]
+Ntrain_total = Ntrain * Utrain.shape[1]
+Utrain = Utrain.transpose(0, 2, 1).reshape(Utrain.shape[0], -1)
+Etest = E[:Ntrain,:]#E[Ntrain:Ntrain + Ntest, :]
+Ftest = F[:Ntrain,:-1]#F[Ntrain:Ntrain + Ntest, :]
 color = F[:Ntrain, :1000:10].reshape(-1)
+# color = Utrain[-2, :]
+
+
+
+import gc
+del(U, E)
+gc.collect()
+
+
+field = st.StochasticField(data=Utrain, axis=1)
+
+
 # =============================================================================
 # DMAPS
 # =============================================================================
@@ -79,7 +89,7 @@ u_pca = pca_map.direct_transform_vector(pca.reduced_coordinates)
 # =============================================================================
 
 # time data
-total_time = 10
+total_time = 5
 total_steps = 1000
 reduced_step = 10
 reduced_steps= np.arange(total_steps, step=reduced_step)
@@ -94,9 +104,9 @@ mass_density = 2.5e-9
 
 # CREATE MATERIAL TYPE
 material = ElasticMaterial2D(stress_state=StressState2D.plain_stress,
-                             poisson_ratio=poisson_ratio,
-                             young_modulus=Emean,
-                             mass_density=mass_density)
+                              poisson_ratio=poisson_ratio,
+                              young_modulus=Emean,
+                              mass_density=mass_density)
 # CREATE ELEMENT TYPE
 quad = Quad4(material=material, thickness=thickness)
 
@@ -107,7 +117,7 @@ boundX = [0, 2000]
 boundY = [0, 5000]
 
 model = rectangular_mesh_model(boundX, boundY, 
-                               numelX, numelY, quad)
+                                numelX, numelY, quad)
 # ASSIGN TIME DEPENDENT LOADS
 
 Iload1 = InertiaLoad(time_history=F[0, :], DOF=DOFtype.X)
@@ -128,7 +138,7 @@ solver = CholeskySolver(linear_system)
 
 dynamic = ProblemStructuralDynamic(model, damping_provider=damping_provider)
 dynamic.stiffness_provider = providers.ElementMaterialOnlyStiffnessProvider()
-dynamic.global_matrix_provider = providers.ReducedGlobalMatrixProvider(diff_map)
+dynamic.global_matrix_provider = providers.ReducedGlobalMatrixProvider(pca_map)
 child_analyzer = Linear(solver)
 newmark = NewmarkDynamicAnalyzer(model=model, 
                                 solver=solver, 
@@ -142,11 +152,14 @@ newmark = NewmarkDynamicAnalyzer(model=model,
 # =============================================================================
 # ANALYSES
 # =============================================================================
+w = np.array([72.03244934])
+phase = np.array([0.00071864])
+P = 100 * np.sin(w[:, None]*t + phase[:, None])
 start = time()
 for case in range(Ntest):
     print("Case {:d}".format(case))
     counter = -1
-    seismic_load = InertiaLoad(time_history=Ftest[case, :], DOF=DOFtype.X)
+    seismic_load = InertiaLoad(time_history=P[case, :], DOF=DOFtype.X)
     model.inertia_loads[0] = seismic_load
     for width in range(numelX):
         for height in range(numelY):
@@ -167,86 +180,87 @@ plt.figure()
 
 
 timeline = timestep* range(newmark.displacements.shape[1])
-Ur = diff_map.matrix @ newmark.displacements
-plt.plot(timeline, Ur[-2,:])
-plt.plot(timeline[::1], Ftest[case, :-1])
+Ur = pca_map.direct_transform_vector(newmark.displacements)
+plt.plot(timeline[::10], Ur[-2,::10])
+plt.plot(timeline[::10], Utrain[-2, case*100:(case+1)*100])
+# plt.plot(timeline, Ftest[case, :-1])
 
 
 # =============================================================================
 # PLOTS
 # =============================================================================
 
-# smartplot.paper_style()
+smartplot.paper_style()
 
-# fig = plt.figure()
-# ax = fig.add_subplot(111)
-# e = np.logspace(-2, 2, num=10)
-# plt.loglog(e, dmaps.kernel_sums_per_epsilon(Utrain, e))
+fig = plt.figure()
+ax = fig.add_subplot(111)
+e = np.logspace(-2, 2, num=10)
+plt.loglog(e, dmaps.kernel_sums_per_epsilon(Utrain, epsilon=e))
 
-# fig, ax1 = plt.subplots()
-# smartplot.plot_eigenvalues(dmaps.eigenvalues,
-#                            ax=ax1,
-#                            marker='+',
-#                            label='DMAPS')
-# smartplot.plot_eigenvalues(pca.eigenvalues/np.max(pca.eigenvalues),
-#                            ax=ax1, 
-#                            marker='x', 
-#                            label='PCA')
-# ax1.legend()
-
-
-# howmany = 4 
-# howmany = howmany * (numeigs > howmany) + (numeigs<= howmany) * numeigs
-# length = 100
-
-# bw = 0.1
-# size = 3
-# dmaps_frame = pd.DataFrame(st.zscore(dmaps.eigenvectors[:howmany, :].T))
-# g = sns.PairGrid(dmaps_frame)
-# g.map_upper(plt.scatter, marker='.', s=size)
-# g.map_diag(sns.kdeplot, bw=bw)
-# g.map_lower(sns.kdeplot, bw=1.5*bw)
-# fig2 = g.fig
-# fig2.suptitle('DMAPS Normalized Eigenvectors')
+fig, ax1 = plt.subplots()
+smartplot.plot_eigenvalues(dmaps.eigenvalues,
+                            ax=ax1,
+                            marker='+',
+                            label='DMAPS')
+smartplot.plot_eigenvalues(pca.eigenvalues/np.max(pca.eigenvalues),
+                            ax=ax1, 
+                            marker='x', 
+                            label='PCA')
+ax1.legend()
 
 
-# pca_frame = pd.DataFrame(st.zscore(pca.eigenvectors[:howmany, :].T))
-# g = sns.PairGrid(pca_frame)
-# g.map_upper(plt.scatter, marker='.', s=size)
-# g.map_diag(sns.kdeplot, bw=bw)
-# g.map_lower(sns.kdeplot, bw=1.5*bw)
-# fig3 = g.fig
-# fig3.suptitle('PCA Normalized Eigenvectors')
+howmany = 4 
+howmany = howmany * (numeigs > howmany) + (numeigs<= howmany) * numeigs
+length = 1000
 
-# psi = [0,1,2]
-# # set up a figure twice as wide as it is tall
-# fig4 = plt.figure(figsize=plt.figaspect(0.3))
-# ax41 = fig4.add_subplot(1, 3, 1, projection='3d')
-# ax42 = fig4.add_subplot(1, 3, 2, projection='3d')
-# ax43 = fig4.add_subplot(1, 3, 3, projection='3d')
-# fig4.suptitle('Normalized Eigenvectors')
-# smartplot.plot_eigenvectors(dmaps.eigenvectors[psi,:length],
-#                             ax=ax42,
-#                             title='DMAPS',
-#                             psi=psi,
-#                             c=color[:length],
-#                             marker='.')
-# smartplot.plot_eigenvectors(pca.eigenvectors[psi,:length],
-#                             ax=ax43,
-#                             title='PCA',
-#                             psi=psi,
-#                             c=color[:length],
-#                             marker='.')
-
-# smartplot.plot_eigenvectors(Utrain[psi,:length],
-#                             ax=ax41, 
-#                             title='Data',
-#                             psi=psi,
-#                             c=color[:length],
-#                             marker='.')
+bw = 0.1
+size = 3
+dmaps_frame = pd.DataFrame(dmaps.znormed_eigenvectors[:howmany, :].T)
+g = sns.PairGrid(dmaps_frame)
+g.map_upper(plt.scatter, marker='.', s=size)
+g.map_diag(sns.kdeplot, bw=bw)
+g.map_lower(sns.kdeplot, bw=1.5*bw)
+fig2 = g.fig
+fig2.suptitle('DMAPS Normalized Eigenvectors')
 
 
-# fig5, axes5 = plt.subplots(1, 2)
-# fig5.suptitle('Correlation')
-# axes5[0].plot(color[:length], dmaps.eigenvectors[1,:length].T, marker='.', linestyle='')
-# axes5[1].plot(color[:length], pca.reduced_coordinates[1,:length].T, marker='.', linestyle='')
+pca_frame = pd.DataFrame(st.zscore(pca.znormed_eigenvectors[:howmany, :].T))
+g = sns.PairGrid(pca_frame)
+g.map_upper(plt.scatter, marker='.', s=size)
+g.map_diag(sns.kdeplot, bw=bw)
+g.map_lower(sns.kdeplot, bw=1.5*bw)
+fig3 = g.fig
+fig3.suptitle('PCA Normalized Eigenvectors')
+
+psi = [0,1,2]
+# set up a figure twice as wide as it is tall
+fig4 = plt.figure(figsize=plt.figaspect(0.3))
+ax41 = fig4.add_subplot(1, 3, 1, projection='3d')
+ax42 = fig4.add_subplot(1, 3, 2, projection='3d')
+ax43 = fig4.add_subplot(1, 3, 3, projection='3d')
+fig4.suptitle('Normalized Eigenvectors')
+smartplot.plot_eigenvectors(dmaps.znormed_eigenvectors[psi,:length],
+                            ax=ax42,
+                            title='DMAPS',
+                            psi=psi,
+                            c=color[:length],
+                            marker='.')
+smartplot.plot_eigenvectors(pca.znormed_eigenvectors[psi,:length],
+                            ax=ax43,
+                            title='PCA',
+                            psi=psi,
+                            c=color[:length],
+                            marker='.')
+
+smartplot.plot_eigenvectors(Utrain[psi,:length],
+                            ax=ax41, 
+                            title='Data',
+                            psi=psi,
+                            c=color[:length],
+                            marker='.')
+
+
+fig5, axes5 = plt.subplots(1, 2)
+fig5.suptitle('Correlation')
+axes5[0].plot(color[:length], dmaps.znormed_eigenvectors[1,:length].T, marker='.', linestyle='')
+axes5[1].plot(color[:length], pca.reduced_coordinates[1,:length].T, marker='.', linestyle='')

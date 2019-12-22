@@ -9,8 +9,8 @@ from fem.assemblers import GlobalMatrixAssembler
 from numpy import array, zeros, sqrt, eye, abs, max
 import scipy.linalg as linalg
 import scipy.sparse.linalg as splinalg
-from scipy.sparse import csc_matrix
-
+from scipy.sparse import csr_matrix
+from mathematics.manilearn import eigendecomposition
 
 class ElementStiffnessProvider:
     """ Responsible for providing elemental stiffness matrix 
@@ -193,22 +193,19 @@ class RayleighDampingMatrixProvider:
             mass_matrix = self.mass_matrix
         damping_coeffs = self.coeffs
         k = mass_matrix.shape[0]
-        eigvals = linalg.eigvalsh(mass_matrix, 
-                                  b=stiffness_matrix,
-                                  eigvals=None,#(k-2,k-1),
-                                  type=1,
-                                  turbo=True, 
-                                  check_finite=False,
-                                  overwrite_a=True,
-                                  overwrite_b=True)
-
         
+        
+        M = mass_matrix
+        K = stiffness_matrix
+        eigvals = eigendecomposition(M, M=K, k=2, timeit=True, which='LA',
+                                     return_eigenvectors=False)
+            
         wmegas =1/sqrt(eigvals[-2:])
         self.frequencies = wmegas
         Matrix = .5* array([1/wmegas,wmegas]) 
-        a = linalg.solve(Matrix.T, damping_coeffs, check_finite=False)
+        sol = linalg.solve(Matrix.T, damping_coeffs, check_finite=False)
         
-        return a[0]*mass_matrix + a[1]*stiffness_matrix
+        return sol[0]*mass_matrix + sol[1]*stiffness_matrix
     
 # import scipy
 def make_sparse(M):

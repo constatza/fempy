@@ -6,6 +6,7 @@ Created on Tue Nov 12 14:39:25 2019
 
 @author: constatza
 """
+from time import time
 import numpy as np
 import scipy.sparse.linalg as splinalg
 import scipy.linalg as linalg
@@ -27,13 +28,13 @@ class Eigendecomposer:
         self.eigenvectors = None
         self.reduced_coordinates = None
     
-    @staticmethod
-    def znormed_eigenvalues(eigenvalues):
-        return zscore(eigenvalues)
+    @property
+    def znormed_eigenvalues(self):
+        return zscore(self.eigenvalues)
     
-    @staticmethod
-    def znormed_eigenvectors(eigenvectors):
-        return zscore(eigenvectors)
+    @property
+    def znormed_eigenvectors(self):
+        return zscore(self.eigenvectors)
         
 
 @dataclass
@@ -45,13 +46,11 @@ class DiffusionMap(Eigendecomposer):
     
     def fit(self, numeigs=1, t=1, inplace=True):
 
-        eigenvalues, eigenvectors, coordinates = DiffusionMap.to_diffusion_coordinates(self.dataset,
+        eigenvalues, eigenvectors, coordinates = self.to_diffusion_coordinates(
                                                                numeigs=numeigs,
-                                                               t=t,
-                                                               epsilon=self.epsilon,
-                                                               alpha=self.alpha)
-        eigenvectors = self.znormed_eigenvectors(eigenvectors)
-        coordinates = self.znormed_eigenvectors(coordinates)
+                                                               t=t)
+        eigenvectors = eigenvectors
+        coordinates = coordinates
         if inplace: 
             self.eigenvalues = eigenvalues
             self.eigenvectors = eigenvectors
@@ -74,35 +73,37 @@ class DiffusionMap(Eigendecomposer):
         return Me
 
     @staticmethod    
-    def calculate_kernel_matrix(data_set, epsilon=1):
-        distance_matrix = pairwise_distances(data_set.T, metric='euclidean')
+    def calculate_kernel_matrix(dataset, epsilon=1):
+        distance_matrix = pairwise_distances(dataset.T, metric='euclidean')
         return np.exp(-distance_matrix/epsilon/epsilon)
     
-    @staticmethod
-    def to_diffusion_coordinates(data_set, numeigs=1, t=1, epsilon=1, alpha=0):
+    def to_diffusion_coordinates(self, dataset=None, numeigs=1, t=1, epsilon=None, alpha=None):
+        if dataset is None: dataset = self.dataset
+        if epsilon is None: epsilon = self.epsilon
+        if alpha is None: alpha = self.alpha
         
-        K = DiffusionMap.calculate_kernel_matrix(data_set, epsilon=epsilon)
+        K = DiffusionMap.calculate_kernel_matrix(dataset, epsilon=epsilon)
         rowsums = np.sum(K, axis=1)
         D_a = np.power(rowsums, alpha)[:, np.newaxis]
-        W = K / D_a / D_a.T
+        W = 1e6*K / D_a / D_a.T
         
         D = np.sum(W, axis=1, keepdims=True)
         Droot = np.sqrt(D)
-        #P = W/D
+        self.transition_matrix = W/D
         # not the real markov transition matrix! 
         # symmetric analog just to use symmetric algorithm
         symmetric_markov = W / Droot / Droot.T 
     
+        # # reltol = 1e-6
+        # relmarkov = symmetric_markov/np.max(symmetric_markov)
+        # symmetric_markov[relmarkov < reltol] = 0
+            
+        eigenvalues, eigenvectors = eigendecomposition(symmetric_markov,
+                                                       k=numeigs+1,
+                                                       which='LA',
+                                                       timeit=True,
+                                                       return_eigenvectors=True)
         
-        
-        reltol = 1e-4
-        relmarkov = symmetric_markov/np.max(symmetric_markov)
-        symmetric_markov[relmarkov < reltol] = 0
-    
-        B = csr_matrix(symmetric_markov)
-        eigenvalues, eigenvectors = splinalg.eigsh(B, k=numeigs+1, which='LM')
-        eigenvalues = np.flip(eigenvalues)  
-        eigenvectors =  np.flip(eigenvectors, axis=1)
         eigenvectors = eigenvectors / Droot # real eigenvectors of markov matrix
         if t>1:
             eigenvalues = np.power(eigenvalues, t)
@@ -118,12 +119,19 @@ class PCA(Eigendecomposer):
         self.eigenvectors = None
     
     def fit(self, numeigs=1, inplace=True):
-        eigenvalues, eigenvectors = PCA.eigendecomposition(self.dataset, numeigs=numeigs)
-        eigenvectors = self.znormed_eigenvectors(eigenvectors)
+        dataset = self.dataset
+        correl = dataset.T @ dataset
+        eigenvalues, eigenvectors = eigendecomposition(correl, 
+                                                       k=numeigs,
+                                                       which='LA',
+                                                       return_eigenvectors=True)
+        
+        eigenvectors = eigenvectors
         if inplace: 
-            self.eigenvectors = eigenvectors
+            self.eigenvectors = eigenvectors.T
             self.eigenvalues = eigenvalues
-            self.reduced_coordinates = eigenvectors
+            self.reduced_coordinates = eigenvectors.T
+            self.correl = correl
         else:
             return eigenvalues, eigenvectors
     
@@ -177,8 +185,35 @@ class LinearMap(Map):
     
     def transpose_transform_matrix(self, matrix):
         return self.matrix @ matrix @ self.matrix.T
-            
 
+def eigendecomposition(arrayh, M=None, timeit=False, **kwargs):            
+    start = time()
+    length = arrayh.shape[0]
+    density = np.count_nonzero(arrayh)/length**2
+
+    B = csr_matrix(arrayh)
+    if M is not None:
+        M = csr_matrix(M)
+    if kwargs['return_eigenvectors']:
+        eigenvalues, eigenvectors = splinalg.eigsh(B, M=M, **kwargs)
+        eigenvectors =  np.flip(eigenvectors, axis=1)
+        
+    else:
+        eigenvalues = splinalg.eigsh(B, M=M, **kwargs)
+
+    eigenvalues = np.flip(eigenvalues)
+
+    if timeit:
+        end = time()
+        print("Eigendecomposition in {:.2f} min".format(end/60 - start/60) )
+    
+    if kwargs['return_eigenvectors']:
+        return eigenvalues, eigenvectors
+    else:
+        return eigenvalues
+    
+
+     
 # def nearest_neighbour_mapping(vectors, natural_coordinates, transformed_coordinates, k=3):
 #      coordinates_tree = spatial.cKDTree(natural_coordinates)
      

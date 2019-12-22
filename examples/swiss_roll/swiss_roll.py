@@ -20,10 +20,10 @@ from scipy.stats import zscore
 np.random.seed(10)
 plt.close('all')
 
-epsilon = 2
+epsilon = .5
 alpha = 1
 timesteps = 1
-numeigs = 3
+numeigs = 2
 
 # set parameters
 length_phi = 10 #length of swiss roll in angular direction
