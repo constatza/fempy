@@ -68,7 +68,7 @@ class GlobalMatrixProvider:
                               inertia_loads,
                               inertia_direction_vectors,
                               mass_matrix)
-        return nodal + inertia
+        return (nodal + inertia).ravel()
     
     @staticmethod
     def build_rhs_from_inertia_loads(timestep, inertia_loads,
@@ -191,13 +191,11 @@ class RayleighDampingMatrixProvider:
             stiffness_matrix = self.stiffness_matrix
         if mass_matrix is None:
             mass_matrix = self.mass_matrix
-        damping_coeffs = self.coeffs
-        k = mass_matrix.shape[0]
-        
+        damping_coeffs = self.coeffs        
         
         M = mass_matrix
         K = stiffness_matrix
-        eigvals = eigendecomposition(M, M=K, k=2, timeit=True, which='LA',
+        eigvals = eigendecomposition(M, M=K, k=2, which='LA',
                                      return_eigenvectors=False)
             
         wmegas =1/sqrt(eigvals[-2:])
@@ -207,12 +205,5 @@ class RayleighDampingMatrixProvider:
         
         return sol[0]*mass_matrix + sol[1]*stiffness_matrix
     
-# import scipy
-def make_sparse(M):
-    m = abs(M)
-    maks = max(m)
-    is_zero = (m/maks) < 1e-3
-    M[is_zero] = 0
-    return csc_matrix(M)
-    
+
     

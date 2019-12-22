@@ -29,8 +29,8 @@ plt.close('all')
 # =============================================================================
 # INPUT
 # =============================================================================
-
-Nsim = 1
+# 2500 in 71.7 min
+Nsim = 2500
 np.random.seed(1)
 # DYNAMIC LOAD
 total_time = 5
@@ -40,9 +40,9 @@ reduced_steps= np.arange(total_steps, step=reduced_step)
 t = np.linspace(0, total_time, total_steps+1)
 timestep = t[1]-t[0]
 
-f0 = 100
+f0 = 1000
 period = np.random.rand(Nsim,)*2 + .05
-w = np.random.rand(Nsim,)*100
+w = np.random.rand(Nsim,)*80
 phase = np.random.rand(Nsim,)*2*np.pi
 F = f0 * np.sin(w[:, None]*t + phase[:, None])
 
@@ -94,10 +94,10 @@ damping_provider = RayleighDampingMatrixProvider(coeffs=[0.1, 0.1])
 # =============================================================================
 # BUILD ANALYZER
 # =============================================================================
-linear_system = LinearSystem(model.forces)
-solver = SparseLUSolver(linear_system)
+linear_system = Lineanear_system)
 
-provider = ProblemStructuralDynamic(model, 
+provider = ProblemStructurrSystem(model.forces)
+solver = SparseLUSolver(lialDynamic(model, 
                                     damping_provider=damping_provider)
 provider.change_mass = False
 provider.stiffness_provider = ElementMaterialOnlyStiffnessProvider()
@@ -108,8 +108,7 @@ newmark = NewmarkDynamicAnalyzer(model=model,
                                          child_analyzer=child_analyzer, 
                                          timestep=timestep, 
                                          total_time=total_time, 
-                                         delta=1/2,
-                                         alpha=1/4)
+                                         )
 displacements = np.empty((model.total_DOFs, total_steps//reduced_step, Nsim))
 start = time()
 
@@ -123,11 +122,13 @@ for case in range(Nsim):
             #slicing through elements list the geometry rectangle grid is columnwise
             counter += 1
             element = model.elements[counter] 
-            element.material.young_modulus = Estochastic[case, height]
-            
+            element.material = ElasticMaterial2D(stress_state=StressState2D.plain_stress,
+                                                 poisson_ratio=poisson_ratio,
+                                                 young_modulus=Estochastic[case,height],
+                                                 mass_density=mass_density)
     newmark.initialize()
     newmark.solve()
-    print(model.inertia_loads[0], model.inertia_loads)
+            
 
 
     displacements[:,:, case] = newmark.displacements[:, ::reduced_step]
@@ -137,9 +138,12 @@ print("Finished in {:.2f} min".format(end/60 - start/60) )
 # =============================================================================
 # SAVE
 # =============================================================================
-# np.savez("Dynamic1_N2500", 
-#          U=displacements,
-#          F=F)
+# 
+if Nsim>500:
+    np.save('Displacements1.npy', displacements)
+    np.save('Forces1.npy', F)
+    np.save('Phase1.npy', phase)
+    np.save('Freq1.npy', w)
 
 
 
@@ -153,8 +157,8 @@ print("Finished in {:.2f} min".format(end/60 - start/60) )
 displacements = newmark.displacements
 timeline = range(displacements.shape[1])*timestep
 # timeline = timeline[reduced_steps]
-velocities = np.gradient(displacements, timestep, axis=0)
-accelerations = np.gradient(velocities, timestep, axis=0)
+velocities = np.gradient(displacements, timestep, axis=1)
+accelerations = np.gradient(velocities, timestep, axis=1)
 node = 1020
 ux = displacements[2*node-2, :]
 uy = displacements[2*node-1, :]

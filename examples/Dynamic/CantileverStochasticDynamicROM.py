@@ -32,10 +32,10 @@ import pandas as pd
 plt.close('all')
 
 Ntrain = 60
-Ntest = 1
+Ntest = 5
 epsilon = 8
 alpha = 0
-numeigs = 2
+numeigs = 3
 diff_time = 1
 
 
@@ -44,9 +44,9 @@ diff_time = 1
 # =============================================================================
 # displacements
 stochastic_path = r"C:\Users\constatza\Documents\thesis\fempy\examples\stochastic_Young_Modulus\stochastic_E.npy"
-U = np.load('U1_N2500.npy', mmap_mode='r')
+U = np.load('Displacements1.npy', mmap_mode='r')
 E = np.load(stochastic_path, mmap_mode='r')
-F = np.load('F1_N2500.npy')
+F = np.load('Forces1.npy')
 # freq = np.load('Freq1.npy')
 # phase = np.load('Phase1.npy')
 
@@ -145,28 +145,29 @@ newmark = NewmarkDynamicAnalyzer(model=model,
                                 provider= dynamic, 
                                 child_analyzer=child_analyzer, 
                                 timestep=timestep, 
-                                total_time=total_time, 
-                                delta=1/2,
-                                alpha=1/4)
+                                total_time=total_time)
 
 # =============================================================================
 # ANALYSES
 # =============================================================================
-w = np.array([72.03244934])
+w = np.array([72.03244934]) #72
 phase = np.array([0.00071864])
 P = 100 * np.sin(w[:, None]*t + phase[:, None])
 start = time()
 for case in range(Ntest):
     print("Case {:d}".format(case))
     counter = -1
-    seismic_load = InertiaLoad(time_history=P[case, :], DOF=DOFtype.X)
+    seismic_load = InertiaLoad(time_history=Ftest[case, :], DOF=DOFtype.X)
     model.inertia_loads[0] = seismic_load
     for width in range(numelX):
         for height in range(numelY):
             #slicing through elements list the geometry rectangle grid is columnwise
             counter += 1
             element = model.elements[counter] 
-            element.material.young_modulus = Etest[case, height]
+            element.material = ElasticMaterial2D(stress_state=StressState2D.plain_stress,
+                                                  poisson_ratio=poisson_ratio,
+                                                  young_modulus=Etest[case, height],
+                                                  mass_density=mass_density)
             
     newmark.initialize()
     newmark.solve()
@@ -179,10 +180,12 @@ print("Finished in {:.2f} min".format(end/60 - start/60) )
 plt.figure()
 
 
-timeline = timestep* range(newmark.displacements.shape[1])
+timeline = timestep* np.arange(newmark.displacements.shape[1])
 Ur = pca_map.direct_transform_vector(newmark.displacements)
-plt.plot(timeline[::10], Ur[-2,::10])
-plt.plot(timeline[::10], Utrain[-2, case*100:(case+1)*100])
+plt.plot(timeline, Ur[2048,:])
+u = np.load('u2038.npy')
+plt.plot(timeline, u)
+# plt.plot(timeline[::10], Utrain[-2, case*100:(case+1)*100])
 # plt.plot(timeline, Ftest[case, :-1])
 
 

@@ -143,7 +143,7 @@ class ProblemStructuralDynamic:
         global_provider = self.global_matrix_provider
         self.damping_matrix = global_provider.build_damping_matrix(self.damping_provider)
         
-    def get_rhs_from_history_load(self, timestep):
+    def get_rhs(self, timestep):
         return self.global_matrix_provider.get_rhs_from_history_loads(timestep, self)
        
     def calculate_inertia_vectors(self):

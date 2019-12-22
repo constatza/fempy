@@ -188,8 +188,7 @@ class LinearMap(Map):
 
 def eigendecomposition(arrayh, M=None, timeit=False, **kwargs):            
     start = time()
-    length = arrayh.shape[0]
-    density = np.count_nonzero(arrayh)/length**2
+    
 
     B = csr_matrix(arrayh)
     if M is not None:
@@ -213,7 +212,13 @@ def eigendecomposition(arrayh, M=None, timeit=False, **kwargs):
         return eigenvalues
     
 
-     
+def matrix_density(matrix):
+    length = matrix.shape[0]
+    density = np.count_nonzero(matrix)/length**2
+    return density
+    
+
+
 # def nearest_neighbour_mapping(vectors, natural_coordinates, transformed_coordinates, k=3):
 #      coordinates_tree = spatial.cKDTree(natural_coordinates)
      
