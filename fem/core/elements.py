@@ -279,7 +279,6 @@ class Quad4(Element):
             Bs[:, :, pointID] = deformation_matrix
             
         stiffness_matrix = Quad4.sum_stiffnesses(Es, Bs, ws, thickness)
-        
         return stiffness_matrix
     
     @staticmethod

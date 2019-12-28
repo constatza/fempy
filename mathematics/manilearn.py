@@ -85,7 +85,7 @@ class DiffusionMap(Eigendecomposer):
         K = DiffusionMap.calculate_kernel_matrix(dataset, epsilon=epsilon)
         rowsums = np.sum(K, axis=1)
         D_a = np.power(rowsums, alpha)[:, np.newaxis]
-        W = 1e6*K / D_a / D_a.T
+        W = K / D_a / D_a.T
         
         D = np.sum(W, axis=1, keepdims=True)
         Droot = np.sqrt(D)
@@ -97,12 +97,13 @@ class DiffusionMap(Eigendecomposer):
         # # reltol = 1e-6
         # relmarkov = symmetric_markov/np.max(symmetric_markov)
         # symmetric_markov[relmarkov < reltol] = 0
-            
-        eigenvalues, eigenvectors = eigendecomposition(symmetric_markov,
-                                                       k=numeigs+1,
-                                                       which='LA',
-                                                       timeit=True,
-                                                       return_eigenvectors=True)
+        L = symmetric_markov.shape[0]    
+        # eigenvalues, eigenvectors = linalg.eigh(symmetric_markov,
+                                                       # eigvals=(L-numeigs-2, L-1))
+        eigenvalues, eigenvectors = eigendecomposition(symmetric_markov, k = numeigs+1,                                           
+                                                        which='LM',
+                                                        timeit=True,
+                                                        return_eigenvectors=True)
         
         eigenvectors = eigenvectors / Droot # real eigenvectors of markov matrix
         if t>1:
@@ -111,7 +112,7 @@ class DiffusionMap(Eigendecomposer):
         
         return eigenvalues, eigenvectors[:, 1:].T, Psi.T
 
-
+linalg.eigh
 @dataclass
 class PCA(Eigendecomposer):
     
@@ -120,28 +121,21 @@ class PCA(Eigendecomposer):
     
     def fit(self, numeigs=1, inplace=True):
         dataset = self.dataset
-        correl = dataset.T @ dataset
+        correl = dataset @ dataset.T
         eigenvalues, eigenvectors = eigendecomposition(correl, 
                                                        k=numeigs,
-                                                       which='LA',
+                                                       which='LM',
                                                        return_eigenvectors=True)
         
         eigenvectors = eigenvectors
         if inplace: 
             self.eigenvectors = eigenvectors.T
             self.eigenvalues = eigenvalues
-            self.reduced_coordinates = eigenvectors.T
+            self.reduced_coordinates = eigenvectors
             self.correl = correl
         else:
             return eigenvalues, eigenvectors
     
-    @staticmethod
-    def eigendecomposition(dataset, numeigs=1):
-        correl = dataset.T @ dataset
-        val, vec = splinalg.eigsh(correl, k=numeigs, which='LM')
-        val = val[::-1]
-        vec = vec[:, ::-1]  
-        return   val, vec.T
 
 
 """Maps"""
@@ -156,9 +150,11 @@ class Map:
 class LinearMap(Map):
     
     def __post_init__(self):
-        
-        p, res = LinearMap.transform(self.domain, self.codomain)
-
+        try:
+            p, res = LinearMap.transform(self.domain, self.codomain)
+        except linalg.LinAlgError:
+            p = None
+            res = None
          
         self.matrix = p
         self.res = res
@@ -175,20 +171,19 @@ class LinearMap(Map):
         return linear_map, res
     
     def direct_transform_vector(self, vector: np.ndarray):
-        return self.matrix @ vector
+        return self.matrix.dot(vector)
     
     def transpose_transform_vector(self, vector: np.ndarray, *args, **kwargs):
-        return self.matrix.T @ vector
+        return self.matrix.T.dot(vector)
     
     def direct_transform_matrix(self, matrix):
-        return self.matrix.T @ matrix @ self.matrix
+        return self.matrix.T.dot(matrix.dot(self.matrix))
     
     def transpose_transform_matrix(self, matrix):
-        return self.matrix @ matrix @ self.matrix.T
+        return self.matrix.dot(matrix.dot(self.matrix.T))
 
-def eigendecomposition(arrayh, M=None, timeit=False, **kwargs):            
+def sparse_eigendecomposition(arrayh, M=None, timeit=False, **kwargs):            
     start = time()
-    
 
     B = csr_matrix(arrayh)
     if M is not None:
@@ -217,8 +212,48 @@ def matrix_density(matrix):
     density = np.count_nonzero(matrix)/length**2
     return density
     
+def dense_eigendecomposition(arrayh, M=None, timeit=False, **kwargs):
+    start = time()
+    N = arrayh.shape[0]
 
+    k = kwargs['k']
+    which = kwargs['which']
+    
+    if which[0]=='L':
+        eigs = (N-k-1, N-1)
+    else:
+        eigs = (0, k)
+        
+    if kwargs['return_eigenvectors']:
+        eigenvalues, eigenvectors = linalg.eigh(arrayh, b=M, eigvals= eigs)
+        eigenvectors =  np.flip(eigenvectors, axis=1)
+        
+    else:
+        eigenvalues = linalg.eigh(arrayh, b=M, eigvals_only=True, eigvals=eigs)
 
+    eigenvalues = np.flip(eigenvalues)
+
+    if timeit:
+        end = time()
+        print("Eigendecomposition in {:.2f} min".format(end/60 - start/60) )
+    
+    if kwargs['return_eigenvectors']:
+        return eigenvalues, eigenvectors
+    else:
+        return eigenvalues
+    
+def eigendecomposition(arrayh, M=None, timeit=False, **kwargs):
+    den = matrix_density(arrayh)
+    
+    if den<.9 and arrayh.shape[0]>100:
+        return sparse_eigendecomposition(arrayh, M=M, timeit=timeit, **kwargs)
+    else:
+        return dense_eigendecomposition(arrayh, M=M, timeit=timeit, **kwargs)
+        
+        
+    
+    
+    
 # def nearest_neighbour_mapping(vectors, natural_coordinates, transformed_coordinates, k=3):
 #      coordinates_tree = spatial.cKDTree(natural_coordinates)
      

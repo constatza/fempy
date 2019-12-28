@@ -4,68 +4,98 @@ Created on Tue Dec  3 13:03:04 2019
 
 @author: constatza
 """
+import pickle, gc
 
+import seaborn as sns
+import pandas as pd 
 import numpy as np
-from time import time
-
 import matplotlib.pyplot as plt
+from time import time
 from mpl_toolkits.mplot3d import Axes3D
+
 import smartplot
 import fem.core.providers as providers
-
+import mathematics.manilearn as ml
+import mathematics.stochastic as st
 from fem.preprocessor import rectangular_mesh_model
 from fem.problems import ProblemStructuralDynamic
 from fem.analyzers import Linear, NewmarkDynamicAnalyzer
-from fem.solvers import CholeskySolver, SparseSolver
+from fem.solvers import CholeskySolver, SparseLUSolver
 from fem.systems import LinearSystem
-
-from fem.core.loads import InertiaLoad
+from fem.core.loads import InertiaLoad, TimeDependentLoad
 from fem.core.entities import DOFtype
-
 from fem.core.materials import ElasticMaterial2D, StressState2D
 from fem.core.elements import Quad4
 
-import mathematics.manilearn as ml
-import mathematics.stochastic as st
-import seaborn as sns
-import pandas as pd 
+
 plt.close('all')
 
-Ntrain = 60
-Ntest = 5
-epsilon = 8
+# =============================================================================
+# INPUT
+# =============================================================================
+
+Ntrain = 10
+epsilon = 20
 alpha = 0
-numeigs = 3
+numeigs = 5
 diff_time = 1
+use_pca = True
+input_suffix = 'InertiaLoadXY'
+
 
 
 # =============================================================================
 # LOAD DATA FROM MONTE CARLO
 # =============================================================================
 # displacements
-stochastic_path = r"C:\Users\constatza\Documents\thesis\fempy\examples\stochastic_Young_Modulus\stochastic_E.npy"
-U = np.load('Displacements1.npy', mmap_mode='r')
-E = np.load(stochastic_path, mmap_mode='r')
-F = np.load('Forces1.npy')
-# freq = np.load('Freq1.npy')
-# phase = np.load('Phase1.npy')
+sformat = lambda x, suffix, ext: '_'.join((x, suffix)) + ext
 
-Utrain = U[:, ::, :Ntrain]
-Ntrain_total = Ntrain * Utrain.shape[1]
-Utrain = Utrain.transpose(0, 2, 1).reshape(Utrain.shape[0], -1)
-Etest = E[:Ntrain,:]#E[Ntrain:Ntrain + Ntest, :]
-Ftest = F[:Ntrain,:-1]#F[Ntrain:Ntrain + Ntest, :]
-color = F[:Ntrain, :1000:10].reshape(-1)
+stochastic_path = r"C:\Users\constatza\Documents\thesis\fempy\examples\stochastic_Young_Modulus\stochastic_E.npy"
+E = np.load(stochastic_path, mmap_mode='r')
+U = np.load(sformat('Displacements', input_suffix, '.npy'), mmap_mode='r')
+# F = np.load(sformat('Forces', input_suffix, '.npy'))
+
+Utrain = U[ :Ntrain, :, 1:10]
+Utrain = np.concatenate(np.split(Utrain, Ntrain, axis=0), axis=2).squeeze()
+# Utrain = st.zscore(Utrain, axis=2)
+# Utrain = np.nan_to_num(Utrain)
+
+
+FullOrder = np.load(sformat('FullOrder', input_suffix, '.npz'))
+
+Fx = FullOrder['Fx']
+Fy = FullOrder['Fy']
+f0 = FullOrder['f0']
+freq = FullOrder['frequency']
+phase = FullOrder['phase'] 
+timeline = FullOrder['timeline'][:-1]
+timestep = FullOrder['timestep']
+total_time =  FullOrder['total_time']
+node_number = FullOrder['node_number']
+
+
+damping_coeffs = FullOrder['damping_coeffs']
+poisson_ratio = FullOrder['poisson_ratio']
+mass_density = FullOrder['mass_density']
+thickness = FullOrder['thickness']
+
+numelX = FullOrder['numelX']
+numelY = FullOrder['numelY'] 
+boundX = FullOrder['boundX'] 
+boundY = FullOrder['boundY'] 
+Nsim = FullOrder['Nsim']
+
+Ntest = FullOrder['Nsim']
+Etest = E[-Ntest:, :]
+# Ftest = F[-Ntest:, :]
+# color = F[:Ntrain, :1000:10].reshape(-1)
 # color = Utrain[-2, :]
 
 
 
-import gc
+
 del(U, E)
 gc.collect()
-
-
-field = st.StochasticField(data=Utrain, axis=1)
 
 
 # =============================================================================
@@ -82,63 +112,33 @@ u_dm = diff_map.direct_transform_vector(dmaps.reduced_coordinates)
 pca = ml.PCA(Utrain)
 pca.fit(numeigs=numeigs)
 pca_map = ml.LinearMap(domain= pca.reduced_coordinates, codomain=Utrain)
-u_pca = pca_map.direct_transform_vector(pca.reduced_coordinates)
+pca_map.matrix = pca.reduced_coordinates
 
+if use_pca:
+    map_used = pca_map
+else:
+    map_used = diff_map
 # =============================================================================
 # MODEL CREATION
 # =============================================================================
 
-# time data
-total_time = 5
-total_steps = 1000
-reduced_step = 10
-reduced_steps= np.arange(total_steps, step=reduced_step)
-t = np.linspace(0, total_time, total_steps+1)
-timestep = t[1]-t[0]
+with open(sformat('Problem', input_suffix, '.pickle'), 'rb') as file:
+    dynamic = pickle.load(file)
+    model = dynamic.model
 
-# MATERIAL PROPERTIES
-Emean = 30
-poisson_ratio = .2
-thickness = 100
-mass_density = 2.5e-9
 
-# CREATE MATERIAL TYPE
-material = ElasticMaterial2D(stress_state=StressState2D.plain_stress,
-                              poisson_ratio=poisson_ratio,
-                              young_modulus=Emean,
-                              mass_density=mass_density)
-# CREATE ELEMENT TYPE
-quad = Quad4(material=material, thickness=thickness)
-
-# CANTILEVER SIZES
-numelX = 20
-numelY = 50
-boundX = [0, 2000]
-boundY = [0, 5000]
-
-model = rectangular_mesh_model(boundX, boundY, 
-                                numelX, numelY, quad)
 # ASSIGN TIME DEPENDENT LOADS
 
-Iload1 = InertiaLoad(time_history=F[0, :], DOF=DOFtype.X)
-model.inertia_loads.append(Iload1)
-
-
-# CONSTRAIN BASE DOFS
-for node in model.nodes[:numelX+1]:
-    node.constraints = [DOFtype.X, DOFtype.Y]
     
-model.connect_data_structures()
-damping_provider = providers.RayleighDampingMatrixProvider(coeffs=[0.1, 0.1])
+# model.connect_data_structures()
+# damping_provider = providers.RayleighDampingMatrixProvider(coeffs=damping_coeffs)
 # =============================================================================
 # BUILD ANALYZER
 # =============================================================================
 linear_system = LinearSystem(model.forces)
-solver = CholeskySolver(linear_system)
-
-dynamic = ProblemStructuralDynamic(model, damping_provider=damping_provider)
-dynamic.stiffness_provider = providers.ElementMaterialOnlyStiffnessProvider()
-dynamic.global_matrix_provider = providers.ReducedGlobalMatrixProvider(pca_map)
+solver = SparseLUSolver(linear_system)
+dynamic.global_matrix_provider = providers.ReducedGlobalMatrixProvider(map_used)
+dynamic.change_mass = False
 child_analyzer = Linear(solver)
 newmark = NewmarkDynamicAnalyzer(model=model, 
                                 solver=solver, 
@@ -150,15 +150,17 @@ newmark = NewmarkDynamicAnalyzer(model=model,
 # =============================================================================
 # ANALYSES
 # =============================================================================
-w = np.array([72.03244934]) #72
-phase = np.array([0.00071864])
-P = 100 * np.sin(w[:, None]*t + phase[:, None])
+# w = np.array([30.23187974]) #72
+# phase = np.array([5.34745553])
+P = f0 * np.sin(freq[:, None]*timeline + phase[:, None])
 start = time()
 for case in range(Ntest):
     print("Case {:d}".format(case))
     counter = -1
-    seismic_load = InertiaLoad(time_history=Ftest[case, :], DOF=DOFtype.X)
-    model.inertia_loads[0] = seismic_load
+    seismic_loadX = InertiaLoad(time_history=Fx[case, :], DOF=DOFtype.X)#, node=model.nodes[node_number])
+    seismic_loadY = InertiaLoad(time_history=Fy[case, :], DOF=DOFtype.Y)
+    model.inertia_loads[0] = seismic_loadX
+    model.inertia_loads[1] = seismic_loadY
     for width in range(numelX):
         for height in range(numelY):
             #slicing through elements list the geometry rectangle grid is columnwise
@@ -179,34 +181,35 @@ print("Finished in {:.2f} min".format(end/60 - start/60) )
 # =============================================================================
 plt.figure()
 
-
-timeline = timestep* np.arange(newmark.displacements.shape[1])
-Ur = pca_map.direct_transform_vector(newmark.displacements)
-plt.plot(timeline, Ur[2048,:])
-u = np.load('u2038.npy')
-plt.plot(timeline, u)
+dof = 5
+Ured = map_used.direct_transform_vector(newmark.displacements)
+plt.plot(timeline, Ured[dof,:])
+Ufull = FullOrder['displacements_last_sim']
+plt.plot(timeline, Ufull[dof,:])
 # plt.plot(timeline[::10], Utrain[-2, case*100:(case+1)*100])
 # plt.plot(timeline, Ftest[case, :-1])
 
-
+# pca r2 = 0.0431346999487219
 # =============================================================================
 # PLOTS
 # =============================================================================
 
 smartplot.paper_style()
 
-fig = plt.figure()
-ax = fig.add_subplot(111)
-e = np.logspace(-2, 2, num=10)
-plt.loglog(e, dmaps.kernel_sums_per_epsilon(Utrain, epsilon=e))
+# fig = plt.figure()
+# ax = fig.add_subplot(111)
+# e = np.logspace(-2, 2, num=10)
+# plt.loglog(e, dmaps.kernel_sums_per_epsilon(Utrain, epsilon=e))
 
 fig, ax1 = plt.subplots()
 smartplot.plot_eigenvalues(dmaps.eigenvalues,
                             ax=ax1,
+                            log=True,
                             marker='+',
                             label='DMAPS')
 smartplot.plot_eigenvalues(pca.eigenvalues/np.max(pca.eigenvalues),
-                            ax=ax1, 
+                            ax=ax1,
+                            log=True,
                             marker='x', 
                             label='PCA')
 ax1.legend()
@@ -221,13 +224,13 @@ size = 3
 dmaps_frame = pd.DataFrame(dmaps.znormed_eigenvectors[:howmany, :].T)
 g = sns.PairGrid(dmaps_frame)
 g.map_upper(plt.scatter, marker='.', s=size)
-g.map_diag(sns.kdeplot, bw=bw)
-g.map_lower(sns.kdeplot, bw=1.5*bw)
+g.map_diag(sns.kdeplot, bw=5*bw)
+g.map_lower(sns.kdeplot, bw=5*bw)
 fig2 = g.fig
 fig2.suptitle('DMAPS Normalized Eigenvectors')
 
 
-pca_frame = pd.DataFrame(st.zscore(pca.znormed_eigenvectors[:howmany, :].T))
+pca_frame = pd.DataFrame(pca.znormed_eigenvectors[:howmany, :].T)
 g = sns.PairGrid(pca_frame)
 g.map_upper(plt.scatter, marker='.', s=size)
 g.map_diag(sns.kdeplot, bw=bw)
@@ -235,35 +238,31 @@ g.map_lower(sns.kdeplot, bw=1.5*bw)
 fig3 = g.fig
 fig3.suptitle('PCA Normalized Eigenvectors')
 
-psi = [0,1,2]
-# set up a figure twice as wide as it is tall
-fig4 = plt.figure(figsize=plt.figaspect(0.3))
-ax41 = fig4.add_subplot(1, 3, 1, projection='3d')
-ax42 = fig4.add_subplot(1, 3, 2, projection='3d')
-ax43 = fig4.add_subplot(1, 3, 3, projection='3d')
-fig4.suptitle('Normalized Eigenvectors')
-smartplot.plot_eigenvectors(dmaps.znormed_eigenvectors[psi,:length],
-                            ax=ax42,
-                            title='DMAPS',
-                            psi=psi,
-                            c=color[:length],
-                            marker='.')
-smartplot.plot_eigenvectors(pca.znormed_eigenvectors[psi,:length],
-                            ax=ax43,
-                            title='PCA',
-                            psi=psi,
-                            c=color[:length],
-                            marker='.')
+# psi = [0,1,2]
+# # set up a figure twice as wide as it is tall
+# fig4 = plt.figure(figsize=plt.figaspect(0.3))
+# ax41 = fig4.add_subplot(1, 3, 1, projection='3d')
+# ax42 = fig4.add_subplot(1, 3, 2, projection='3d')
+# ax43 = fig4.add_subplot(1, 3, 3, projection='3d')
+# fig4.suptitle('Normalized Eigenvectors')
+# smartplot.plot_eigenvectors(dmaps.znormed_eigenvectors[psi,:length],
+#                             ax=ax42,
+#                             title='DMAPS',
+#                             psi=psi,
+#                             # c=color[:length],
+#                             marker='.')
+# smartplot.plot_eigenvectors(pca.znormed_eigenvectors[psi,:length],
+#                             ax=ax43,
+#                             title='PCA',
+#                             psi=psi,
+#                             # c=color[:length],
+#                             marker='.')
 
-smartplot.plot_eigenvectors(Utrain[psi,:length],
-                            ax=ax41, 
-                            title='Data',
-                            psi=psi,
-                            c=color[:length],
-                            marker='.')
+# smartplot.plot_eigenvectors(Utrain[psi,:length],
+#                             ax=ax41, 
+#                             title='Data',
+#                             psi=psi,
+#                             # c=color[:length],
+#                             marker='.')
 
 
-fig5, axes5 = plt.subplots(1, 2)
-fig5.suptitle('Correlation')
-axes5[0].plot(color[:length], dmaps.znormed_eigenvectors[1,:length].T, marker='.', linestyle='')
-axes5[1].plot(color[:length], pca.reduced_coordinates[1,:length].T, marker='.', linestyle='')

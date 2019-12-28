@@ -15,7 +15,7 @@ def paper_style():
     plt.style.use(['seaborn-whitegrid', 'seaborn-paper'])
     font = {'family' : 'Times New Roman',
             'weight' : 'bold',
-            'size'   : 15}
+            'size'   : 16}
     matplotlib.rc('image', cmap='viridis')
     matplotlib.rc('font', **font)
 
@@ -79,11 +79,14 @@ def formal_serif():
     plt.rc('axes', labelsize=12)
 
 
-def plot_eigenvalues(V, ax=None, *args, **kwargs):
+def plot_eigenvalues(V, ax=None, log=False, *args, **kwargs):
     if ax is None:
         fig = plt.figure()
         ax = fig.add_subplot('111')
-    ax.plot(V, *args, **kwargs)
+    if not log:
+        ax.plot(V, *args, **kwargs)
+    else:
+        ax.semilogy(V, *args, **kwargs)
     ax.set_title('Eigenvalues')
     return ax
 

@@ -5,10 +5,10 @@ Created on Mon Apr  8 19:56:25 2019
 @author: constatza
 """
 import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
 from fem.core.entities import Model, Node
 from fem.core.elements import Quad4
+
 
 def rectangular_mesh_model(xlim, ylim, xnumel, ynumel, element_type):
     """ Builds a rectangular mesh model. 
@@ -30,11 +30,11 @@ def rectangular_mesh_model(xlim, ylim, xnumel, ynumel, element_type):
     xnumnodes = xnumel + 1
     ynumnodes = ynumel + 1
     
-    xlength = xlim[1] - xlim[0]
-    ylength = ylim[1] - ylim[0]
+    # xlength = xlim[1] - xlim[0]
+    # ylength = ylim[1] - ylim[0]
     
-    xstep = xlength/xnumel
-    ystep = ylength/ynumel
+    # xstep = xlength/xnumel
+    # ystep = ylength/ynumel
     
     xcoordinates = np.linspace(xlim[0], xlim[1], xnumnodes)
     ycoordinates = np.linspace(ylim[0], ylim[1], ynumnodes)
@@ -71,12 +71,12 @@ def rectangular_mesh_model(xlim, ylim, xnumel, ynumel, element_type):
     return model                      
     
 
-def read_nodes(file='nodes.csv'): 
-    return pd.read_csv(file)
+# def read_nodes(file='nodes.csv'): 
+#     return pd.read_csv(file)
 
 
-def read_connectivity(file='connectivity.csv'):
-    return pd.read_csv(file, header=None, usecols=(1,2,3,4))
+# def read_connectivity(file='connectivity.csv'):
+#     return pd.read_csv(file, header=None, usecols=(1,2,3,4))
 
 def draw_mesh(elements, *args, **kwargs):
     
