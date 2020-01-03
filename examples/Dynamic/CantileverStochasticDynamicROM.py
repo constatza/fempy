@@ -16,26 +16,20 @@ from mpl_toolkits.mplot3d import Axes3D
 import smartplot
 import fem.core.providers as providers
 import mathematics.manilearn as ml
-import mathematics.stochastic as st
-from fem.preprocessor import rectangular_mesh_model
-from fem.problems import ProblemStructuralDynamic
-from fem.analyzers import Linear, NewmarkDynamicAnalyzer
-from fem.solvers import CholeskySolver, SparseLUSolver
 from fem.systems import LinearSystem
-from fem.core.loads import InertiaLoad, TimeDependentLoad
 from fem.core.entities import DOFtype
 from fem.core.materials import ElasticMaterial2D, StressState2D
-from fem.core.elements import Quad4
-
-
+from fem.core.loads import InertiaLoad#, TimeDependentLoad
+from fem.analyzers import Linear, NewmarkDynamicAnalyzer
+from fem.solvers import SparseLUSolver
 plt.close('all')
 
 # =============================================================================
 # INPUT
 # =============================================================================
 
-Ntrain = 10
-epsilon = 20
+Ntrain = 30
+epsilon = 10
 alpha = 0
 numeigs = 5
 diff_time = 1
@@ -175,7 +169,7 @@ for case in range(Ntest):
     newmark.solve()
 
 end = time()
-print("Finished in {:.2f} min".format(end/60 - start/60) )
+print("Finished in {:.3f} min".format(end/60 - start/60) )
 # =============================================================================
 # SAMPLING
 # =============================================================================

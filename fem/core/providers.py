@@ -6,10 +6,8 @@ Created on Tue Jul 30 13:49:31 2019
 """
 
 from fem.assemblers import GlobalMatrixAssembler
-from numpy import array, zeros, sqrt, eye, abs, max
+from numpy import array, zeros, sqrt
 import scipy.linalg as linalg
-import scipy.sparse.linalg as splinalg
-from scipy.sparse import csr_matrix
 from mathematics.manilearn import eigendecomposition
 
 class ElementStiffnessProvider:
@@ -178,6 +176,7 @@ class ReducedGlobalMatrixProvider(GlobalMatrixProvider):
         rhs = GlobalMatrixProvider.get_rhs_from_history_loads(timestep, problem)
         rhs_r = self.linear_map.transpose_transform_vector(rhs)
         return rhs_r
+
 
 class RayleighDampingMatrixProvider:
     
