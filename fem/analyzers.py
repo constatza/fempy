@@ -131,7 +131,22 @@ class NewmarkDynamicAnalyzer(Analyzer):
     
     def __init__(self, model=None, solver=None, provider=None, child_analyzer=None, 
                  timestep=None, total_time=None, acceleration_scheme='constant'):
-
+        """
+        Creates an instance that uses a specific problem type and an
+        appropriate child analyzer for the construction of the system of 
+        equations arising from the actual physical problem.
+        
+        Parameters
+        ----------
+        provider : ProblemType
+            Instance of the problem type to be solved.
+        child_analyzer : Analyzer
+            Instance of the child analyzer that will handle the solution of
+            the system of equations.
+        linear_system 
+            Instance of the linear system that will be initialized.
+        """
+        
         super().__init__(provider, child_analyzer)
         self.model = model
         self.solver = solver
@@ -226,31 +241,28 @@ class NewmarkDynamicAnalyzer(Analyzer):
         Initializes the models, the solvers, child analyzers, builds
         the matrices, assigns loads and initializes right-hand-side vectors.
         """
+
         linear_system = self.linear_system
         model = self.model
         
         model.connect_data_structures()
-
         linear_system.reset()
-
         model.assign_loads()
         
         self.initialize_internal_vectors() # call BEFORE build_matrices & initialize_rhs
         self.build_matrices()
-     
-        self.linear_system.rhs = self.provider.get_rhs(1)
-        
+        self.linear_system.rhs = self.provider.get_rhs(1)   
         self.child.initialize()
-    
-        
-   
+
+
     def solve(self):
         """
         Solves the linear system of equations by calling the corresponding 
         method of the specific solver attached during construction of the
         current instance.
         """
-        # initialize functions to adef self.function() overhead
+        
+        # initialize functions to avoid self.function() overhead
         get_rhs = self.provider.get_rhs
         calculate_rhs_implicit = self.calculate_rhs_implicit
         child_solve = self.child.solve
@@ -260,10 +272,9 @@ class NewmarkDynamicAnalyzer(Analyzer):
         for i in range(1, self.total_steps):
             
             self.rhs = get_rhs(i)
-            
             self.linear_system.rhs = calculate_rhs_implicit()            
+   
             child_solve()
-            
             update_velocity_and_acceleration()
             store_results(i)
     
@@ -272,6 +283,7 @@ class NewmarkDynamicAnalyzer(Analyzer):
         Calculates the right-hand-side of the implicit dynamic method. 
         This will be used for the solution of the linear dynamic system.
         """
+
         alphas = self.alphas
         u = self.u
         ud = self.ud
@@ -279,7 +291,7 @@ class NewmarkDynamicAnalyzer(Analyzer):
 
         udd_eff = alphas[0] * u + alphas[2] * ud + alphas[3] * udd
         ud_eff = alphas[1] * u + alphas[4] * ud + alphas[5] * udd
-      
+
         inertia_forces = self.mass_matrix.dot(udd_eff)
         damping_forces = self.damping_matrix.dot(ud_eff)
         rhs_effective = inertia_forces + damping_forces + self.rhs   
