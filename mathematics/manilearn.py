@@ -199,7 +199,7 @@ def sparse_eigendecomposition(arrayh, M=None, timeit=False, **kwargs):
 
     if timeit:
         end = time()
-        print("Eigendecomposition in {:.2f} min".format(end/60 - start/60) )
+        print("Sparse Eigendecomposition in {:.2f} sec".format(end - start) )
     
     if kwargs['return_eigenvectors']:
         return eigenvalues, eigenvectors
@@ -220,32 +220,38 @@ def dense_eigendecomposition(arrayh, M=None, timeit=False, **kwargs):
     which = kwargs['which']
     
     if which[0]=='L':
-        eigs = (N-k-1, N-1)
+        eigs = (N-k, N-1)
     else:
         eigs = (0, k)
         
     if kwargs['return_eigenvectors']:
-        eigenvalues, eigenvectors = linalg.eigh(arrayh, b=M, eigvals= eigs)
+        eigenvalues, eigenvectors = linalg.eigh(arrayh,
+                                                b=M,
+                                                eigvals=eigs,
+                                                check_finite=False)
         eigenvectors =  np.flip(eigenvectors, axis=1)
         
     else:
-        eigenvalues = linalg.eigh(arrayh, b=M, eigvals_only=True, eigvals=eigs)
+        eigenvalues = linalg.eigh(arrayh,
+                                  b=M,
+                                  eigvals_only=True,
+                                  eigvals=eigs,
+                                  check_finite=False)
 
     eigenvalues = np.flip(eigenvalues)
 
     if timeit:
         end = time()
-        print("Eigendecomposition in {:.2f} min".format(end/60 - start/60) )
+        print("Dense Eigendecomposition in {:.2f} sec".format(end - start) )
     
     if kwargs['return_eigenvectors']:
         return eigenvalues, eigenvectors
     else:
         return eigenvalues
     
-def eigendecomposition(arrayh, M=None, timeit=False, **kwargs):
+def eigendecomposition(arrayh, M=None, timeit=False, critical_density=.9, **kwargs):
     den = matrix_density(arrayh)
-    
-    if den<.9 and arrayh.shape[0]>100:
+    if den<critical_density and arrayh.shape[0]>100:
         return sparse_eigendecomposition(arrayh, M=M, timeit=timeit, **kwargs)
     else:
         return dense_eigendecomposition(arrayh, M=M, timeit=timeit, **kwargs)

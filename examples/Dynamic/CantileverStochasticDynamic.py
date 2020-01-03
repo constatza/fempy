@@ -7,7 +7,8 @@ Created on Fri Nov 15 11:19:22 2019
 """
 import numpy as np
 from time import time
-import pickle, sys
+import pickle
+import sys
 import matplotlib.pyplot as plt
 import smartplot as splt
 import fem.core.providers as providers 
@@ -38,7 +39,7 @@ output_suffix = 'InertiaLoadXY'
 # =============================================================================
 
 # DYNAMIC LOAD
-total_time = 5
+total_time = 2
 total_steps = 1000
 reduced_step = 10
 reduced_steps= np.arange(total_steps, step=reduced_step)
@@ -51,7 +52,7 @@ theta = np.random.rand(Nsim,) * np.pi/2
 freq = np.random.rand(Nsim,)*50
 
 phase = np.random.rand(Nsim,)*2*np.pi
-F = f0 * np.sin(freq[:, None]*t + phase[:, None]) * np.exp(-t)
+F = f0 * np.sin(freq[:, None]*t + phase[:, None]) 
 Fx = F * np.cos(theta[:, None]) 
 Fy = F * np.sin(theta[:, None])
 
@@ -79,9 +80,10 @@ material = ElasticMaterial2D(stress_state=StressState2D.plain_stress,
 quad = Quad4(material=material, thickness=thickness)
 
 # CANTILEVER SIZES
-numelX = 30
+# 2sec 
+numelX = 24
 numelY = 50
-boundX = [0, 3000]
+boundX = [0, 2500]
 boundY = [0, 5000]
 
 model = rectangular_mesh_model(boundX, boundY, 
@@ -102,7 +104,7 @@ for node in model.nodes[:numelX+1]:
     node.constraints = [DOFtype.X, DOFtype.Y]
     
 model.connect_data_structures()
-damping_coeffs = [0.05, 0.05]
+damping_coeffs = [0.1, 0.1]
 damping_provider = providers.RayleighDampingMatrixProvider(coeffs=damping_coeffs)
 # =============================================================================
 # BUILD ANALYZER
@@ -139,8 +141,7 @@ for case in range(Nsim):
             element = model.elements[counter] 
             element.material = ElasticMaterial2D(stress_state=StressState2D.plain_stress,
                                                  poisson_ratio=poisson_ratio,
-                                                 young_modulus=Estochastic[case,
-                                                                           height],
+                                                 young_modulus=Estochastic[case,height],
                                                  mass_density=mass_density)
     newmark.initialize()
     newmark.solve()
@@ -148,19 +149,20 @@ for case in range(Nsim):
     displacements[case, :,:] = newmark.displacements[:, 1::reduced_step]
 
 end = time()
-print("Finished in {:.2f} min".format(end/60 - start/60) )
+
+print("Finished in {:.3f} min".format(end/60 - start/60) )
 
 
 
 
-import fem.postprocessor as post
+# import fem.postprocessor as post
 
-fig, ax = plt.subplots()
-ax.set_aspect('equal')
-i=20
-ax.set_title('Displacements, t={:d}'.format(i))
-model = post.assign_element_displacements(newmark.displacements[:,i], model)
-ax = post.draw_deformed_shape(ax=ax, elements=model.elements, color='g', scale=200)
+# fig, ax = plt.subplots()
+# ax.set_aspect('equal')
+# i=20
+# ax.set_title('Displacements, t={:d}'.format(i))
+# model = post.assign_element_displacements(newmark.displacements[:,i], model)
+# ax = post.draw_deformed_shape(ax=ax, elements=model.elements, color='g', scale=200)
 
 
 
@@ -168,10 +170,11 @@ ax = post.draw_deformed_shape(ax=ax, elements=model.elements, color='g', scale=2
 # SAVE
 # =============================================================================
 #
-sformat = lambda x, suffix, ext: '_'.join((x, suffix)) + ext
+sformat = lambda x, suffix, ext: r'_'.join((x, suffix)) + ext
+fname = sformat('Problem', output_suffix, '.pickle')
+with open(fname, 'wb') as file:
+    pickle.dump(dynamic, file, protocol=0)
 
-with open(sformat('Problem', output_suffix, '.pickle'), 'wb') as file:
-    pickle.dump(dynamic, file)
 
 if case>=40:
     np.save(sformat('Displacements', output_suffix, '.npy'), displacements)

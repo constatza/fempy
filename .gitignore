@@ -133,3 +133,5 @@ dmypy.json
 data/
 examples/data
 fem/test.py
+*.pickle
+examples/Dynamic/Problem_InertiaLoadXY.pickle

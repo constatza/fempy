@@ -1,10 +1,9 @@
-# cython: language_level=3
-# define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
 
 
 import numpy as np
 from scipy.sparse import csr_matrix
 from mathematics.manilearn import matrix_density
+
 
 class Analyzer:
     """Abstract class for Parent Analyzers"""
@@ -191,7 +190,8 @@ class NewmarkDynamicAnalyzer(Analyzer):
         damping = np.ascontiguousarray(provider.damping_matrix.astype(float)) #after M and K !
         
         density = matrix_density(damping)
-        if density < 0.8:
+        if density < 0.9:
+            print('Using sparse Linear Algebra')
             mass = csr_matrix(mass)
             stiffness = csr_matrix(stiffness)
             damping = csr_matrix(damping)
