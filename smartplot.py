@@ -14,8 +14,8 @@ from scipy.stats import zscore
 def paper_style():
     plt.style.use(['seaborn-whitegrid', 'seaborn-paper'])
     font = {'family' : 'Times New Roman',
-            'weight' : 'bold',
-            'size'   : 16}
+            'weight' : 'bold',}
+            # 'size'   : 10}
     matplotlib.rc('image', cmap='viridis')
     matplotlib.rc('font', **font)
 
@@ -87,7 +87,7 @@ def plot_eigenvalues(V, ax=None, log=False, *args, **kwargs):
         ax.plot(V, *args, **kwargs)
     else:
         ax.semilogy(V, *args, **kwargs)
-    ax.set_title('Eigenvalues')
+    # ax.set_title('Eigenvalues')
     return ax
 
 

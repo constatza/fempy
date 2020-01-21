@@ -8,25 +8,34 @@ This is a temporary script file.
 import matplotlib.pyplot as plt
 import numpy as np
 import mathematics.manilearn as ml
-# plt.close('all')
-np.random.seed(10)
+import scipy as sp
+plt.close('all')
+
 t = np.random.randn(2100)*np.pi/3 + np.pi/2
 
 
-x = np.cos(t)
-y = np.sin(t)    
+r = sp.random.randn(2, 500)
+    
+theta = np.pi/4
 
+Rot = np.array(( (np.cos(theta), -np.sin(theta)),
+               (np.sin(theta),  np.cos(theta)) ))
 
-dmap = ml.DiffusionMap(np.array([x,y]), epsilon=.5, alpha=0)
+Scale = np.array((( 3, 0),
+                 (0, 1)))
 
-dmap.fit(numeigs=2, t=10)
+xy = Rot @ Scale @ r
 
-U = dmap.reduced_coordinates
-u, v = U[1,:], U[2,:]
+pca = ml.PCA(xy)
+
+pca.fit(numeigs=2)
+
+U = pca.reduced_coordinates
+u, v = U[0,:], U[1,:]
 
 
 fig, ax = plt.subplots()
-mag = np.max([u,v])
-plt.scatter(u/mag,v/mag, c=t)
+plt.scatter(xy[0,:], xy[1,:])
 ax.set_aspect('equal', 'box')
 plt.show()
+np.savetxt('pca_scatter.csv', xy.T, delimiter=',')

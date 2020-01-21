@@ -135,3 +135,5 @@ examples/data
 fem/test.py
 *.pickle
 examples/Dynamic/Problem_InertiaLoadXY.pickle
+*.pickle
+examples/Dynamic/Problem_InertiaLoadXY.pickle

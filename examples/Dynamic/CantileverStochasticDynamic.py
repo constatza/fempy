@@ -30,8 +30,8 @@ sys.setrecursionlimit(10**6)
 # =============================================================================
 # INPUT
 # =============================================================================
-Nsim = 5 # 2500 in 71.7 min, seed=1
-# np.random.seed(189)
+Nsim = 2 # 3000 in 103.29 min, seed=1
+np.random.seed(1)
 output_suffix = 'InertiaLoadXY'
 
 # =============================================================================
@@ -83,7 +83,7 @@ quad = Quad4(material=material, thickness=thickness)
 # 2sec 
 numelX = 24
 numelY = 50
-boundX = [0, 2500]
+boundX = [0, 3000]
 boundY = [0, 5000]
 
 model = rectangular_mesh_model(boundX, boundY, 
@@ -178,30 +178,30 @@ with open(fname, 'wb') as file:
 
 if case>=40:
     np.save(sformat('Displacements', output_suffix, '.npy'), displacements)
-    np.save(sformat('Forces', output_suffix, '.npy'), F)
+
 
 save_dict = {'Fx' : Fx,
-             'Fy' : Fy,
-             'f0' : f0,
-             'phase' : phase,
-             'frequency' : freq,
-             'timeline' : t,
-             'total_time' : total_time,
-             'timestep' : timestep,
-             'node_number' : node_number,
+              'Fy' : Fy,
+              'f0' : f0,
+              'phase' : phase,
+              'frequency' : freq,
+              'timeline' : t,
+              'total_time' : total_time,
+              'timestep' : timestep,
+              'node_number' : node_number,
              
-             'damping_coeffs' : damping_coeffs,
-             'poisson_ratio' : poisson_ratio,
-             'mass_density' : mass_density,
-             'thickness' : thickness,
+              'damping_coeffs' : damping_coeffs,
+              'poisson_ratio' : poisson_ratio,
+              'mass_density' : mass_density,
+              'thickness' : thickness,
              
-             'numelX' : numelX,
-             'numelY' : numelY,
-             'boundX' : boundX,
-             'boundY' : boundY,
-             'Nsim' : Nsim,
+              'numelX' : numelX,
+              'numelY' : numelY,
+              'boundX' : boundX,
+              'boundY' : boundY,
+              'Nsim' : Nsim,
              
-             'displacements_last_sim': newmark.displacements}
+              'displacements_last_sim': newmark.displacements}
 
 
 np.savez(sformat('FullOrder', output_suffix, '.npz'), **save_dict)

@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+ # -*- coding: utf-8 -*-
 """
 Manifold-learning library
 
@@ -69,7 +69,7 @@ class DiffusionMap(Eigendecomposer):
         Me = np.empty(epsilon.shape)
         for i,e in enumerate(epsilon):
             L = kernel_matrix(dataset, epsilon=e)
-            Me[i] = np.einsum('ij->', L)
+            Me[i] = np.einsum('ij->', L)/Me.shape[0]
         return Me
 
     @staticmethod    
@@ -120,8 +120,9 @@ class PCA(Eigendecomposer):
         self.eigenvectors = None
     
     def fit(self, numeigs=1, inplace=True):
-        dataset = self.dataset
-        correl = dataset @ dataset.T
+        dataset = self.dataset - np.mean(self.dataset, axis=1, keepdims=True)
+        m = dataset.shape[1]
+        correl = dataset @ dataset.T/(m-1)
         eigenvalues, eigenvectors = eigendecomposition(correl, 
                                                        k=numeigs,
                                                        which='LM',
