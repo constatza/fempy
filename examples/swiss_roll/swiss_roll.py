@@ -23,7 +23,7 @@ plt.close('all')
 epsilon = .5
 alpha = 1
 timesteps = 1
-numeigs = 2
+numeigs = 3
 
 # set parameters
 length_phi = 10 #length of swiss roll in angular direction
@@ -73,8 +73,8 @@ z_dm = U_dm[2,:]
 pca = ml.PCA(U)
 pca.fit(numeigs=numeigs)
 
-pca_map = ml.LinearMap(domain= pca.reduced_coordinates,
-                          codomain=U)
+pca_map = ml.LinearMap(domain= pca.reduced_coordinates, codomain=U.T)
+pca_map.matrix = pca.reduced_coordinates
 
 U_pca = pca_map.direct_transform_vector(pca.reduced_coordinates)
 x_pca = U_pca[0, :]
@@ -116,7 +116,7 @@ plt.grid()
  
 fig4, axes4 = plt.subplots(1, 3)
 fig4.suptitle('Normalized Eigenvectors')
-smartplot.plot_eigenvectors(dmaps.eigenvectors, ax=axes4[0], title='DMAPS', c=color, marker='.')
+smartplot.plot_eigenvectors(dmaps.reduced_coordinates, ax=axes4[0], title='DMAPS', c=color, marker='.')
 smartplot.plot_eigenvectors(Xr, ax=axes4[1], title='LLE', c=color, marker='.')
 smartplot.plot_eigenvectors(pca.reduced_coordinates, ax=axes4[2], title='PCA', c=color, marker='.')
 
@@ -128,6 +128,6 @@ axes5[0].plot(phi, dmaps.eigenvectors.T, marker='.', linestyle='')
 axes5[1].plot(phi, Xr.T, marker='.', linestyle='')
 axes5[2].plot(phi, pca.reduced_coordinates.T, marker='.', linestyle='')
 
-correl_dfm = np.corrcoef(x=phi, y=dmaps.reduced_coordinates)
-correl_lle = np.corrcoef(x=phi, y=Xr)
-correl_pca = np.corrcoef(x=phi, y=pca.reduced_coordinates)
+# correl_dfm = np.corrcoef(x=phi, y=dmaps.reduced_coordinates)
+# correl_lle = np.corrcoef(x=phi, y=Xr)
+# correl_pca = np.corrcoef(x=phi, y=pca.reduced_coordinates)

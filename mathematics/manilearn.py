@@ -164,7 +164,7 @@ class LinearMap(Map):
     def transform(domain, codomain):
 
         L = linalg.cho_factor(domain @ domain.T)
-        linear_map_T = linalg.cho_solve(L, domain @ codomain.T)
+        linear_map_T = linalg.cho_solve(L, domain.dot(codomain.T))
         linear_map = linear_map_T.T
         diff = codomain - linear_map @ domain
         res = np.sum(diff*diff, axis=1)

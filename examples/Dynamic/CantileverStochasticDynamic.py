@@ -52,7 +52,7 @@ theta = np.random.rand(Nsim,) * np.pi/2
 freq = np.random.rand(Nsim,)*50
 
 phase = np.random.rand(Nsim,)*2*np.pi
-F = f0 * np.sin(freq[:, None]*t + phase[:, None]) 
+F = f0 * np.sin(freq[:, None]*t + phase[:, None])*np.exp(-5*(t - total_time/2)**2)
 Fx = F * np.cos(theta[:, None]) 
 Fy = F * np.sin(theta[:, None])
 
@@ -212,9 +212,9 @@ np.savez(sformat('FullOrder', output_suffix, '.npz'), **save_dict)
 displacements = newmark.displacements
 timeline = range(displacements.shape[1])*timestep
 # timeline = timeline[reduced_steps]
-velocities = np.gradient(displacements, timestep, axis=1)
-accelerations = np.gradient(velocities, timestep, axis=1)
-node = 500
+velocities = newmark.velocities
+accelerations = newmark.accelerations
+node = 51
 ux = displacements[2*node-2, :]
 uy = displacements[2*node-1, :]
 vx = velocities[2*node-2, :]
@@ -227,9 +227,20 @@ splt.plot23d(ux, uy, ax=ax1, title='Phase Space')
 
 fig, axes = plt.subplots(4, 1, sharex=True )
 
-data = ((t, F[case, :]),
+data = ((t, Fx[case, :], Fy[case, :]),
         (timeline, ux, uy),
         (timeline, vx, vy),
         (timeline, ax, ay))
 
-splt.gridplot(axes.ravel(), data)
+axes = splt.gridplot(axes.ravel(), data)
+
+fig.suptitle('Node 51, θ={:.4f} rad'.format(theta[-1]))
+axes[0].set_ylabel('$a_g(mm/s^2)$')
+axes[1].set_ylabel('$u(mm)$')
+axes[2].set_ylabel('$\dot{u}(mm/s)$')
+axes[3].set_ylabel('$\ddot{u}(mm/s^2)$')
+axes[3].set_xlabel('$t(s)$')
+axes[3].legend(axes[3].lines, ['X','Y'])
+
+for ax in axes:
+    ax.grid(True)

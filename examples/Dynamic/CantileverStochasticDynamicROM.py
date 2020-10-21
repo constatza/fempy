@@ -32,7 +32,7 @@ from fem.solvers import SparseLUSolver
 Ntrain = 60
 epsilon = 20
 alpha = 0
-numeigs = 7
+numeigs = 5
 diff_time = 1
 use_pca = True 
 input_suffix = 'InertiaLoadXY'
@@ -120,7 +120,7 @@ with open(sformat('Problem', input_suffix, '.pickle'), 'rb') as file:
     dynamic = pickle.load(file)
     model = dynamic.model
 
-
+(timeline, Fx[0, -1])
 # ASSIGN TIME DEPENDENT LOADS
 
     
