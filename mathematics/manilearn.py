@@ -132,7 +132,7 @@ class PCA(Eigendecomposer):
         if inplace: 
             self.eigenvectors = eigenvectors.T
             self.eigenvalues = eigenvalues
-            self.reduced_coordinates = eigenvectors
+            self.reduced_coordinates = eigenvectors.T @ dataset
             self.correl = correl
         else:
             return eigenvalues, eigenvectors
@@ -156,6 +156,7 @@ class LinearMap(Map):
         except linalg.LinAlgError:
             p = None
             res = None
+            print("error")
          
         self.matrix = p
         self.res = res

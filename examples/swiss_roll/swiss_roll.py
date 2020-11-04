@@ -20,10 +20,10 @@ from scipy.stats import zscore
 np.random.seed(10)
 plt.close('all')
 
-epsilon = .5
+epsilon = 1
 alpha = 1
 timesteps = 1
-numeigs = 3
+numeigs = 2
 
 # set parameters
 length_phi = 10 #length of swiss roll in angular direction
@@ -36,7 +36,7 @@ phi = length_phi/6 *np.random.randn(m) + length_phi*.6 # normal distribution phi
 
 X = length_Z*np.random.randn(m) 
 Y = (phi )*np.sin(phi)
-Z = (phi )*np.cos(phi) + 100
+Z = (phi )*np.cos(phi) 
 swiss_roll = np.array([X, Y, Z])
 U = np.concatenate([[X],[Y],[Z]])
 U = zscore(U, axis=1)
@@ -73,8 +73,8 @@ z_dm = U_dm[2,:]
 pca = ml.PCA(U)
 pca.fit(numeigs=numeigs)
 
-pca_map = ml.LinearMap(domain= pca.reduced_coordinates, codomain=U.T)
-pca_map.matrix = pca.reduced_coordinates
+pca_map = ml.LinearMap(domain= pca.reduced_coordinates, codomain=U)
+#pca_map.matrix = pca.eigenvectors
 
 U_pca = pca_map.direct_transform_vector(pca.reduced_coordinates)
 x_pca = U_pca[0, :]
@@ -90,7 +90,10 @@ Z = zscore(Z)
 
 fig0 = plt.figure()
 ax0 = fig0.add_subplot(111, projection='3d')
-ax0.scatter(X, Y, Z, alpha=0.5, label='Original Data', c=phi, marker='.')
+ax0.scatter(X, Y, Z, alpha=0.9, label='Original Data', c=phi, marker='.')
+ax0.set_xlabel('X')
+ax0.set_ylabel('Y')
+ax0.set_zlabel('Z')
 
 fig1 = plt.figure()
 ax1 = fig1.add_subplot(111, projection='3d')
@@ -110,24 +113,17 @@ plt.loglog(e, dmaps.kernel_sums_per_epsilon(U, e))
 ax3 = smartplot.plot_eigenvalues(dmaps.eigenvalues, marker='+', label='DMAPS')
 smartplot.plot_eigenvalues(pca.eigenvalues/np.max(pca.eigenvalues),ax=ax3, marker='o', label='PCA')
 ax3.legend()
+ax3.set_ylabel('$\lambda_i$')
 plt.grid()
 
 
  
-fig4, axes4 = plt.subplots(1, 3)
-fig4.suptitle('Normalized Eigenvectors')
-smartplot.plot_eigenvectors(dmaps.reduced_coordinates, ax=axes4[0], title='DMAPS', c=color, marker='.')
-smartplot.plot_eigenvectors(Xr, ax=axes4[1], title='LLE', c=color, marker='.')
-smartplot.plot_eigenvectors(pca.reduced_coordinates, ax=axes4[2], title='PCA', c=color, marker='.')
+fig4, axes4 = plt.subplots(1, 2, sharey=True)
+fig4.suptitle('Reduced Coordinates')
+smartplot.plot_eigenvectors(dmaps.reduced_coordinates[1:,:], ax=axes4[0], title='DMAPS', c=color, marker='.')
+#smartplot.plot_eigenvectors(Xr, ax=axes4[2], title='LLE', c=color, marker='.')
+smartplot.plot_eigenvectors(pca.reduced_coordinates, ax=axes4[1], title='PCA', c=color, marker='.')
 
  
-fig5, axes5 = plt.subplots(1, 3)
-fig5.suptitle('Correlation')
-
-axes5[0].plot(phi, dmaps.eigenvectors.T, marker='.', linestyle='')
-axes5[1].plot(phi, Xr.T, marker='.', linestyle='')
-axes5[2].plot(phi, pca.reduced_coordinates.T, marker='.', linestyle='')
-
-# correl_dfm = np.corrcoef(x=phi, y=dmaps.reduced_coordinates)
-# correl_lle = np.corrcoef(x=phi, y=Xr)
-# correl_pca = np.corrcoef(x=phi, y=pca.reduced_coordinates)
+print(pca.eigenvalues/np.sum(pca.eigenvalues))
+print(dmaps.eigenvalues/np.sum(dmaps.eigenvalues))
