@@ -6,15 +6,11 @@ Created on Tue Dec  3 13:03:04 2019
 """
 import pickle, gc
 import os
-import seaborn as sns
-import pandas as pd 
 import numpy as np
 import matplotlib.pyplot as plt
 from time import time
 from mpl_toolkits.mplot3d import Axes3D
 
-import mathematics.stochastic as st
-import smartplot
 import fem.core.providers as providers
 import mathematics.manilearn as ml
 from fem.systems import LinearSystem
@@ -32,7 +28,7 @@ from fem.solvers import SparseLUSolver
 Ntrain = 60
 epsilon = 20
 alpha = 0
-numeigs = 5
+numeigs = 3
 diff_time = 1
 use_pca = True 
 input_suffix = 'InertiaLoadXY'
@@ -107,6 +103,33 @@ pca = ml.PCA(Utrain)
 pca.fit(numeigs=numeigs)
 pca_map = ml.LinearMap(domain= pca.reduced_coordinates, codomain=Utrain)
 pca_map.matrix = pca.reduced_coordinates
+
+import pandas as pd
+import seaborn as sns
+from sklearn import preprocessing
+
+x1 = dmaps.reduced_coordinates[1:,:].T
+x2 = pca.reduced_coordinates.T
+
+x1 = preprocessing.scale(x1)
+x2 = preprocessing.scale(x2)
+
+df1 = pd.DataFrame(x1)
+df2 = pd.DataFrame(x2)
+
+df1.add_prefix("X")
+df2.add_prefix("X")
+g = sns.PairGrid(df1)
+g.map_diag(sns.kdeplot)
+g.map_upper(sns.scatterplot, size=5)
+g.map_lower(sns.kdeplot)
+g.add_legend(title="", adjust_subtitles=True)
+
+g = sns.PairGrid(df2)
+g.map_diag(sns.kdeplot)
+g.map_upper(sns.scatterplot, size=5)
+g.map_lower(sns.kdeplot)
+g.add_legend(title="", adjust_subtitles=True)
 
 if use_pca:
     map_used = pca_map
