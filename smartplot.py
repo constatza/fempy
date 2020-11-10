@@ -82,7 +82,7 @@ def formal_serif():
 def plot_eigenvalues(V, ax=None, log=False, *args, **kwargs):
     if ax is None:
         fig = plt.figure()
-        ax = fig.add_subplot('111')
+        ax = fig.add_subplot(1,1,1)
     if not log:
         ax.plot(V, *args, **kwargs)
     else:

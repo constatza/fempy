@@ -21,20 +21,20 @@ np.random.seed(10)
 plt.close('all')
 
 epsilon = 1
-alpha = 1
+alpha = 0
 timesteps = 1
 numeigs = 2
 
 # set parameters
-length_phi = 10 #length of swiss roll in angular direction
-length_Z = 5#length of swiss roll in z direction
+std_phi = 2 #length of swiss roll in angular direction
+std_roll = 5#length of swiss roll in z direction
 sigma = 2 #noise strength
 m = 1000 #number of samples
 # create dataset
-phi = length_phi/6 *np.random.randn(m) + length_phi*.6 # normal distribution phi
-#phi = length_phi *np.random.rand(m) #+ length_phi*.6
+# phi = np.linspace(1,9,m) # normal distribution phi
+phi = np.random.normal(5, std_phi, m ) 
 
-X = length_Z*np.random.randn(m) 
+X = np.random.normal(0, std_roll, m ) 
 Y = (phi )*np.sin(phi)
 Z = (phi )*np.cos(phi) 
 swiss_roll = np.array([X, Y, Z])
@@ -44,12 +44,16 @@ d = U.shape[0]
 N = U.shape[1]
 Phi = np.tile(phi, (numeigs, 1))
 color = phi#np.arange(swiss_roll.shape[1])
-X_r, err = manifold.locally_linear_embedding(U.T, n_neighbors=20,
-                                             n_components=numeigs)
-Xr = X_r.T
+# X_r, err = manifold.locally_linear_embedding(U.T, n_neighbors=20,
+#                                             n_components=numeigs)
+# Xr = X_r.T
 
-
-
+ax = plt.subplot()
+ax.scatter(phi,X, c=phi, s=10)
+plt.grid()
+plt.show()
+ax.set_xlabel("$\phi$")
+ax.set_ylabel("$t$")
 # =============================================================================
 # Diffusion Maps 
 # =============================================================================
